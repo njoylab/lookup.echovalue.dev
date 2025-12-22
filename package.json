@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "DNS Intelligence & Security Analyzer - Image Generation",
   "scripts": {
+    "build": "node build.js",
     "generate-images": "node generate-images.js",
     "install-deps": "npm install"
   },

@@ -143,7 +143,7 @@ const historyList = document.getElementById('historyList');
 const historyCount = document.getElementById('historyCount');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
-const API_ENDPOINT = 'https://dnstool-api.echovalue.dev/';
+const API_ENDPOINT = '__API_ENDPOINT__';
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

@@ -1,0 +1,79 @@
+const fs = require('fs');
+const path = require('path');
+
+const rootDir = __dirname;
+const distDir = path.join(rootDir, 'dist');
+
+const siteKey =
+    process.env.TURNSTILE_SITE_KEY ||
+    process.env.CLOUDFLARE_TURNSTILE_SITE_KEY ||
+    '';
+
+const apiEndpoint =
+    process.env.DNS_API_ENDPOINT ||
+    'https://dnstool-api.echovalue.dev/';
+
+const allowedExtensions = new Set([
+    '.html',
+    '.css',
+    '.js',
+    '.png',
+    '.ico',
+    '.svg',
+    '.webmanifest',
+    '.txt',
+    '.xml'
+]);
+
+const allowedNames = new Set([
+    'robots.txt',
+    'sitemap.xml',
+    'site.webmanifest'
+]);
+
+fs.rmSync(distDir, { recursive: true, force: true });
+fs.mkdirSync(distDir, { recursive: true });
+
+const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+
+for (const entry of entries) {
+    if (!entry.isFile()) {
+        continue;
+    }
+
+    const fileName = entry.name;
+    if (fileName.startsWith('.')) {
+        continue;
+    }
+
+    const ext = path.extname(fileName);
+    const shouldCopy = allowedExtensions.has(ext) || allowedNames.has(fileName);
+
+    if (!shouldCopy) {
+        continue;
+    }
+
+    const sourcePath = path.join(rootDir, fileName);
+    const destPath = path.join(distDir, fileName);
+
+    if (fileName === 'index.html') {
+        const html = fs.readFileSync(sourcePath, 'utf8');
+        if (!siteKey) {
+            console.warn('TURNSTILE_SITE_KEY is not set; using placeholder in index.html');
+        }
+        const output = siteKey
+            ? html.replace('YOUR_TURNSTILE_SITE_KEY', siteKey)
+            : html;
+        fs.writeFileSync(destPath, output);
+        continue;
+    }
+
+    if (fileName === 'script.js') {
+        const script = fs.readFileSync(sourcePath, 'utf8');
+        const output = script.replace('__API_ENDPOINT__', apiEndpoint);
+        fs.writeFileSync(destPath, output);
+        continue;
+    }
+
+    fs.copyFileSync(sourcePath, destPath);
+}

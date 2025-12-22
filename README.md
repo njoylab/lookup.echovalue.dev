@@ -2,7 +2,7 @@
 
 A privacy-first DNS lookup tool with advanced security analysis, email security checking, SSL/TLS inspection, and DNS propagation monitoring.
 
-**Live Demo**: [dnstool.echovalue.dev](https://dnstool.echovalue.dev)
+**Live Demo**: [lookup.echovalue.dev](https://lookup.echovalue.dev)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
@@ -19,7 +19,7 @@ A privacy-first DNS lookup tool with advanced security analysis, email security 
 ## Tech Stack
 
 Pure static HTML/CSS/JavaScript:
-- No build process
+- Optional build step for environment variable injection
 - No framework dependencies
 - Vanilla JavaScript (ES6+)
 - IBM Plex Sans & JetBrains Mono fonts
@@ -30,7 +30,7 @@ Pure static HTML/CSS/JavaScript:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/dns-intelligence.git
+git clone https://github.com/njoylab/lookup.echovalue.dev
 cd dns-intelligence
 
 # Serve locally (choose one):
@@ -39,6 +39,30 @@ npx serve .
 php -S localhost:8000
 
 # Visit http://localhost:8000
+```
+
+### Pages Build (Turnstile Key)
+
+Set a build command to inject the Turnstile site key at build time.
+
+Build command:
+```
+npm run build
+```
+
+Output directory:
+```
+dist
+```
+
+Environment variable:
+```
+TURNSTILE_SITE_KEY=0x4AAAAAACIBHDOiy9i84iTV
+```
+
+Optional API endpoint override:
+```
+DNS_API_ENDPOINT=https://dnstool-api.echovalue.dev/
 ```
 
 ### Generate Images (Optional)
