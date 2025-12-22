@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Generated images (generate locally)
+og-image.png
+favicon.ico
+favicon-16x16.png
+favicon-32x32.png
+apple-touch-icon.png
+android-chrome-192x192.png
+android-chrome-512x512.png
+
+# Keep these (manual or template files)
+!favicon.svg
+!og-image-template.html
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs (if you add a build process later)
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Testing
+coverage/
+.nyc_output/
+
+# Optional: Comment out if you want to track these
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif

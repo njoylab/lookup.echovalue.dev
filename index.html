@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>DNS Lookup Tool - Intelligence & Security Analyzer | Free DNS Checker</title>
+    <meta name="title" content="DNS Lookup Tool - Intelligence & Security Analyzer | Free DNS Checker">
+    <meta name="description" content="Free DNS lookup tool with advanced intelligence features. Check DNS records, email security (SPF, DMARC, DKIM), SSL certificates, DNS propagation, and get security insights. Privacy-first, all processing in your browser.">
+    <meta name="keywords" content="DNS lookup, DNS checker, DNS records, SPF checker, DMARC checker, SSL certificate checker, DNS propagation, email security, DNS intelligence, DNS analyzer, free DNS tool">
+    <meta name="author" content="DNS Intelligence">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dnstool.echovalue.dev/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dnstool.echovalue.dev/">
+    <meta property="og:title" content="DNS Lookup Tool - Intelligence & Security Analyzer">
+    <meta property="og:description" content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation. Privacy-first design.">
+    <meta property="og:image" content="https://dnstool.echovalue.dev/og-image.png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="DNS Intelligence">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://dnstool.echovalue.dev/">
+    <meta property="twitter:title" content="DNS Lookup Tool - Intelligence & Security Analyzer">
+    <meta property="twitter:description" content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation.">
+    <meta property="twitter:image" content="https://dnstool.echovalue.dev/og-image.png">
+
+    <!-- Favicon - SVG works in all modern browsers -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Sitemap Reference -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <!-- Structured Data / Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "DNS Intelligence - DNS Lookup Tool",
+      "description": "Advanced DNS lookup tool with security analysis, email security checking, SSL certificate inspection, and DNS propagation monitoring.",
+      "url": "https://dnstool.echovalue.dev/",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "DNS Record Lookup (A, AAAA, MX, NS, TXT, CNAME)",
+        "Email Security Analysis (SPF, DMARC, DKIM)",
+        "SSL/TLS Certificate Inspection",
+        "DNS Propagation Checking",
+        "Reverse DNS Lookup",
+        "DNS Enrichment",
+        "Privacy-First Design",
+        "No Server-Side Data Storage"
+      ],
+      "browserRequirements": "Requires JavaScript. Works on all modern browsers.",
+      "permissions": "localStorage"
+    }
+    </script>
+</head>
+<body>
+    <noscript>
+        <div style="text-align: center; padding: 2rem; background: #1a1f2e; color: #e8eaed; font-family: sans-serif;">
+            <h1>JavaScript Required</h1>
+            <p>This DNS lookup tool requires JavaScript to function. Please enable JavaScript in your browser settings to use this application.</p>
+        </div>
+    </noscript>
+
+    <div class="grain-overlay" aria-hidden="true"></div>
+
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="logo" role="img" aria-label="DNS Intelligence Logo">
+                <span class="logo-icon" aria-hidden="true">◈</span>
+                <span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span>
+            </div>
+            <nav class="nav" role="navigation" aria-label="Main navigation">
+                <a href="#api" class="nav-link">API Access</a>
+                <a href="#pricing" class="nav-link">Bulk Analysis</a>
+            </nav>
+        </div>
+    </header>
+
+    <main role="main">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badges">
+                        <span class="badge badge-privacy">🔒 Privacy-First</span>
+                        <span class="badge badge-local">💾 Local Storage Only</span>
+                    </div>
+                    <h1 class="hero-title" id="hero-title">
+                        <span class="title-line">DNS Lookup:</span>
+                        <span class="title-line title-gradient">Intelligence & Security Analyzer</span>
+                    </h1>
+                    <p class="hero-description">
+                        A powerful DNS intelligence tool that performs multi-record lookups, global propagation checks,
+                        reverse DNS, SSL/TLS inspection, email security analysis, and rich metadata extraction
+                        all in one automated workflow.
+                    </p>
+                </div>
+
+                <div class="analyzer-card">
+                    <div class="card-header">
+                        <div class="status-indicator">
+                            <span class="status-dot" aria-label="Status indicator"></span>
+                            <span class="status-text">All systems operational</span>
+                        </div>
+                    </div>
+
+                    <form class="analyzer-form" id="analyzerForm" aria-label="DNS Analysis Form">
+                        <div class="input-group">
+                            <label for="domain" class="input-label">Target Domain</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="text"
+                                    id="domain"
+                                    class="domain-input"
+                                    placeholder="example.com"
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                />
+                                <button type="submit" class="analyze-btn">
+                                    <span class="btn-text">Analyze</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="turnstile-wrapper">
+                            <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY"></div>
+                        </div>
+
+                        <div class="advanced-toggle-wrapper">
+                            <button type="button" class="advanced-toggle" id="advancedToggle">
+                                <span class="toggle-icon">▸</span>
+                                <span>Advanced Options</span>
+                            </button>
+                            <button type="button" class="history-toggle" id="historyToggle">
+                                <span>🕒</span>
+                                <span>History</span>
+                                <span class="history-count" id="historyCount" style="display: none;">0</span>
+                            </button>
+                        </div>
+
+                        <div class="history-panel" id="historyPanel">
+                            <div class="history-header">
+                                <h4>Recent Searches</h4>
+                                <button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button>
+                            </div>
+                            <div class="privacy-notice">
+                                <span class="privacy-icon">🔒</span>
+                                <span class="privacy-text">Your search history is stored locally in your browser. No data is sent to our servers.</span>
+                            </div>
+                            <div class="history-list" id="historyList">
+                                <div class="history-empty">No search history yet</div>
+                            </div>
+                        </div>
+
+                        <div class="advanced-options" id="advancedOptions">
+                            <div class="options-grid">
+                                <div class="option-group">
+                                    <label class="option-label">DNS Record Types</label>
+                                    <div class="record-types">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="A">
+                                            <span>A</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="AAAA">
+                                            <span>AAAA</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="MX">
+                                            <span>MX</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="CNAME">
+                                            <span>CNAME</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="TXT">
+                                            <span>TXT</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="NS">
+                                            <span>NS</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Check DNS Propagation</span>
+                                        <input type="checkbox" checked class="toggle-input" name="checkPropagation">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Perform Reverse DNS Lookup</span>
+                                        <input type="checkbox" checked class="toggle-input" name="reverseDNS">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Enable DNS Enrichment</span>
+                                        <input type="checkbox" checked class="toggle-input" name="enrichment">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Enable TLS/SSL Inspection</span>
+                                        <input type="checkbox" checked class="toggle-input" name="sslInspection">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="option-label">Query Timeout (ms)</label>
+                                    <input type="number" class="number-input" value="5000" name="timeout" min="1000" max="30000" step="100">
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="option-label">Maximum Retries</label>
+                                    <input type="number" class="number-input" value="3" name="maxRetries" min="0" max="10">
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="option-label">Retry Delay (ms)</label>
+                                    <input type="number" class="number-input" value="1000" name="retryDelay" min="100" max="5000" step="100">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="results-container" id="resultsContainer" style="display: none;">
+                    <!-- Results will be injected here -->
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section" id="pricing" aria-labelledby="cta-heading">
+            <div class="container">
+                <h2 id="cta-heading" class="sr-only">Additional Services</h2>
+                <div class="cta-grid">
+                    <div class="cta-card">
+                        <div class="cta-icon">⚡</div>
+                        <h3 class="cta-title">Bulk Analysis</h3>
+                        <p class="cta-description">
+                            Need to analyze hundreds or thousands of domains? Our bulk analysis service
+                            processes large datasets with enterprise-grade infrastructure.
+                        </p>
+                        <a href="#contact" class="cta-button cta-button-primary">Get Started</a>
+                    </div>
+
+                    <div class="cta-card" id="api">
+                        <div class="cta-icon">{ }</div>
+                        <h3 class="cta-title">API Access</h3>
+                        <p class="cta-description">
+                            Integrate DNS intelligence directly into your applications.
+                            Available as an Apify actor with simple REST API access.
+                        </p>
+                        <a href="https://apify.com" target="_blank" class="cta-button cta-button-secondary">View on Apify</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">&copy; 2025 DNS Intelligence. Built for security professionals.</p>
+                <p class="footer-privacy">
+                    <span>🔒</span>
+                    <span>Privacy-first: All data processing happens in your browser. We don't collect, store, or transmit your search queries.</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
