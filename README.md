@@ -52,47 +52,6 @@ This creates:
 - `og-image.png` (1200x630px for social sharing)
 - All favicon sizes (16x16, 32x32, 180x180, etc.)
 
-## Deployment
-
-Deploy to any static hosting:
-
-```bash
-# Vercel
-vercel --prod
-
-# Netlify
-netlify deploy --prod
-
-# Or drag & drop to:
-# - Cloudflare Pages
-# - GitHub Pages
-# - Netlify
-# - Vercel
-```
-
-**Before deploying:**
-1. Update domain URLs in `index.html` and `sitemap.xml`
-2. Generate images: `npm run generate-images`
-3. Add your API endpoint in `script.js` (or keep mock data)
-
-## API Integration
-
-Currently uses mock data. To integrate with a real API:
-
-**Location:** `script.js` line ~376
-
-```javascript
-// Replace mock data with your API:
-const response = await fetch('YOUR_API_ENDPOINT', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ domain, options })
-});
-const data = await response.json();
-```
-
-See `MOCK_DATA` in `script.js` for expected response format.
-
 ## Privacy
 
 - ✅ All processing happens in your browser
@@ -112,15 +71,7 @@ See `MOCK_DATA` in `script.js` for expected response format.
 
 MIT License - see [LICENSE](LICENSE) file
 
-## Contributing
-
-Frontend contributions welcome! Focus on:
-- UI/UX improvements
-- Accessibility enhancements
-- Mobile responsiveness
-- Bug fixes
-
-**Note:** Backend API is proprietary and not part of this repository.
+**Note:** Backend API is not part of this repository.
 
 ---
 
