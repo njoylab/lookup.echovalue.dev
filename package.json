@@ -1,15 +1,10 @@
 {
   "name": "dns-intelligence-tool",
   "version": "1.0.0",
-  "description": "DNS Intelligence & Security Analyzer - Image Generation",
+  "description": "DNS Intelligence & Security Analyzer",
   "scripts": {
     "build": "node build.js",
-    "generate-images": "node generate-images.js",
     "install-deps": "npm install"
-  },
-  "devDependencies": {
-    "puppeteer": "^21.6.1",
-    "sharp": "^0.33.1"
   },
   "keywords": [
     "dns",

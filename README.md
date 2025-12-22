@@ -65,16 +65,6 @@ Optional API endpoint override:
 DNS_API_ENDPOINT=https://dnstool-api.echovalue.dev/
 ```
 
-### Generate Images (Optional)
-
-```bash
-npm install
-npm run generate-images
-```
-
-This creates:
-- `og-image.png` (1200x630px for social sharing)
-- All favicon sizes (16x16, 32x32, 180x180, etc.)
 
 ## Privacy
 

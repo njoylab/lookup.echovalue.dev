@@ -8,7 +8,7 @@ This is a **static frontend-only application** for DNS intelligence and security
 
 **Tech Stack:**
 - Pure HTML5, CSS3, vanilla JavaScript (ES6+)
-- No build process, no bundler, no framework
+- Optional build step for environment variable injection
 - Google Fonts (IBM Plex Sans, JetBrains Mono)
 
 ## Development Commands
@@ -25,18 +25,9 @@ php -S localhost:8000
 # Visit http://localhost:8000
 ```
 
-### Image Generation
-```bash
-# Install dependencies (only needed for image generation)
-npm install
-
-# Generate OG image and all favicon sizes
-npm run generate-images
-```
-
 ### Deployment
 ```bash
-# No build needed! Deploy static files directly.
+# Build optional for env injection, otherwise deploy static files directly.
 
 # Example with Vercel:
 vercel --prod
@@ -67,45 +58,21 @@ netlify deploy --prod
 **Data Flow:**
 1. User input → `form.addEventListener('submit')`
 2. Extract form data → `getFormOptions()`
-3. **Mock API call** (currently) → `MOCK_DATA[0]`
-4. Render results → `displayResults(data)`
+3. API call → `callDnsApi(domain, options, turnstileToken)`
+4. Render results → `displayResults(result)`
 5. Save to history → `saveToHistory(domain, options)`
 
 ### Critical Constants in `script.js`
 
 ```javascript
-MOCK_DATA[0]           // Mock API response structure
+API_ENDPOINT          // API base URL (build-time injected)
 HISTORY_KEY            // LocalStorage key: 'dns-analyzer-history'
 MAX_HISTORY_ITEMS      // History limit: 20 items
 ```
 
 ### API Integration Point
 
-**Location:** `script.js` around line 376 in form submission handler
-
-**To integrate real API:**
-```javascript
-// Replace MOCK_DATA usage with:
-const response = await fetch('YOUR_API_ENDPOINT', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ domain, options })
-});
-const data = await response.json();
-```
-
-**Expected API Response Format:**
-See `MOCK_DATA` structure in `script.js` for complete schema:
-```javascript
-{
-  domain: "example.com",
-  lookupResult: {
-    records: { A, AAAA, MX, NS, TXT, CNAME },
-    enrichment: { emailSecurity, ssl, ttlAnalysis }
-  },
-  propagationResults: [ /* server checks */ ]
-}
-```
+**Location:** `script.js` in `callDnsApi()` and form submission handler
 
 ## Privacy & Data Handling
 
@@ -176,12 +143,6 @@ localStorage['dns-analyzer-history'] = [
 1. `index.html` - Canonical URLs (search for `dnstool.echovalue.dev`)
 2. `sitemap.xml` - Domain URLs
 3. All Open Graph tags - Update domain and image paths
-
-**Generate images before deployment:**
-- Run `npm run generate-images` to create:
-  - `og-image.png` (1200x630px for social sharing)
-  - All favicon sizes (16x16, 32x32, 180x180, etc.)
-  - `favicon.svg` already exists (works in modern browsers)
 
 ## Scope of Contributions
 
@@ -256,4 +217,3 @@ Before deployment:
 
 - **README.md** - Project overview and quick start
 - **CHANGELOG.md** - Version history
-- **IMAGE-GENERATION-GUIDE.md** - How to generate images
