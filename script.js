@@ -899,7 +899,7 @@ function getURLParameter(name) {
     return urlParams.get(name);
 }
 
-// Auto-fill and analyze domain from URL parameter
+// Auto-fill domain from URL parameter (no auto-analysis)
 function initializeFromURL() {
     // Load history
     renderHistory();
@@ -909,11 +909,6 @@ function initializeFromURL() {
     if (domainParam) {
         // Fill the input field
         domainInput.value = domainParam.trim();
-
-        // Auto-submit the form after a short delay to allow page to fully load
-        setTimeout(() => {
-            form.dispatchEvent(new Event('submit'));
-        }, 500);
     }
 }
 
@@ -925,8 +920,6 @@ window.addEventListener('popstate', () => {
     const domainParam = getURLParameter('domain');
     if (domainParam) {
         domainInput.value = domainParam.trim();
-        // Optionally re-run analysis
-        // form.dispatchEvent(new Event('submit'));
     } else {
         domainInput.value = '';
         resultsContainer.style.display = 'none';

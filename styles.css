@@ -1013,6 +1013,13 @@ body {
     line-height: 1.8;
 }
 
+.cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
 .cta-button {
     display: inline-block;
     padding: 1rem 2rem;
@@ -1042,6 +1049,12 @@ body {
 
 .cta-button-secondary:hover {
     background: var(--color-accent-soft);
+}
+
+.cta-button[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.7;
+    pointer-events: none;
 }
 
 /* Footer */
