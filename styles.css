@@ -667,6 +667,9 @@ body {
     font-weight: 600;
     color: var(--color-text-secondary);
     font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 /* Record Types */
@@ -743,6 +746,9 @@ body {
 .toggle-option-label {
     font-size: 0.9rem;
     color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .toggle-input {
@@ -800,6 +806,76 @@ body {
     outline: none;
     border-color: var(--color-accent);
     box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+/* Tooltip */
+.tooltip-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: help;
+    transition: all 0.2s var(--transition-smooth);
+    font-family: var(--font-mono);
+}
+
+.tooltip-icon:hover {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    transform: scale(1.1);
+}
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-accent);
+    color: var(--color-text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.5;
+    white-space: normal;
+    width: max-content;
+    max-width: 280px;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    transition: all 0.3s var(--transition-smooth);
+}
+
+.tooltip-text::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--color-accent);
+}
+
+.tooltip-wrapper:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    bottom: calc(100% + 12px);
 }
 
 /* Results Container */
@@ -1249,5 +1325,20 @@ body {
 
     .domain-badge {
         text-align: center;
+    }
+
+    .tooltip-text {
+        max-width: 220px;
+        font-size: 0.75rem;
+        padding: 0.6rem 0.85rem;
+        left: auto;
+        right: 0;
+        transform: none;
+    }
+
+    .tooltip-text::after {
+        left: auto;
+        right: 12px;
+        transform: none;
     }
 }
