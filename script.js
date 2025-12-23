@@ -369,12 +369,12 @@ form.addEventListener('submit', async (e) => {
             resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
     } catch (error) {
-        // Reset Turnstile only on error
+        alert(error?.message || 'Request failed');
+    } finally {
+        // Reset Turnstile after every API call to generate new token
         if (window.turnstile && typeof window.turnstile.reset === 'function') {
             window.turnstile.reset();
         }
-        alert(error?.message || 'Request failed');
-    } finally {
         analyzeBtn.innerHTML = originalText;
         analyzeBtn.disabled = false;
     }
