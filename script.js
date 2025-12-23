@@ -1,136 +1,3 @@
-// Mock data - Replace with actual API call
-const MOCK_DATA = [
-    {
-        "domain": "unibocconi.it",
-        "lookupResult": {
-            "domain": "unibocconi.it",
-            "timestamp": "2025-12-22T08:27:48.307Z",
-            "records": {
-                "MX": [
-                    {
-                        "type": "MX",
-                        "exchange": "unibocconi-it.mail.protection.outlook.com",
-                        "priority": 10
-                    }
-                ],
-                "A": [
-                    {
-                        "type": "A",
-                        "address": "193.205.23.246",
-                        "ttl": 300
-                    }
-                ],
-                "NS": [
-                    {
-                        "type": "NS",
-                        "value": "dns.cineca.com"
-                    },
-                    {
-                        "type": "NS",
-                        "value": "dns.cineca.it"
-                    },
-                    {
-                        "type": "NS",
-                        "value": "ns2.unibocconi.it"
-                    },
-                    {
-                        "type": "NS",
-                        "value": "ns1.garr.net"
-                    },
-                    {
-                        "type": "NS",
-                        "value": "ns1.unibocconi.it"
-                    }
-                ],
-                "AAAA": [
-                    {
-                        "type": "AAAA",
-                        "address": "2001:760:2006:10::1240",
-                        "ttl": 300
-                    }
-                ],
-                "TXT": [
-                    {
-                        "type": "TXT",
-                        "entries": ["v=spf1 include:spf.protection.outlook.com ~all"]
-                    },
-                    {
-                        "type": "TXT",
-                        "entries": ["google-site-verification=tZDUVzg3Y0OII8Hgvu_VSRlnUCwW5-LpSpaX4hMdI0I"]
-                    }
-                ]
-            },
-            "enrichment": {
-                "emailSecurity": {
-                    "score": 90,
-                    "recommendations": [
-                        "Add backup MX records for email redundancy"
-                    ],
-                    "spf": {
-                        "version": "v=spf1",
-                        "isValid": true,
-                        "warnings": []
-                    },
-                    "dmarc": {
-                        "version": "DMARC1",
-                        "policy": "reject",
-                        "isValid": true,
-                        "warnings": []
-                    },
-                    "mx": {
-                        "totalServers": 1,
-                        "primaryServer": "unibocconi-it.mail.protection.outlook.com",
-                        "provider": {
-                            "name": "Microsoft 365",
-                            "confidence": "high"
-                        }
-                    }
-                },
-                "ssl": {
-                    "certificate": {
-                        "subject": {
-                            "commonName": "*.unibocconi.it"
-                        },
-                        "issuer": {
-                            "commonName": "GEANT TLS RSA 1",
-                            "organization": "Hellenic Academic and Research Institutions CA",
-                            "country": "GR"
-                        },
-                        "validFrom": "Jul 31 08:04:27 2025 GMT",
-                        "validTo": "Jul 31 08:04:27 2026 GMT",
-                        "daysUntilExpiry": 221
-                    }
-                }
-            },
-            "mx_provider": "Microsoft 365",
-            "spf_valid": true,
-            "dmarc_policy": "reject",
-            "has_dkim": true,
-            "email_security_score": 90,
-            "ssl_certificate_expires_at": "Jul 31 08:04:27 2026 GMT",
-            "ssl_days_until_expiry": 221
-        },
-        "propagationResults": [
-            {
-                "domain": "unibocconi.it",
-                "recordType": "A",
-                "isPropagated": true,
-                "consistencyPercentage": 100,
-                "servers": {
-                    "8.8.8.8": {
-                        "records": [{"type": "A", "address": "193.205.23.246", "ttl": 2191}],
-                        "responseTime": 2
-                    },
-                    "1.1.1.1": {
-                        "records": [{"type": "A", "address": "193.205.23.246", "ttl": 3600}],
-                        "responseTime": 103
-                    }
-                }
-            }
-        ]
-    }
-];
-
 // DOM Elements
 const form = document.getElementById('analyzerForm');
 const advancedToggle = document.getElementById('advancedToggle');
@@ -212,7 +79,7 @@ async function callDnsApi(domain, options, turnstileToken) {
 
     for (let attempt = 0; attempt <= options.maxRetries; attempt++) {
         try {
-        return await fetchWithTimeout(API_ENDPOINT, payload, options.timeout, turnstileToken);
+            return await fetchWithTimeout(API_ENDPOINT, payload, options.timeout, turnstileToken);
         } catch (error) {
             lastError = error;
             if (attempt >= options.maxRetries) {
@@ -567,7 +434,7 @@ function displayResults(data) {
     // Add event listener for calendar button
     const calendarBtn = resultsContainer.querySelector('.calendar-btn');
     if (calendarBtn) {
-        calendarBtn.addEventListener('click', function() {
+        calendarBtn.addEventListener('click', function () {
             const domain = this.dataset.domain;
             const date = this.dataset.date;
             downloadCalendarEvent(domain, date);
@@ -758,7 +625,7 @@ function renderSSLCertificate(enrichment) {
 
     const { certificate } = enrichment.ssl;
     const daysColor = certificate.daysUntilExpiry > 30 ? 'var(--color-success)' :
-                     certificate.daysUntilExpiry > 7 ? 'var(--color-warning)' : 'var(--color-error)';
+        certificate.daysUntilExpiry > 7 ? 'var(--color-warning)' : 'var(--color-error)';
 
     // Get domain for calendar event
     const domain = certificate.subject?.commonName || 'Unknown domain';
