@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,10 @@
     <!-- Primary Meta Tags -->
     <title>DNS Lookup Tool - Intelligence & Security Analyzer | Free DNS Checker</title>
     <meta name="title" content="DNS Lookup Tool - Intelligence & Security Analyzer | Free DNS Checker">
-    <meta name="description" content="Free DNS lookup tool with advanced intelligence features. Check DNS records, email security (SPF, DMARC, DKIM), SSL certificates, DNS propagation, and get security insights.">
-    <meta name="keywords" content="DNS lookup, DNS checker, DNS records, SPF checker, DMARC checker, SSL certificate checker, DNS propagation, email security, DNS intelligence, DNS analyzer, free DNS tool">
+    <meta name="description"
+        content="Free DNS lookup tool with advanced intelligence features. Check DNS records, email security (SPF, DMARC, DKIM), SSL certificates, DNS propagation, and get security insights.">
+    <meta name="keywords"
+        content="DNS lookup, DNS checker, DNS records, SPF checker, DMARC checker, SSL certificate checker, DNS propagation, email security, DNS intelligence, DNS analyzer, free DNS tool">
     <meta name="author" content="DNS Intelligence">
     <meta name="robots" content="index, follow">
     <meta name="language" content="English">
@@ -21,7 +24,8 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lookup.echovalue.dev/">
     <meta property="og:title" content="DNS Lookup Tool - Intelligence & Security Analyzer">
-    <meta property="og:description" content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation.">
+    <meta property="og:description"
+        content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation.">
     <meta property="og:image" content="https://lookup.echovalue.dev/og-image.png">
     <meta property="og:locale" content="en_US">
     <meta property="og:site_name" content="DNS Intelligence">
@@ -30,7 +34,8 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lookup.echovalue.dev/">
     <meta property="twitter:title" content="DNS Lookup Tool - Intelligence & Security Analyzer">
-    <meta property="twitter:description" content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation.">
+    <meta property="twitter:description"
+        content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation.">
     <meta property="twitter:image" content="https://lookup.echovalue.dev/og-image.png">
 
     <!-- Favicon - SVG works in all modern browsers -->
@@ -46,7 +51,9 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -86,11 +93,13 @@
     }
     </script>
 </head>
+
 <body>
     <noscript>
         <div style="text-align: center; padding: 2rem; background: #1a1f2e; color: #e8eaed; font-family: sans-serif;">
             <h1>JavaScript Required</h1>
-            <p>This DNS lookup tool requires JavaScript to function. Please enable JavaScript in your browser settings to use this application.</p>
+            <p>This DNS lookup tool requires JavaScript to function. Please enable JavaScript in your browser settings
+                to use this application.</p>
         </div>
     </noscript>
 
@@ -136,14 +145,8 @@
                         <div class="input-group">
                             <label for="domain" class="input-label">Target Domain</label>
                             <div class="input-wrapper">
-                                <input
-                                    type="text"
-                                    id="domain"
-                                    class="domain-input"
-                                    placeholder="example.com"
-                                    autocomplete="off"
-                                    spellcheck="false"
-                                />
+                                <input type="text" id="domain" class="domain-input" placeholder="example.com"
+                                    autocomplete="off" spellcheck="false" />
                                 <button type="submit" class="analyze-btn">
                                     <span class="btn-text">Analyze</span>
                                     <span class="btn-icon">→</span>
@@ -174,7 +177,8 @@
                             </div>
                             <div class="privacy-notice">
                                 <span class="privacy-icon">🔒</span>
-                                <span class="privacy-text">Your search history is stored only in your browser and never synced to servers.</span>
+                                <span class="privacy-text">Your search history is stored only in your browser and never
+                                    synced to servers.</span>
                             </div>
                             <div class="history-list" id="historyList">
                                 <div class="history-empty">No search history yet</div>
@@ -188,7 +192,8 @@
                                         DNS Record Types
                                         <span class="tooltip-wrapper">
                                             <span class="tooltip-icon">?</span>
-                                            <span class="tooltip-text">Query all major DNS record types including A, AAAA, MX, CNAME, TXT, NS, PTR, SOA, CAA, and SRV records</span>
+                                            <span class="tooltip-text">Query all major DNS record types including A,
+                                                AAAA, MX, CNAME, TXT, NS, PTR, SOA, CAA, and SRV records</span>
                                         </span>
                                     </label>
                                     <div class="record-types">
@@ -225,7 +230,8 @@
                                             Check DNS Propagation
                                             <span class="tooltip-wrapper">
                                                 <span class="tooltip-icon">?</span>
-                                                <span class="tooltip-text">Verify DNS changes across multiple global DNS servers (Google DNS, Cloudflare, OpenDNS, Quad9, etc.)</span>
+                                                <span class="tooltip-text">Verify DNS changes across multiple global DNS
+                                                    servers (Google DNS, Cloudflare, OpenDNS, Quad9, etc.)</span>
                                             </span>
                                         </span>
                                         <input type="checkbox" class="toggle-input" name="checkPropagation">
@@ -239,7 +245,8 @@
                                             Perform Reverse DNS Lookup
                                             <span class="tooltip-wrapper">
                                                 <span class="tooltip-icon">?</span>
-                                                <span class="tooltip-text">Automatic IP → hostname resolution using PTR records for network reconnaissance and validation</span>
+                                                <span class="tooltip-text">Automatic IP → hostname resolution using PTR
+                                                    records for network reconnaissance and validation</span>
                                             </span>
                                         </span>
                                         <input type="checkbox" checked class="toggle-input" name="reverseDNS">
@@ -253,7 +260,9 @@
                                             Enable DNS Enrichment
                                             <span class="tooltip-wrapper">
                                                 <span class="tooltip-icon">?</span>
-                                                <span class="tooltip-text">Intelligent SPF/DMARC/DKIM parsing, MX provider detection, email security scoring (0-100), and actionable recommendations</span>
+                                                <span class="tooltip-text">Intelligent SPF/DMARC/DKIM parsing, MX
+                                                    provider detection, email security scoring (0-100), and actionable
+                                                    recommendations</span>
                                             </span>
                                         </span>
                                         <input type="checkbox" class="toggle-input" name="enrichment">
@@ -267,7 +276,9 @@
                                             Enable TLS/SSL Inspection
                                             <span class="tooltip-wrapper">
                                                 <span class="tooltip-icon">?</span>
-                                                <span class="tooltip-text">Fetches live certificate metadata (issuer, SANs, expiry, cipher/protocol) and highlights risky configurations</span>
+                                                <span class="tooltip-text">Fetches live certificate metadata (issuer,
+                                                    SANs, expiry, cipher/protocol) and highlights risky
+                                                    configurations</span>
                                             </span>
                                         </span>
                                         <input type="checkbox" checked class="toggle-input" name="sslInspection">
@@ -280,10 +291,12 @@
                                         Query Timeout (ms)
                                         <span class="tooltip-wrapper">
                                             <span class="tooltip-icon">?</span>
-                                            <span class="tooltip-text">Configurable timeout settings for DNS queries (1000-30000ms)</span>
+                                            <span class="tooltip-text">Configurable timeout settings for DNS queries
+                                                (1000-30000ms)</span>
                                         </span>
                                     </label>
-                                    <input type="number" class="number-input" value="5000" name="timeout" min="1000" max="30000" step="100">
+                                    <input type="number" class="number-input" value="5000" name="timeout" min="1000"
+                                        max="30000" step="100">
                                 </div>
 
                                 <div class="option-group">
@@ -291,10 +304,12 @@
                                         Maximum Retries
                                         <span class="tooltip-wrapper">
                                             <span class="tooltip-icon">?</span>
-                                            <span class="tooltip-text">Built-in retry logic with exponential backoff for failed queries (0-10 attempts)</span>
+                                            <span class="tooltip-text">Built-in retry logic with exponential backoff for
+                                                failed queries (0-10 attempts)</span>
                                         </span>
                                     </label>
-                                    <input type="number" class="number-input" value="3" name="maxRetries" min="0" max="10">
+                                    <input type="number" class="number-input" value="3" name="maxRetries" min="0"
+                                        max="10">
                                 </div>
 
                                 <div class="option-group">
@@ -302,10 +317,12 @@
                                         Retry Delay (ms)
                                         <span class="tooltip-wrapper">
                                             <span class="tooltip-icon">?</span>
-                                            <span class="tooltip-text">Customizable delay between retry attempts (100-5000ms)</span>
+                                            <span class="tooltip-text">Customizable delay between retry attempts
+                                                (100-5000ms)</span>
                                         </span>
                                     </label>
-                                    <input type="number" class="number-input" value="1000" name="retryDelay" min="100" max="5000" step="100">
+                                    <input type="number" class="number-input" value="1000" name="retryDelay" min="100"
+                                        max="5000" step="100">
                                 </div>
                             </div>
                         </div>
@@ -339,8 +356,10 @@
                             Available on Apify and RapidAPI with simple REST access.
                         </p>
                         <div class="cta-actions">
-                            <a href="https://apify.com/njoylab/apify-dns?fpr=njoylab" target="_blank" class="cta-button cta-button-secondary">View on Apify</a>
-                            <a href="https://rapidapi.com/njoylab/api/dns-lookup-api-intelligence-security-analyzer" target="_blank" class="cta-button cta-button-secondary">View on RapidAPI</a>
+                            <a href="https://apify.com/njoylab/apify-dns?fpr=njoylab" target="_blank"
+                                class="cta-button cta-button-secondary">View on Apify</a>
+                            <a href="https://rapidapi.com/njoylab/api/dns-lookup-api-intelligence-security-analyzer"
+                                target="_blank" class="cta-button cta-button-secondary">View on RapidAPI</a>
                         </div>
                     </div>
                 </div>
@@ -354,12 +373,14 @@
                 <p class="footer-text">&copy; 2025 DNS Intelligence. Built for security professionals.</p>
                 <p class="footer-privacy">
                     <span>🔒</span>
-                    <span>Privacy-focused: Your search history is stored only in your browser and never synced to servers.</span>
+                    <span>Privacy-focused: Your search history is stored only in your browser and never synced to
+                        servers.</span>
                 </p>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?a=1"></script>
 </body>
+
 </html>
