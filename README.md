@@ -62,7 +62,7 @@ TURNSTILE_SITE_KEY=0x4AAAAAACIBHDOiy9i84iTV
 
 Optional API endpoint override:
 ```
-DNS_API_ENDPOINT=https://dnstool-api.echovalue.dev/
+DNS_API_ENDPOINT=https://<API_URL>
 ```
 
 

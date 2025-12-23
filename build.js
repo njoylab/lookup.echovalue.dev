@@ -10,8 +10,7 @@ const siteKey =
     '';
 
 const apiEndpoint =
-    process.env.DNS_API_ENDPOINT ||
-    'https://dnstool-api.echovalue.dev/';
+    process.env.DNS_API_ENDPOINT || '';
 
 const allowedExtensions = new Set([
     '.html',
