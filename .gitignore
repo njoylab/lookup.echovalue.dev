@@ -6,18 +6,6 @@ yarn-error.log*
 package-lock.json
 yarn.lock
 
-# Generated images (generate locally)
-og-image.png
-favicon.ico
-favicon-16x16.png
-favicon-32x32.png
-apple-touch-icon.png
-android-chrome-192x192.png
-android-chrome-512x512.png
-
-# Keep these (manual or template files)
-!favicon.svg
-!og-image-template.html
 
 # Editor directories and files
 .vscode/
