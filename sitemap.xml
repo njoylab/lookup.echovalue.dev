@@ -6,8 +6,8 @@
 
     <!-- Homepage -->
     <url>
-        <loc>https://dnstool.echovalue.dev/</loc>
-        <lastmod>2025-12-22</lastmod>
+        <loc>https://lookup.echovalue.dev/</loc>
+        <lastmod>2025-12-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
@@ -15,8 +15,8 @@
     <!-- Add more pages here as your site grows -->
     <!-- Example:
     <url>
-        <loc>https://dnstool.echovalue.dev/api</loc>
-        <lastmod>2025-12-22</lastmod>
+        <loc>https://lookup.echovalue.dev/api</loc>
+        <lastmod>2025-12-23</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>

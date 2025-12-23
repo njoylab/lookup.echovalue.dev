@@ -139,10 +139,13 @@ localStorage['dns-analyzer-history'] = [
 
 ## SEO & Meta
 
-**Update these before deployment:**
-1. `index.html` - Canonical URLs (search for `dnstool.echovalue.dev`)
-2. `sitemap.xml` - Domain URLs
-3. All Open Graph tags - Update domain and image paths
+**Domain:** `lookup.echovalue.dev` (all SEO meta tags and URLs have been updated)
+
+**Files containing domain references:**
+1. `index.html` - Canonical URLs, Open Graph tags, structured data
+2. `sitemap.xml` - Sitemap URLs
+3. `robots.txt` - Sitemap reference
+4. `og-image-template.html` - OG image template
 
 ## Scope of Contributions
 
