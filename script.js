@@ -145,6 +145,9 @@ const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
 const API_ENDPOINT = '__API_ENDPOINT__';
 
+// Store the current API response for JSON export
+let currentApiResponse = null;
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -526,14 +529,29 @@ form.addEventListener('submit', async (e) => {
 
 // Display results
 function displayResults(data) {
+    // Store the complete API response for JSON export
+    currentApiResponse = data;
+
     const { domain, lookupResult, propagationResults } = data;
     const { records, enrichment } = lookupResult;
 
     let html = `
         <div class="results-card">
             <div class="results-header">
-                <h2 class="results-title">Analysis Results</h2>
-                <div class="domain-badge">${domain}</div>
+                <div class="results-header-left">
+                    <h2 class="results-title">Analysis Results</h2>
+                </div>
+                <div class="results-header-right">
+                    <button class="json-action-btn" id="copyJsonBtn">
+                        <span>📋</span>
+                        <span>Copy JSON</span>
+                    </button>
+                    <button class="json-action-btn" id="downloadJsonBtn">
+                        <span>💾</span>
+                        <span>Download JSON</span>
+                    </button>
+                    <div class="domain-badge">${domain}</div>
+                </div>
             </div>
 
             ${renderEmailSecurity(enrichment)}
@@ -564,6 +582,18 @@ function displayResults(data) {
                 this.style.background = '';
             }, 2000);
         });
+    }
+
+    // Add event listeners for JSON export buttons
+    const copyJsonBtn = document.getElementById('copyJsonBtn');
+    const downloadJsonBtn = document.getElementById('downloadJsonBtn');
+
+    if (copyJsonBtn) {
+        copyJsonBtn.addEventListener('click', copyJsonToClipboard);
+    }
+
+    if (downloadJsonBtn) {
+        downloadJsonBtn.addEventListener('click', downloadJsonFile);
     }
 }
 
@@ -829,6 +859,74 @@ function downloadCalendarEvent(domain, expiryDate) {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(link.href);
+}
+
+// Copy JSON to clipboard
+function copyJsonToClipboard() {
+    if (!currentApiResponse) {
+        alert('No analysis data available');
+        return;
+    }
+
+    const jsonString = JSON.stringify(currentApiResponse, null, 2);
+
+    navigator.clipboard.writeText(jsonString).then(() => {
+        // Visual feedback
+        const btn = document.getElementById('copyJsonBtn');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<span>✓</span><span>Copied!</span>';
+        btn.style.background = 'var(--color-success)';
+        btn.style.borderColor = 'var(--color-success)';
+        btn.style.color = 'var(--color-bg)';
+
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+        }, 2000);
+    }).catch(err => {
+        alert('Failed to copy to clipboard. Please try again.');
+        console.error('Clipboard error:', err);
+    });
+}
+
+// Download JSON file
+function downloadJsonFile() {
+    if (!currentApiResponse) {
+        alert('No analysis data available');
+        return;
+    }
+
+    const jsonString = JSON.stringify(currentApiResponse, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+
+    // Generate filename with domain and timestamp
+    const domain = currentApiResponse.domain || 'unknown';
+    const timestamp = new Date().toISOString().split('T')[0];
+    link.download = `dns-analysis-${domain.replace(/[^a-z0-9]/gi, '-')}-${timestamp}.json`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(link.href);
+
+    // Visual feedback
+    const btn = document.getElementById('downloadJsonBtn');
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = '<span>✓</span><span>Downloaded!</span>';
+    btn.style.background = 'var(--color-success)';
+    btn.style.borderColor = 'var(--color-success)';
+    btn.style.color = 'var(--color-bg)';
+
+    setTimeout(() => {
+        btn.innerHTML = originalContent;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+    }, 2000);
 }
 
 // Render propagation results
