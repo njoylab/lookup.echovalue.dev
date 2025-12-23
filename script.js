@@ -19,9 +19,9 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function fetchWithTimeout(url, payload, timeoutMs, turnstileToken) {
+async function fetchWithTimeout(url, payload, turnstileToken) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const timeoutId = setTimeout(() => controller.abort(), 180000);
 
     try {
         const headers = {
@@ -75,21 +75,7 @@ async function callDnsApi(domain, options, turnstileToken) {
         includeMetadata: false
     };
 
-    let lastError = null;
-
-    for (let attempt = 0; attempt <= options.maxRetries; attempt++) {
-        try {
-            return await fetchWithTimeout(API_ENDPOINT, payload, options.timeout, turnstileToken);
-        } catch (error) {
-            lastError = error;
-            if (attempt >= options.maxRetries) {
-                break;
-            }
-            await sleep(options.retryDelay);
-        }
-    }
-
-    throw lastError || new Error('Request failed');
+    return await fetchWithTimeout(API_ENDPOINT, payload, turnstileToken);
 }
 
 function getTurnstileToken() {
