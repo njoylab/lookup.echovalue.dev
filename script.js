@@ -12,6 +12,312 @@ const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
 const API_ENDPOINT = '__API_ENDPOINT__';
 
+// Toast and Confirmation Elements
+const toastContainer = document.getElementById('toastContainer');
+const confirmationOverlay = document.getElementById('confirmationOverlay');
+const confirmationTitle = document.getElementById('confirmationTitle');
+const confirmationMessage = document.getElementById('confirmationMessage');
+const confirmationCancel = document.getElementById('confirmationCancel');
+const confirmationConfirm = document.getElementById('confirmationConfirm');
+
+// ===============================================
+// Toast Notification System
+// ===============================================
+
+let toastCounter = 0;
+
+const TOAST_TYPES = {
+    success: '✓',
+    error: '✗',
+    warning: '⚠',
+    info: 'ℹ'
+};
+
+/**
+ * Show a toast notification
+ * @param {string} message - The message to display
+ * @param {string} type - Toast type: 'success', 'error', 'warning', 'info'
+ * @param {number} duration - Auto-dismiss duration in ms (0 = no auto-dismiss)
+ * @returns {HTMLElement} The toast element
+ */
+function showToast(message, type = 'info', duration = 5000) {
+    const toastId = `toast-${++toastCounter}`;
+    const icon = TOAST_TYPES[type] || TOAST_TYPES.info;
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.id = toastId;
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+
+    toast.innerHTML = `
+        <span class="toast-icon" aria-hidden="true">${icon}</span>
+        <div class="toast-content">
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" aria-label="Close notification">×</button>
+        ${duration > 0 ? '<div class="toast-progress"></div>' : ''}
+    `;
+
+    toastContainer.appendChild(toast);
+
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.addEventListener('click', () => dismissToast(toast));
+
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    if (duration > 0) {
+        setTimeout(() => {
+            dismissToast(toast);
+        }, duration);
+    }
+
+    return toast;
+}
+
+/**
+ * Dismiss a toast notification
+ * @param {HTMLElement} toast - The toast element to dismiss
+ */
+function dismissToast(toast) {
+    if (!toast || !toast.classList.contains('toast')) return;
+
+    toast.classList.remove('show');
+    toast.classList.add('hide');
+
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 300);
+}
+
+/**
+ * Dismiss all toasts
+ */
+function dismissAllToasts() {
+    const toasts = toastContainer.querySelectorAll('.toast');
+    toasts.forEach(toast => dismissToast(toast));
+}
+
+// ===============================================
+// Confirmation Modal System
+// ===============================================
+
+let confirmResolve = null;
+
+/**
+ * Show a confirmation dialog
+ * @param {string} message - The confirmation message
+ * @param {string} title - The dialog title (optional)
+ * @returns {Promise<boolean>} Resolves to true if confirmed, false if cancelled
+ */
+function showConfirmation(message, title = 'Confirm Action') {
+    return new Promise((resolve) => {
+        confirmResolve = resolve;
+
+        confirmationTitle.textContent = title;
+        confirmationMessage.textContent = message;
+
+        confirmationOverlay.style.display = 'flex';
+        requestAnimationFrame(() => {
+            confirmationOverlay.classList.add('show');
+        });
+
+        setTimeout(() => {
+            confirmationConfirm.focus();
+        }, 100);
+    });
+}
+
+/**
+ * Hide the confirmation dialog
+ * @param {boolean} confirmed - Whether the action was confirmed
+ */
+function hideConfirmation(confirmed) {
+    confirmationOverlay.classList.remove('show');
+
+    setTimeout(() => {
+        confirmationOverlay.style.display = 'none';
+        if (confirmResolve) {
+            confirmResolve(confirmed);
+            confirmResolve = null;
+        }
+    }, 300);
+}
+
+confirmationCancel.addEventListener('click', () => hideConfirmation(false));
+confirmationConfirm.addEventListener('click', () => hideConfirmation(true));
+
+confirmationOverlay.addEventListener('click', (e) => {
+    if (e.target === confirmationOverlay) {
+        hideConfirmation(false);
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && confirmationOverlay.style.display === 'flex') {
+        hideConfirmation(false);
+    }
+});
+
+// ===============================================
+// Domain Validation System
+// ===============================================
+
+const analyzeBtn = document.getElementById('analyzeBtn');
+const domainError = document.getElementById('domain-error');
+
+const DOMAIN_REGEX_UNICODE = /^(?!:\/\/)([a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF-_]{1,63}\.)*[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF-_]{0,61}[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]\.[a-zA-Z]{2,63}$/;
+const VALIDATION_DEBOUNCE_MS = 300;
+
+let validationTimeout = null;
+let lastValidationState = null;
+
+/**
+ * Validates domain input and returns validation result
+ * @param {string} input - Raw domain input
+ * @returns {Object} { valid: boolean, message: string, cleaned: string }
+ */
+function validateDomain(input) {
+    if (!input || input.trim() === '') {
+        return { valid: true, message: '', cleaned: '' };
+    }
+
+    let cleaned = input.trim().toLowerCase();
+
+    // Remove protocol prefixes
+    cleaned = cleaned.replace(/^https?:\/\//i, '');
+    cleaned = cleaned.replace(/^ftp:\/\//i, '');
+
+    // Remove www. prefix
+    cleaned = cleaned.replace(/^www\./i, '');
+
+    // Remove trailing slashes and paths
+    cleaned = cleaned.split('/')[0];
+
+    // Remove port numbers
+    cleaned = cleaned.split(':')[0];
+
+    // Validation checks
+    if (cleaned.includes(' ')) {
+        return { valid: false, message: 'Domain cannot contain spaces', cleaned };
+    }
+
+    if (cleaned.length < 4) {
+        return { valid: false, message: 'Domain is too short (minimum 4 characters)', cleaned };
+    }
+
+    if (cleaned.length > 253) {
+        return { valid: false, message: 'Domain is too long (maximum 253 characters)', cleaned };
+    }
+
+    if (!/^[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF.-]+$/.test(cleaned)) {
+        return { valid: false, message: 'Domain contains invalid characters', cleaned };
+    }
+
+    if (cleaned.includes('..')) {
+        return { valid: false, message: 'Domain cannot have consecutive dots', cleaned };
+    }
+
+    if (/^[.-]|[.-]$/.test(cleaned)) {
+        return { valid: false, message: 'Domain cannot start or end with dots or hyphens', cleaned };
+    }
+
+    if (!DOMAIN_REGEX_UNICODE.test(cleaned)) {
+        return { valid: false, message: 'Invalid domain format', cleaned };
+    }
+
+    return { valid: true, message: '', cleaned };
+}
+
+/**
+ * Updates UI based on validation state
+ * @param {Object} validation - Validation result object
+ * @param {boolean} showNeutral - Whether to show neutral state for empty input
+ */
+function updateValidationUI(validation, showNeutral = false) {
+    const isEmpty = !domainInput.value.trim();
+
+    // Clear all states first
+    domainInput.classList.remove('valid', 'invalid');
+    domainError.classList.remove('show');
+    domainInput.setAttribute('aria-invalid', 'false');
+
+    if (isEmpty && showNeutral) {
+        analyzeBtn.disabled = false;
+        domainError.textContent = '';
+        lastValidationState = null;
+        return;
+    }
+
+    if (!validation.valid && !isEmpty) {
+        // Invalid state
+        domainInput.classList.add('invalid');
+        domainInput.setAttribute('aria-invalid', 'true');
+        domainError.textContent = validation.message;
+        domainError.classList.add('show');
+        analyzeBtn.disabled = true;
+        lastValidationState = false;
+    } else if (validation.valid && !isEmpty) {
+        // Valid state
+        domainInput.classList.add('valid');
+        domainError.textContent = '';
+        analyzeBtn.disabled = false;
+        lastValidationState = true;
+    } else {
+        // Default state (empty)
+        analyzeBtn.disabled = false;
+        domainError.textContent = '';
+        lastValidationState = null;
+    }
+}
+
+/**
+ * Handles real-time validation with debouncing
+ */
+function handleInputValidation() {
+    if (validationTimeout) {
+        clearTimeout(validationTimeout);
+    }
+
+    // Clear error immediately when user starts typing (if there was an error)
+    if (lastValidationState === false) {
+        domainInput.classList.remove('invalid');
+        domainError.classList.remove('show');
+        domainInput.setAttribute('aria-invalid', 'false');
+    }
+
+    // Debounce validation
+    validationTimeout = setTimeout(() => {
+        const validation = validateDomain(domainInput.value);
+        updateValidationUI(validation, true);
+
+        // Auto-clean domain if valid
+        if (validation.valid && validation.cleaned && validation.cleaned !== domainInput.value) {
+            domainInput.value = validation.cleaned;
+        }
+    }, VALIDATION_DEBOUNCE_MS);
+}
+
+// Real-time domain validation
+domainInput.addEventListener('input', handleInputValidation);
+
+// Clear validation state on focus (better UX)
+domainInput.addEventListener('focus', () => {
+    if (!domainInput.value.trim()) {
+        updateValidationUI({ valid: true, message: '', cleaned: '' }, true);
+    }
+});
+
+// Validate on blur
+domainInput.addEventListener('blur', () => {
+    const validation = validateDomain(domainInput.value);
+    updateValidationUI(validation, false);
+});
+
 // Store the current API response for JSON export
 let currentApiResponse = null;
 
@@ -179,10 +485,16 @@ function deleteHistoryItem(domain) {
     renderHistory();
 }
 
-function clearHistory() {
-    if (confirm('Are you sure you want to clear all search history?')) {
+async function clearHistory() {
+    const confirmed = await showConfirmation(
+        'Are you sure you want to clear all search history? This action cannot be undone.',
+        'Clear Search History'
+    );
+
+    if (confirmed) {
         localStorage.removeItem(HISTORY_KEY);
         renderHistory();
+        showToast('Search history cleared successfully', 'success', 3000);
     }
 }
 
@@ -272,6 +584,10 @@ function renderHistory() {
 function loadFromHistory(historyItem) {
     // Set domain
     domainInput.value = historyItem.domain;
+
+    // Trigger validation
+    const validation = validateDomain(historyItem.domain);
+    updateValidationUI(validation, true);
 
     // Set options if available
     if (historyItem.options) {
@@ -450,16 +766,31 @@ function stopLoadingAnimation(button) {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const domain = domainInput.value.trim();
+    const rawDomain = domainInput.value.trim();
+
+    // Validate domain
+    const validation = validateDomain(rawDomain);
+
+    if (!validation.valid) {
+        updateValidationUI(validation, false);
+        return;
+    }
+
+    // Use cleaned domain
+    const domain = validation.cleaned || rawDomain;
 
     if (!domain) {
-        alert('Please enter a domain name');
+        updateValidationUI({
+            valid: false,
+            message: 'Please enter a domain name',
+            cleaned: ''
+        }, false);
         return;
     }
 
     const turnstileToken = getTurnstileToken();
     if (!turnstileToken) {
-        alert('Please complete the Turnstile verification');
+        showToast('Please complete the Turnstile verification', 'warning', 5000);
         return;
     }
 
@@ -492,7 +823,7 @@ form.addEventListener('submit', async (e) => {
             resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
     } catch (error) {
-        alert(error?.message || 'Request failed');
+        showToast(error?.message || 'Request failed. Please try again.', 'error', 6000);
     } finally {
         // Stop loading animation
         stopLoadingAnimation(analyzeBtn);
@@ -843,7 +1174,7 @@ function downloadCalendarEvent(domain, expiryDate) {
 // Copy JSON to clipboard
 function copyJsonToClipboard() {
     if (!currentApiResponse) {
-        alert('No analysis data available');
+        showToast('No analysis data available to copy', 'warning', 4000);
         return;
     }
 
@@ -858,6 +1189,8 @@ function copyJsonToClipboard() {
         btn.style.borderColor = 'var(--color-success)';
         btn.style.color = 'var(--color-bg)';
 
+        showToast('JSON data copied to clipboard successfully', 'success', 3000);
+
         setTimeout(() => {
             btn.innerHTML = originalContent;
             btn.style.background = '';
@@ -865,7 +1198,7 @@ function copyJsonToClipboard() {
             btn.style.color = '';
         }, 2000);
     }).catch(err => {
-        alert('Failed to copy to clipboard. Please try again.');
+        showToast('Failed to copy to clipboard. Please try again.', 'error', 5000);
         console.error('Clipboard error:', err);
     });
 }
@@ -873,7 +1206,7 @@ function copyJsonToClipboard() {
 // Download JSON file
 function downloadJsonFile() {
     if (!currentApiResponse) {
-        alert('No analysis data available');
+        showToast('No analysis data available to download', 'warning', 4000);
         return;
     }
 
@@ -891,6 +1224,8 @@ function downloadJsonFile() {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(link.href);
+
+    showToast('JSON file downloaded successfully', 'success', 3000);
 
     // Visual feedback
     const btn = document.getElementById('downloadJsonBtn');
@@ -986,6 +1321,10 @@ function initializeFromURL() {
     if (domainParam) {
         // Fill the input field
         domainInput.value = domainParam.trim();
+
+        // Trigger validation
+        const validation = validateDomain(domainParam.trim());
+        updateValidationUI(validation, true);
     }
 }
 

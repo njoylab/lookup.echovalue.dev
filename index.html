@@ -59,7 +59,7 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css?a=4">
+    <link rel="stylesheet" href="styles.css?a=5">
 
     <!-- Sitemap Reference -->
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
@@ -102,6 +102,22 @@
                 to use this application.</p>
         </div>
     </noscript>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer" role="region" aria-live="polite" aria-label="Notifications"></div>
+
+    <!-- Confirmation Modal Container -->
+    <div class="confirmation-overlay" id="confirmationOverlay" style="display: none;">
+        <div class="confirmation-modal" role="dialog" aria-labelledby="confirmationTitle"
+            aria-describedby="confirmationMessage">
+            <h3 class="confirmation-title" id="confirmationTitle">Confirm Action</h3>
+            <p class="confirmation-message" id="confirmationMessage"></p>
+            <div class="confirmation-actions">
+                <button class="confirmation-btn confirmation-btn-cancel" id="confirmationCancel">Cancel</button>
+                <button class="confirmation-btn confirmation-btn-confirm" id="confirmationConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
 
     <div class="grain-overlay" aria-hidden="true"></div>
 
@@ -146,12 +162,18 @@
                             <label for="domain" class="input-label">Target Domain</label>
                             <div class="input-wrapper">
                                 <input type="text" id="domain" class="domain-input" placeholder="example.com"
-                                    autocomplete="off" spellcheck="false" />
-                                <button type="submit" class="analyze-btn">
+                                    autocomplete="off" spellcheck="false" aria-describedby="domain-error"
+                                    aria-invalid="false" />
+                                <div class="input-icons" aria-hidden="true">
+                                    <span class="input-icon input-icon-error" id="inputIconError">✕</span>
+                                    <span class="input-icon input-icon-valid" id="inputIconValid">✓</span>
+                                </div>
+                                <button type="submit" class="analyze-btn" id="analyzeBtn">
                                     <span class="btn-text">Analyze</span>
                                     <span class="btn-icon">→</span>
                                 </button>
                             </div>
+                            <div class="input-error" id="domain-error" role="alert" aria-live="polite"></div>
                         </div>
 
                         <div class="turnstile-wrapper">
@@ -382,7 +404,7 @@
         </div>
     </footer>
 
-    <script src="script.js?a=4"></script>
+    <script src="script.js?a=5"></script>
 </body>
 
 </html>
