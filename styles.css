@@ -648,6 +648,7 @@ body {
     max-height: 1000px;
     opacity: 1;
     padding-top: 2rem;
+    overflow: visible;
 }
 
 .options-grid {
