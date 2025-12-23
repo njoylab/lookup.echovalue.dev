@@ -1228,6 +1228,36 @@ body {
     to { transform: rotate(360deg); }
 }
 
+.loading-text {
+    margin-left: 0.5rem;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+}
+
+.loading-timer {
+    margin-left: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    opacity: 0.7;
+    font-weight: 600;
+}
+
+.analyze-btn.loading-active {
+    animation: loadingPulse 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes loadingPulse {
+    0%, 100% {
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+    }
+    50% {
+        box-shadow: 0 10px 40px rgba(245, 158, 11, 0.5);
+    }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .container {

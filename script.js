@@ -323,6 +323,129 @@ function loadFromHistory(historyItem) {
 // Clear history button
 clearHistoryBtn.addEventListener('click', clearHistory);
 
+// Loading messages (Codex-style)
+const LOADING_MESSAGES = {
+    base: [
+        'Initializing DNS query...',
+        'Querying authoritative nameservers...',
+        'Resolving DNS records...',
+        'Validating responses...',
+        'Almost there...',
+        'Finalizing analysis...'
+    ],
+    enrichment: [
+        'Analyzing email security configuration...',
+        'Parsing SPF, DMARC, DKIM records...',
+        'Enriching data with intelligence...',
+        'Gathering security insights...',
+        'Validating MX records...'
+    ],
+    ssl: [
+        'Inspecting SSL/TLS certificates...',
+        'Checking certificate chain...',
+        'Validating certificate expiry...'
+    ],
+    propagation: [
+        'Checking DNS propagation across global servers...',
+        'Querying DNS servers worldwide...',
+        'Verifying consistency...'
+    ],
+    reverse: [
+        'Performing reverse DNS lookups...',
+        'Resolving PTR records...'
+    ]
+};
+
+let loadingMessageInterval = null;
+let loadingTimerInterval = null;
+let startTime = null;
+
+function buildLoadingMessages(options) {
+    let messages = [...LOADING_MESSAGES.base];
+
+    if (options.enrichment) {
+        messages = messages.concat(LOADING_MESSAGES.enrichment);
+    }
+    if (options.sslInspection) {
+        messages = messages.concat(LOADING_MESSAGES.ssl);
+    }
+    if (options.checkPropagation) {
+        messages = messages.concat(LOADING_MESSAGES.propagation);
+    }
+    if (options.reverseDNS) {
+        messages = messages.concat(LOADING_MESSAGES.reverse);
+    }
+
+    // Shuffle for variety
+    return messages.sort(() => Math.random() - 0.5);
+}
+
+function formatElapsedTime(ms) {
+    const seconds = Math.floor(ms / 1000);
+    return `${seconds}s`;
+}
+
+function startLoadingAnimation(button, options) {
+    let messageIndex = 0;
+    startTime = Date.now();
+
+    const messages = buildLoadingMessages(options);
+
+    // Set initial message with timer
+    button.innerHTML = `
+        <span class="loading"></span>
+        <span class="loading-text">${messages[0]}</span>
+        <span class="loading-timer">0s</span>
+    `;
+
+    // Add pulsing class
+    button.classList.add('loading-active');
+
+    // Update timer every second
+    loadingTimerInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const timerSpan = button.querySelector('.loading-timer');
+        if (timerSpan) {
+            timerSpan.textContent = formatElapsedTime(elapsed);
+        }
+    }, 1000);
+
+    // Rotate messages every 2.5 seconds
+    loadingMessageInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % messages.length;
+        const textSpan = button.querySelector('.loading-text');
+        if (textSpan) {
+            // Fade out
+            textSpan.style.opacity = '0';
+
+            setTimeout(() => {
+                textSpan.textContent = messages[messageIndex];
+                // Fade in
+                textSpan.style.opacity = '1';
+            }, 200);
+        }
+    }, 2500);
+}
+
+function stopLoadingAnimation(button) {
+    if (loadingMessageInterval) {
+        clearInterval(loadingMessageInterval);
+        loadingMessageInterval = null;
+    }
+
+    if (loadingTimerInterval) {
+        clearInterval(loadingTimerInterval);
+        loadingTimerInterval = null;
+    }
+
+    // Remove pulsing class
+    if (button) {
+        button.classList.remove('loading-active');
+    }
+
+    startTime = null;
+}
+
 // Form submission
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -348,11 +471,11 @@ form.addEventListener('submit', async (e) => {
     url.searchParams.set('domain', domain);
     window.history.pushState({}, '', url);
 
-    // Show loading state
+    // Show loading state with animated messages
     const analyzeBtn = form.querySelector('.analyze-btn');
     const originalText = analyzeBtn.innerHTML;
-    analyzeBtn.innerHTML = '<span class="loading"></span><span style="margin-left: 0.5rem;">Analyzing...</span>';
     analyzeBtn.disabled = true;
+    startLoadingAnimation(analyzeBtn, options);
 
     try {
         const response = await callDnsApi(domain, options, turnstileToken);
@@ -371,6 +494,9 @@ form.addEventListener('submit', async (e) => {
     } catch (error) {
         alert(error?.message || 'Request failed');
     } finally {
+        // Stop loading animation
+        stopLoadingAnimation(analyzeBtn);
+
         // Reset Turnstile after every API call to generate new token
         if (window.turnstile && typeof window.turnstile.reset === 'function') {
             window.turnstile.reset();
