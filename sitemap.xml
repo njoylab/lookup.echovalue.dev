@@ -7,19 +7,25 @@
     <!-- Homepage -->
     <url>
         <loc>https://lookup.echovalue.dev/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2025-12-27</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
 
-    <!-- Add more pages here as your site grows -->
-    <!-- Example:
+    <!-- FAQ Page -->
     <url>
-        <loc>https://lookup.echovalue.dev/api</loc>
-        <lastmod>2025-12-23</lastmod>
+        <loc>https://lookup.echovalue.dev/faq.html</loc>
+        <lastmod>2025-12-27</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
-    -->
+
+    <!-- Terms and Conditions -->
+    <url>
+        <loc>https://lookup.echovalue.dev/terms.html</loc>
+        <lastmod>2025-12-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
 
 </urlset>
