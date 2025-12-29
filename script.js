@@ -871,7 +871,7 @@ function displayResults(data) {
             ${renderWarnings(warnings)}
             ${renderRecommendations(recommendations)}
             ${renderEmailSecurity(enrichment)}
-            ${renderDNSRecords(records)}
+            ${renderDNSRecords(records, enrichment)}
             ${renderSSLCertificate(enrichment)}
             ${renderPropagation(propagationResults)}
         </div>
@@ -1062,8 +1062,24 @@ function renderEmailSecurity(enrichment) {
     `;
 }
 
+// Helper function to render TTL with analysis description
+function renderTTL(ttl, recordType, enrichment) {
+    if (!ttl) return '';
+
+    const ttlAnalysis = enrichment?.ttlAnalysis?.[recordType];
+    const description = ttlAnalysis?.description;
+
+    let html = `<span style="color: var(--color-text-muted); margin-left: 1rem;">TTL: ${ttl}s</span>`;
+
+    if (description) {
+        html += `<div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: 0.25rem; font-style: italic;">${description}</div>`;
+    }
+
+    return html;
+}
+
 // Render DNS records
-function renderDNSRecords(records) {
+function renderDNSRecords(records, enrichment) {
     if (!records) return '';
 
     let recordsHtml = '';
@@ -1081,7 +1097,7 @@ function renderDNSRecords(records) {
                         <div class="record-item">
                             <span class="record-type">A</span>
                             <span>${r.address}</span>
-                            ${r.ttl ? `<span style="color: var(--color-text-muted); margin-left: 1rem;">TTL: ${r.ttl}s</span>` : ''}
+                            ${renderTTL(r.ttl, 'A', enrichment)}
                         </div>
                     `).join('')}
                 </div>
@@ -1102,7 +1118,7 @@ function renderDNSRecords(records) {
                         <div class="record-item">
                             <span class="record-type">AAAA</span>
                             <span>${r.address}</span>
-                            ${r.ttl ? `<span style="color: var(--color-text-muted); margin-left: 1rem;">TTL: ${r.ttl}s</span>` : ''}
+                            ${renderTTL(r.ttl, 'AAAA', enrichment)}
                         </div>
                     `).join('')}
                 </div>
@@ -1124,6 +1140,7 @@ function renderDNSRecords(records) {
                             <span class="record-type">MX</span>
                             <span>${r.exchange}</span>
                             <span style="color: var(--color-text-muted); margin-left: 1rem;">Priority: ${r.priority}</span>
+                            ${renderTTL(r.ttl, 'MX', enrichment)}
                         </div>
                     `).join('')}
                 </div>
@@ -1144,6 +1161,7 @@ function renderDNSRecords(records) {
                         <div class="record-item">
                             <span class="record-type">NS</span>
                             <span>${r.value}</span>
+                            ${renderTTL(r.ttl, 'NS', enrichment)}
                         </div>
                     `).join('')}
                 </div>
@@ -1164,6 +1182,7 @@ function renderDNSRecords(records) {
                         <div class="record-item">
                             <span class="record-type">TXT</span>
                             <span style="word-break: break-all;">${r.entries.join(' ')}</span>
+                            ${renderTTL(r.ttl, 'TXT', enrichment)}
                         </div>
                     `).join('')}
                     ${records.TXT.length > 3 ? `
@@ -1195,6 +1214,20 @@ function renderSSLCertificate(enrichment) {
     const warningBadge = createContextBadge(warnings, 'warning');
     const recommendationBadge = createContextBadge(recommendations, 'recommendation');
 
+    // Prepare SAN display
+    const sans = certificate.subjectAlternativeNames;
+    let sanDisplay = 'N/A';
+    if (sans && Array.isArray(sans) && sans.length > 0) {
+        if (sans.length <= 5) {
+            // Show all if 5 or less
+            sanDisplay = sans.map(san => `<span style="display: inline-block; background: var(--color-bg-elevated); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.125rem; font-size: 0.85rem; font-family: var(--font-mono);">${san}</span>`).join(' ');
+        } else {
+            // Show first 4 and count
+            const firstFour = sans.slice(0, 4).map(san => `<span style="display: inline-block; background: var(--color-bg-elevated); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.125rem; font-size: 0.85rem; font-family: var(--font-mono);">${san}</span>`).join(' ');
+            sanDisplay = `${firstFour} <span style="color: var(--color-text-muted); font-size: 0.85rem;">+${sans.length - 4} more</span>`;
+        }
+    }
+
     return `
         <div class="results-section">
             <h3 class="section-title">
@@ -1207,6 +1240,12 @@ function renderSSLCertificate(enrichment) {
                 <div class="data-item">
                     <div class="data-label">Common Name</div>
                     <div class="data-value">${certificate.subject?.commonName || 'N/A'}</div>
+                </div>
+                <div class="data-item">
+                    <div class="data-label">Subject Alternative Names</div>
+                    <div class="data-value" style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+                        ${sanDisplay}
+                    </div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">Issuer</div>
