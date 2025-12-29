@@ -843,7 +843,7 @@ function displayResults(data) {
     currentApiResponse = data;
 
     const { domain, lookupResult, propagationResults } = data;
-    const { records, enrichment } = lookupResult;
+    const { records, enrichment, warnings, recommendations } = lookupResult;
 
     let html = `
         <div class="results-card">
@@ -864,6 +864,8 @@ function displayResults(data) {
                 </div>
             </div>
 
+            ${renderWarnings(warnings)}
+            ${renderRecommendations(recommendations)}
             ${renderEmailSecurity(enrichment)}
             ${renderDNSRecords(records)}
             ${renderSSLCertificate(enrichment)}
@@ -907,17 +909,92 @@ function displayResults(data) {
     }
 }
 
+// Helper function to create contextual badge with tooltip
+function createContextBadge(items, type = 'warning') {
+    if (!items || items.length === 0) return '';
+
+    const icon = type === 'warning' ? '⚠' : '💡';
+    const label = type === 'warning' ? 'Warning' : 'Tip';
+    const labelPlural = type === 'warning' ? 'Warnings' : 'Tips';
+    const badgeClass = type === 'warning' ? 'badge-warning' : 'badge-recommendation';
+
+    const displayLabel = items.length === 1 ? label : labelPlural;
+
+    return `
+        <span class="context-badge ${badgeClass}">
+            <span class="context-badge-icon">${icon}</span>
+            <span class="context-badge-count">${items.length}</span>
+            <span>${displayLabel}</span>
+            <div class="badge-tooltip">
+                <ul class="badge-tooltip-list">
+                    ${items.map(item => `<li class="badge-tooltip-item">${item}</li>`).join('')}
+                </ul>
+            </div>
+        </span>
+    `;
+}
+
+// Render warnings section
+function renderWarnings(warnings) {
+    if (!warnings || warnings.length === 0) return '';
+
+    return `
+        <div class="results-section">
+            <h3 class="section-title">
+                <span class="section-icon">⚠️</span>
+                Security Warnings
+            </h3>
+            <div class="record-list">
+                ${warnings.map(warning => `
+                    <div class="record-item" style="color: var(--color-warning); border-left: 3px solid var(--color-warning); padding-left: 1rem;">
+                        <span style="margin-right: 0.5rem;">⚠</span>
+                        <span>${warning}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+// Render recommendations section
+function renderRecommendations(recommendations) {
+    if (!recommendations || recommendations.length === 0) return '';
+
+    return `
+        <div class="results-section">
+            <h3 class="section-title">
+                <span class="section-icon">💡</span>
+                Security Recommendations
+            </h3>
+            <div class="record-list">
+                ${recommendations.map(recommendation => `
+                    <div class="record-item" style="color: var(--color-accent); border-left: 3px solid var(--color-accent); padding-left: 1rem;">
+                        <span style="margin-right: 0.5rem;">→</span>
+                        <span>${recommendation}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
 // Render email security section
 function renderEmailSecurity(enrichment) {
     if (!enrichment?.emailSecurity) return '';
 
-    const { score, spf, dmarc, mx } = enrichment.emailSecurity;
+    const { score, spf, dmarc, mx, warnings, recommendations } = enrichment.emailSecurity;
+
+    // Create contextual badges for warnings and recommendations
+    const warningBadge = createContextBadge(warnings, 'warning');
+    const recommendationBadge = createContextBadge(recommendations, 'recommendation');
 
     return `
         <div class="results-section">
             <h3 class="section-title">
                 <span class="section-icon">🔒</span>
                 Email Security Analysis
+                ${warningBadge}
+                ${recommendationBadge}
             </h3>
             <div class="data-grid">
                 <div class="data-item">
@@ -1066,7 +1143,7 @@ function renderDNSRecords(records) {
 function renderSSLCertificate(enrichment) {
     if (!enrichment?.ssl?.certificate) return '';
 
-    const { certificate } = enrichment.ssl;
+    const { certificate, warnings, recommendations } = enrichment.ssl;
     const daysColor = certificate.daysUntilExpiry > 30 ? 'var(--color-success)' :
         certificate.daysUntilExpiry > 7 ? 'var(--color-warning)' : 'var(--color-error)';
 
@@ -1074,11 +1151,17 @@ function renderSSLCertificate(enrichment) {
     const domain = certificate.subject?.commonName || 'Unknown domain';
     const certId = `cert-${Date.now()}`; // Unique ID for the calendar button
 
+    // Create contextual badges for warnings and recommendations
+    const warningBadge = createContextBadge(warnings, 'warning');
+    const recommendationBadge = createContextBadge(recommendations, 'recommendation');
+
     return `
         <div class="results-section">
             <h3 class="section-title">
                 <span class="section-icon">🔐</span>
                 SSL/TLS Certificate
+                ${warningBadge}
+                ${recommendationBadge}
             </h3>
             <div class="data-grid">
                 <div class="data-item">
