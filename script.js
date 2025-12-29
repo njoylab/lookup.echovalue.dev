@@ -997,6 +997,35 @@ function renderEmailSecurity(enrichment) {
     const warningBadge = createContextBadge(warnings, 'warning');
     const recommendationBadge = createContextBadge(recommendations, 'recommendation');
 
+    // Determine security score color and icon
+    let scoreColor = 'var(--color-success)';
+    let scoreIcon = '✓';
+    if (score < 50) {
+        scoreColor = 'var(--color-error)';
+        scoreIcon = '✗';
+    } else if (score < 80) {
+        scoreColor = 'var(--color-warning)';
+        scoreIcon = '⚠';
+    }
+
+    // Determine DMARC policy color and icon
+    const dmarcPolicy = dmarc?.policy?.toLowerCase() || 'none';
+    let dmarcColor = 'var(--color-text-secondary)';
+    let dmarcIcon = '';
+    let dmarcText = dmarc?.policy || 'Not configured';
+
+    if (dmarcPolicy === 'reject') {
+        dmarcColor = 'var(--color-success)';
+        dmarcIcon = '✓';
+    } else if (dmarcPolicy === 'quarantine') {
+        dmarcColor = 'var(--color-warning)';
+        dmarcIcon = '⚠';
+    } else if (dmarcPolicy === 'none' || !dmarc?.policy) {
+        dmarcColor = 'var(--color-error)';
+        dmarcIcon = '✗';
+        dmarcText = dmarcPolicy === 'none' ? 'None (Not protected)' : 'Not configured';
+    }
+
     return `
         <div class="results-section">
             <h3 class="section-title">
@@ -1008,7 +1037,9 @@ function renderEmailSecurity(enrichment) {
             <div class="data-grid">
                 <div class="data-item">
                     <div class="data-label">Security Score</div>
-                    <div class="security-score">${score}/100</div>
+                    <div class="data-value" style="color: ${scoreColor}; font-weight: 600;">
+                        ${scoreIcon} ${score}/100
+                    </div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">SPF Record</div>
@@ -1018,8 +1049,8 @@ function renderEmailSecurity(enrichment) {
                 </div>
                 <div class="data-item">
                     <div class="data-label">DMARC Policy</div>
-                    <div class="data-value" style="color: var(--color-success)">
-                        ${dmarc?.policy || 'Not configured'}
+                    <div class="data-value" style="color: ${dmarcColor}">
+                        ${dmarcIcon} ${dmarcText}
                     </div>
                 </div>
                 <div class="data-item">
