@@ -856,6 +856,10 @@ function displayResults(data) {
                         <span>📋</span>
                         <span>Copy JSON</span>
                     </button>
+                    <button class="json-action-btn" id="viewJsonBtn">
+                        <span>👁️</span>
+                        <span>View JSON</span>
+                    </button>
                     <button class="json-action-btn" id="downloadJsonBtn">
                         <span>💾</span>
                         <span>Download JSON</span>
@@ -898,10 +902,15 @@ function displayResults(data) {
 
     // Add event listeners for JSON export buttons
     const copyJsonBtn = document.getElementById('copyJsonBtn');
+    const viewJsonBtn = document.getElementById('viewJsonBtn');
     const downloadJsonBtn = document.getElementById('downloadJsonBtn');
 
     if (copyJsonBtn) {
         copyJsonBtn.addEventListener('click', copyJsonToClipboard);
+    }
+
+    if (viewJsonBtn) {
+        viewJsonBtn.addEventListener('click', viewJsonFile);
     }
 
     if (downloadJsonBtn) {
@@ -1284,6 +1293,50 @@ function copyJsonToClipboard() {
         showToast('Failed to copy to clipboard. Please try again.', 'error', 5000);
         console.error('Clipboard error:', err);
     });
+}
+
+// View JSON in external viewer
+function viewJsonFile() {
+    if (!currentApiResponse) {
+        showToast('No analysis data available to view', 'warning', 4000);
+        return;
+    }
+
+    try {
+        // Compress JSON using LZString
+        const jsonString = JSON.stringify(currentApiResponse);
+        const compressed = LZString.compressToEncodedURIComponent(jsonString);
+
+        // Create a temporary link and click it (prevents popup blockers)
+        const url = `https://jsonlint.echovalue.dev/?json=${compressed}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast('Opening JSON viewer in new tab...', 'success', 3000);
+
+        // Visual feedback
+        const btn = document.getElementById('viewJsonBtn');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<span>✓</span><span>Opened!</span>';
+        btn.style.background = 'var(--color-success)';
+        btn.style.borderColor = 'var(--color-success)';
+        btn.style.color = 'var(--color-bg)';
+
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+        }, 2000);
+    } catch (error) {
+        showToast('Failed to compress JSON. Please try again.', 'error', 5000);
+        console.error('Compression error:', error);
+    }
 }
 
 // Download JSON file
