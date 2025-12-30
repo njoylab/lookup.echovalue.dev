@@ -20,6 +20,17 @@ const confirmationMessage = document.getElementById('confirmationMessage');
 const confirmationCancel = document.getElementById('confirmationCancel');
 const confirmationConfirm = document.getElementById('confirmationConfirm');
 
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+const escapeAttribute = escapeHtml;
+
 // ===============================================
 // Toast Notification System
 // ===============================================
@@ -44,6 +55,8 @@ function showToast(message, type = 'info', duration = 5000) {
     const toastId = `toast-${++toastCounter}`;
     const icon = TOAST_TYPES[type] || TOAST_TYPES.info;
 
+    const safeMessage = escapeHtml(message);
+
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.id = toastId;
@@ -53,7 +66,7 @@ function showToast(message, type = 'info', duration = 5000) {
     toast.innerHTML = `
         <span class="toast-icon" aria-hidden="true">${icon}</span>
         <div class="toast-content">
-            <div class="toast-message">${message}</div>
+            <div class="toast-message">${safeMessage}</div>
         </div>
         <button class="toast-close" aria-label="Close notification">×</button>
         ${duration > 0 ? '<div class="toast-progress"></div>' : ''}
@@ -239,6 +252,11 @@ function validateDomain(input) {
  * @param {boolean} showNeutral - Whether to show neutral state for empty input
  */
 function updateValidationUI(validation, showNeutral = false) {
+    if (!API_ENDPOINT) {
+        analyzeBtn.disabled = true;
+        return;
+    }
+
     const isEmpty = !domainInput.value.trim();
 
     // Clear all states first
@@ -544,18 +562,18 @@ function renderHistory() {
     historyList.innerHTML = history.map(item => {
         const optionsCount = getOptionsCount(item.options);
         return `
-            <div class="history-item" data-domain="${item.domain}">
+            <div class="history-item" data-domain="${escapeAttribute(item.domain)}">
                 <div class="history-item-main">
-                    <div class="history-item-domain">${item.domain}</div>
+                    <div class="history-item-domain">${escapeHtml(item.domain)}</div>
                     <div class="history-item-meta">
                         <span class="history-item-date">
                             <span>📅</span>
-                            <span>${formatDate(item.timestamp)}</span>
+                            <span>${escapeHtml(formatDate(item.timestamp))}</span>
                         </span>
                         ${optionsCount > 0 ? `<span class="history-item-options">${optionsCount} options</span>` : ''}
                     </div>
                 </div>
-                <button class="history-item-delete" data-domain="${item.domain}" title="Delete">×</button>
+                <button class="history-item-delete" data-domain="${escapeAttribute(item.domain)}" title="Delete">×</button>
             </div>
         `;
     }).join('');
@@ -766,6 +784,11 @@ function stopLoadingAnimation(button) {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    if (!API_ENDPOINT) {
+        showToast('Service unavailable. Please try again later.', 'error', 6000);
+        return;
+    }
+
     const rawDomain = domainInput.value.trim();
 
     // Validate domain
@@ -864,7 +887,7 @@ function displayResults(data) {
                         <span>💾</span>
                         <span>Download JSON</span>
                     </button>
-                    <div class="domain-badge">${domain}</div>
+                    <div class="domain-badge">${escapeHtml(domain)}</div>
                 </div>
             </div>
 
@@ -936,7 +959,7 @@ function createContextBadge(items, type = 'warning') {
             <span>${displayLabel}</span>
             <div class="badge-tooltip">
                 <ul class="badge-tooltip-list">
-                    ${items.map(item => `<li class="badge-tooltip-item">${item}</li>`).join('')}
+                    ${items.map(item => `<li class="badge-tooltip-item">${escapeHtml(item)}</li>`).join('')}
                 </ul>
             </div>
         </span>
@@ -957,7 +980,7 @@ function renderWarnings(warnings) {
                 ${warnings.map(warning => `
                     <div class="record-item" style="color: var(--color-warning); border-left: 3px solid var(--color-warning); padding-left: 1rem;">
                         <span style="margin-right: 0.5rem;">⚠</span>
-                        <span>${warning}</span>
+                        <span>${escapeHtml(warning)}</span>
                     </div>
                 `).join('')}
             </div>
@@ -979,7 +1002,7 @@ function renderRecommendations(recommendations) {
                 ${recommendations.map(recommendation => `
                     <div class="record-item" style="color: var(--color-accent); border-left: 3px solid var(--color-accent); padding-left: 1rem;">
                         <span style="margin-right: 0.5rem;">→</span>
-                        <span>${recommendation}</span>
+                        <span>${escapeHtml(recommendation)}</span>
                     </div>
                 `).join('')}
             </div>
@@ -1050,12 +1073,12 @@ function renderEmailSecurity(enrichment) {
                 <div class="data-item">
                     <div class="data-label">DMARC Policy</div>
                     <div class="data-value" style="color: ${dmarcColor}">
-                        ${dmarcIcon} ${dmarcText}
+                        ${dmarcIcon} ${escapeHtml(dmarcText)}
                     </div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">Email Provider</div>
-                    <div class="data-value">${mx?.provider?.name || 'Unknown'}</div>
+                    <div class="data-value">${escapeHtml(mx?.provider?.name || 'Unknown')}</div>
                 </div>
             </div>
         </div>
@@ -1064,15 +1087,15 @@ function renderEmailSecurity(enrichment) {
 
 // Helper function to render TTL with analysis description
 function renderTTL(ttl, recordType, enrichment) {
-    if (!ttl) return '';
+    if (ttl == null) return '';
 
     const ttlAnalysis = enrichment?.ttlAnalysis?.[recordType];
     const description = ttlAnalysis?.description;
 
-    let html = `<span style="color: var(--color-text-muted); margin-left: 1rem;">TTL: ${ttl}s</span>`;
+    let html = `<span style="color: var(--color-text-muted); margin-left: 1rem;">TTL: ${escapeHtml(ttl)}s</span>`;
 
     if (description) {
-        html += `<div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: 0.25rem; font-style: italic;">${description}</div>`;
+        html += `<div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: 0.25rem; font-style: italic;">${escapeHtml(description)}</div>`;
     }
 
     return html;
@@ -1096,7 +1119,7 @@ function renderDNSRecords(records, enrichment) {
                     ${records.A.map(r => `
                         <div class="record-item">
                             <span class="record-type">A</span>
-                            <span>${r.address}</span>
+                            <span>${escapeHtml(r.address)}</span>
                             ${renderTTL(r.ttl, 'A', enrichment)}
                         </div>
                     `).join('')}
@@ -1117,7 +1140,7 @@ function renderDNSRecords(records, enrichment) {
                     ${records.AAAA.map(r => `
                         <div class="record-item">
                             <span class="record-type">AAAA</span>
-                            <span>${r.address}</span>
+                            <span>${escapeHtml(r.address)}</span>
                             ${renderTTL(r.ttl, 'AAAA', enrichment)}
                         </div>
                     `).join('')}
@@ -1138,8 +1161,8 @@ function renderDNSRecords(records, enrichment) {
                     ${records.MX.map(r => `
                         <div class="record-item">
                             <span class="record-type">MX</span>
-                            <span>${r.exchange}</span>
-                            <span style="color: var(--color-text-muted); margin-left: 1rem;">Priority: ${r.priority}</span>
+                            <span>${escapeHtml(r.exchange)}</span>
+                            <span style="color: var(--color-text-muted); margin-left: 1rem;">Priority: ${escapeHtml(r.priority)}</span>
                             ${renderTTL(r.ttl, 'MX', enrichment)}
                         </div>
                     `).join('')}
@@ -1160,7 +1183,7 @@ function renderDNSRecords(records, enrichment) {
                     ${records.NS.map(r => `
                         <div class="record-item">
                             <span class="record-type">NS</span>
-                            <span>${r.value}</span>
+                            <span>${escapeHtml(r.value)}</span>
                             ${renderTTL(r.ttl, 'NS', enrichment)}
                         </div>
                     `).join('')}
@@ -1181,7 +1204,7 @@ function renderDNSRecords(records, enrichment) {
                     ${records.TXT.slice(0, 3).map(r => `
                         <div class="record-item">
                             <span class="record-type">TXT</span>
-                            <span style="word-break: break-all;">${r.entries.join(' ')}</span>
+                            <span style="word-break: break-all;">${r.entries.map(entry => escapeHtml(entry)).join(' ')}</span>
                             ${renderTTL(r.ttl, 'TXT', enrichment)}
                         </div>
                     `).join('')}
@@ -1220,10 +1243,10 @@ function renderSSLCertificate(enrichment) {
     if (sans && Array.isArray(sans) && sans.length > 0) {
         if (sans.length <= 5) {
             // Show all if 5 or less
-            sanDisplay = sans.map(san => `<span style="display: inline-block; background: var(--color-bg-elevated); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.125rem; font-size: 0.85rem; font-family: var(--font-mono);">${san}</span>`).join(' ');
+            sanDisplay = sans.map(san => `<span style="display: inline-block; background: var(--color-bg-elevated); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.125rem; font-size: 0.85rem; font-family: var(--font-mono);">${escapeHtml(san)}</span>`).join(' ');
         } else {
             // Show first 4 and count
-            const firstFour = sans.slice(0, 4).map(san => `<span style="display: inline-block; background: var(--color-bg-elevated); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.125rem; font-size: 0.85rem; font-family: var(--font-mono);">${san}</span>`).join(' ');
+            const firstFour = sans.slice(0, 4).map(san => `<span style="display: inline-block; background: var(--color-bg-elevated); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.125rem; font-size: 0.85rem; font-family: var(--font-mono);">${escapeHtml(san)}</span>`).join(' ');
             sanDisplay = `${firstFour} <span style="color: var(--color-text-muted); font-size: 0.85rem;">+${sans.length - 4} more</span>`;
         }
     }
@@ -1239,7 +1262,7 @@ function renderSSLCertificate(enrichment) {
             <div class="data-grid">
                 <div class="data-item">
                     <div class="data-label">Common Name</div>
-                    <div class="data-value">${certificate.subject?.commonName || 'N/A'}</div>
+                    <div class="data-value">${escapeHtml(certificate.subject?.commonName || 'N/A')}</div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">Subject Alternative Names</div>
@@ -1249,14 +1272,14 @@ function renderSSLCertificate(enrichment) {
                 </div>
                 <div class="data-item">
                     <div class="data-label">Issuer</div>
-                    <div class="data-value">${certificate.issuer?.organization || certificate.issuer?.commonName || 'N/A'}</div>
+                    <div class="data-value">${escapeHtml(certificate.issuer?.organization || certificate.issuer?.commonName || 'N/A')}</div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">Valid Until</div>
                     <div class="data-value" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                        <span>${certificate.validTo || 'N/A'}</span>
+                        <span>${escapeHtml(certificate.validTo || 'N/A')}</span>
                         ${certificate.validTo ? `
-                            <button class="calendar-btn" id="${certId}" data-domain="${domain}" data-date="${certificate.validTo}">
+                            <button class="calendar-btn" id="${certId}" data-domain="${escapeAttribute(domain)}" data-date="${escapeAttribute(certificate.validTo)}">
                                 <span>📅</span>
                                 <span>Add reminder</span>
                             </button>
@@ -1266,7 +1289,7 @@ function renderSSLCertificate(enrichment) {
                 <div class="data-item">
                     <div class="data-label">Days Until Expiry</div>
                     <div class="data-value" style="color: ${daysColor}">
-                        ${certificate.daysUntilExpiry || 'N/A'} days
+                        ${escapeHtml(certificate.daysUntilExpiry || 'N/A')} days
                     </div>
                 </div>
             </div>
@@ -1462,10 +1485,10 @@ function renderPropagation(propagationResults) {
             <div class="data-grid">
                 ${propagationResults.map(result => `
                     <div class="data-item">
-                        <div class="data-label">${result.recordType} Record</div>
+                        <div class="data-label">${escapeHtml(result.recordType)} Record</div>
                         <div class="propagation-status ${result.isPropagated ? 'success' : 'warning'}">
                             <span>${result.isPropagated ? '✓' : '⚠'}</span>
-                            <span>${result.consistencyPercentage}% consistent</span>
+                            <span>${escapeHtml(result.consistencyPercentage)}% consistent</span>
                         </div>
                     </div>
                 `).join('')}
@@ -1521,6 +1544,12 @@ function getURLParameter(name) {
 function initializeFromURL() {
     // Load history
     renderHistory();
+
+    if (!API_ENDPOINT) {
+        analyzeBtn.disabled = true;
+        domainError.textContent = 'Service unavailable. Please try again later.';
+        domainError.classList.add('show');
+    }
 
     const domainParam = getURLParameter('domain');
 
