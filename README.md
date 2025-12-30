@@ -68,7 +68,6 @@ DNS_API_ENDPOINT=https://<API_URL>
 
 ## Privacy
 
-- ✅ All processing happens in your browser
 - ✅ No server-side data collection
 - ✅ Search history stored locally only (LocalStorage)
 - ✅ No tracking or analytics
