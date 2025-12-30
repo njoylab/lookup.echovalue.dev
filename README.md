@@ -6,6 +6,11 @@ A privacy-first DNS lookup tool with advanced security analysis, email security 
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
+## MCP
+
+Use the DNS tool as an MCP endpoint via Apify:
+[mcp.apify.com/?tools=njoylab/apify-dns](https://mcp.apify.com/?tools=njoylab/apify-dns)
+
 ## Features
 
 - 🔍 **DNS Lookup** - A, AAAA, MX, NS, TXT, CNAME records
