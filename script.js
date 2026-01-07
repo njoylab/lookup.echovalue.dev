@@ -184,14 +184,41 @@ const analyzeBtn = document.getElementById('analyzeBtn');
 const domainError = document.getElementById('domain-error');
 
 const DOMAIN_REGEX_UNICODE = /^(?!:\/\/)([a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF-_]{1,63}\.)*[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF-_]{0,61}[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]\.[a-zA-Z]{2,63}$/;
+const IPV4_REGEX = /^(\d{1,3}\.){3}\d{1,3}$/;
+const IPV6_REGEX = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
 const VALIDATION_DEBOUNCE_MS = 300;
 
 let validationTimeout = null;
 let lastValidationState = null;
 
 /**
+ * Validates IPv4 address
+ * @param {string} ip - IPv4 address
+ * @returns {boolean} True if valid IPv4
+ */
+function isValidIPv4(ip) {
+    if (!IPV4_REGEX.test(ip)) return false;
+
+    const octets = ip.split('.');
+    return octets.every(octet => {
+        const num = parseInt(octet, 10);
+        return num >= 0 && num <= 255;
+    });
+}
+
+/**
+ * Validates IPv6 address
+ * @param {string} ip - IPv6 address
+ * @returns {boolean} True if valid IPv6
+ */
+function isValidIPv6(ip) {
+    return IPV6_REGEX.test(ip);
+}
+
+/**
  * Validates domain input and returns validation result
- * @param {string} input - Raw domain input
+ * Supports domains, IPv4, and IPv6 addresses
+ * @param {string} input - Raw domain or IP input
  * @returns {Object} { valid: boolean, message: string, cleaned: string }
  */
 function validateDomain(input) {
@@ -199,22 +226,52 @@ function validateDomain(input) {
         return { valid: true, message: '', cleaned: '' };
     }
 
-    let cleaned = input.trim().toLowerCase();
+    let cleaned = input.trim();
+
+    // Check if it's an IPv6 address (contains colons)
+    if (cleaned.includes(':')) {
+        // For IPv6, preserve case but remove protocol and path
+        cleaned = cleaned.replace(/^https?:\/\//i, '');
+        cleaned = cleaned.replace(/^ftp:\/\//i, '');
+        cleaned = cleaned.split('/')[0];
+
+        // Remove brackets if present (e.g., [::1])
+        cleaned = cleaned.replace(/^\[|\]$/g, '');
+
+        if (isValidIPv6(cleaned)) {
+            return { valid: true, message: '', cleaned };
+        }
+        return { valid: false, message: 'Invalid IPv6 address format', cleaned };
+    }
+
+    // Convert to lowercase for domain/IPv4 processing
+    cleaned = cleaned.toLowerCase();
 
     // Remove protocol prefixes
     cleaned = cleaned.replace(/^https?:\/\//i, '');
     cleaned = cleaned.replace(/^ftp:\/\//i, '');
 
-    // Remove www. prefix
-    cleaned = cleaned.replace(/^www\./i, '');
-
     // Remove trailing slashes and paths
     cleaned = cleaned.split('/')[0];
 
-    // Remove port numbers
-    cleaned = cleaned.split(':')[0];
+    // For IPv4, don't remove port numbers yet - check first
+    const withoutPort = cleaned.split(':')[0];
 
-    // Validation checks
+    // Check if it's an IPv4 address
+    if (IPV4_REGEX.test(withoutPort)) {
+        if (isValidIPv4(withoutPort)) {
+            return { valid: true, message: '', cleaned: withoutPort };
+        }
+        return { valid: false, message: 'Invalid IPv4 address (each octet must be 0-255)', cleaned: withoutPort };
+    }
+
+    // If not an IP, treat as domain - remove port numbers
+    cleaned = withoutPort;
+
+    // Remove www. prefix for domains
+    cleaned = cleaned.replace(/^www\./i, '');
+
+    // Validation checks for domains
     if (cleaned.includes(' ')) {
         return { valid: false, message: 'Domain cannot contain spaces', cleaned };
     }
