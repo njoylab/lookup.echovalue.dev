@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMARC Check Tool - Validate DMARC Policy | Free DMARC Checker</title>
+    <meta name="description" content="Check DMARC records and validate email authentication policy. Verify DMARC configuration for none, quarantine, or reject policies with reporting setup.">
+    <link rel="canonical" href="https://lookup.echovalue.dev/dmarc-check/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <link rel="stylesheet" href="/styles.css?a=9">
+</head>
+<body data-preset="dmarc-check">
+    <div class="toast-container" id="toastContainer" role="region" aria-live="polite"></div>
+    <div class="confirmation-overlay" id="confirmationOverlay" style="display: none;"><div class="confirmation-modal"><h3 class="confirmation-title" id="confirmationTitle">Confirm</h3><p class="confirmation-message" id="confirmationMessage"></p><div class="confirmation-actions"><button class="confirmation-btn confirmation-btn-cancel" id="confirmationCancel">Cancel</button><button class="confirmation-btn confirmation-btn-confirm" id="confirmationConfirm">Confirm</button></div></div></div>
+    <div class="grain-overlay"></div>
+    <header class="header"><div class="container"><div class="logo"><a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;"><span class="logo-icon">◈</span><span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span></a></div><nav class="nav"><a href="/#tools" class="nav-link">Tools</a></nav></div></header>
+    <main>
+        <section style="padding: 1.5rem 0 0;"><div class="container"><nav style="font-size: 0.9rem; color: var(--color-text-secondary); font-family: var(--font-mono);"><a href="/" style="color: var(--color-text-secondary); text-decoration: none;">Home</a> › <span style="color: var(--color-accent);">DMARC Check</span></nav></div></section>
+        <section class="hero"><div class="container"><div class="hero-content"><h1 class="hero-title"><span class="title-line">DMARC Policy Checker</span><span class="title-line title-gradient">Validate Email Authentication Policy</span></h1><p class="hero-description">Check DMARC records to validate policy configuration (none/quarantine/reject), verify reporting setup, and assess email authentication strength.</p></div>
+        <div class="analyzer-card"><div class="card-header"><div class="status-indicator"><span class="status-dot"></span><span class="status-text">All systems operational</span></div></div>
+        <form class="analyzer-form" id="analyzerForm"><div class="input-group"><label for="domain" class="input-label">Target Domain</label><div class="input-wrapper"><input type="text" id="domain" class="domain-input" placeholder="example.com" autocomplete="off" spellcheck="false" /><button type="submit" class="analyze-btn" id="analyzeBtn"><span class="btn-text">Check DMARC</span><span class="btn-icon">→</span></button></div><div class="input-error" id="domain-error"></div></div>
+        <div class="turnstile-wrapper"><div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="dark" size="compact"></div></div>
+        <div class="advanced-toggle-wrapper"><button type="button" class="advanced-toggle" id="advancedToggle"><span class="toggle-icon">▸</span><span>Advanced Options</span></button><button type="button" class="history-toggle" id="historyToggle"><span>🕒</span><span>History</span><span class="history-count" id="historyCount" style="display: none;">0</span></button></div>
+        <div class="history-panel" id="historyPanel"><div class="history-header"><h4>Recent Searches</h4><button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button></div><div class="privacy-notice"><span class="privacy-icon">🔒</span><span class="privacy-text">History stored locally.</span></div><div class="history-list" id="historyList"><div class="history-empty">No history</div></div></div>
+        <div class="advanced-options" id="advancedOptions"><div class="options-grid"><div class="option-group"><label class="option-label">DNS Record Types</label><div class="record-types"><label class="checkbox-label"><input type="checkbox" name="recordType" value="A"><span>A</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="AAAA"><span>AAAA</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="MX"><span>MX</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="CNAME"><span>CNAME</span></label><label class="checkbox-label"><input type="checkbox" checked name="recordType" value="TXT"><span>TXT</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="NS"><span>NS</span></label></div></div><div class="option-group"><label class="toggle-option"><span class="toggle-option-label">Email Security Analysis</span><input type="checkbox" checked class="toggle-input" name="enrichment"><span class="toggle-slider"></span></label></div></div></div>
+        </form></div>
+        <div class="results-container" id="resultsContainer" style="display: none;"></div>
+        <div style="max-width: 900px; margin: 4rem auto 0;">
+            <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-accent);">DMARC Policy Validation</h2>
+            <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">DMARC (Domain-based Message Authentication, Reporting, and Conformance) builds on SPF and DKIM by defining policies for handling authentication failures. DMARC records are published at <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; font-family: var(--font-mono);">_dmarc.example.com</code> as TXT records.</p>
+            <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem;">DMARC Policy Levels</h3>
+            <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;"><strong style="color: var(--color-text-primary);">p=none:</strong> Monitor mode. Recipients log authentication failures but deliver all mail normally. Use this when first implementing DMARC to gather data without risk of blocking legitimate email.</p>
+            <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;"><strong style="color: var(--color-text-primary);">p=quarantine:</strong> Send emails that fail authentication to spam/junk folders. Provides protection while allowing recipients to retrieve false positives from spam folders.</p>
+            <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem;"><strong style="color: var(--color-text-primary);">p=reject:</strong> Block delivery of emails that fail authentication entirely. Strongest protection but requires confidence in SPF and DKIM configuration to avoid blocking legitimate mail.</p>
+            <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem;">DMARC Reporting</h3>
+            <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;"><strong style="color: var(--color-text-primary);">rua (Aggregate Reports):</strong> Daily XML reports sent to specified email addresses showing authentication statistics. Example: <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; font-family: var(--font-mono);">rua=mailto:dmarc@example.com</code></p>
+            <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem;"><strong style="color: var(--color-text-primary);">ruf (Forensic Reports):</strong> Individual reports for each authentication failure containing message headers and details. More verbose than aggregate reports and may contain sensitive information.</p>
+            <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem;">DMARC Alignment</h3>
+            <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;">DMARC requires alignment between the domain in the From header and authenticated domains from SPF or DKIM. Strict alignment (aspf=s, adkim=s) requires exact matches. Relaxed alignment (default) allows subdomain matches.</p>
+            <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">Example: Email from support@example.com must pass SPF/DKIM for example.com (relaxed) or support.example.com (strict) to align.</p>
+        </div>
+        </div></section>
+    </main>
+    <footer class="footer"><div class="container"><div class="footer-content"><p class="footer-text">&copy; 2026 DNS Intelligence</p></div></div></footer>
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+    <script src="/script.js?a=9"></script>
+</body>
+</html>

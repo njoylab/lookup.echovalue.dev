@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Intelligence Report | Lookup Results</title>
+    <meta name="description" content="View comprehensive DNS intelligence reports including records, email security, SSL certificates, and reverse DNS lookups.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lookup.echovalue.dev/lookup/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <link rel="stylesheet" href="/styles.css?a=9">
+</head>
+<body>
+    <noscript>
+        <div style="text-align: center; padding: 2rem; background: #1a1f2e; color: #e8eaed; font-family: sans-serif;">
+            <h1>JavaScript Required</h1>
+            <p>This DNS lookup tool requires JavaScript to function.</p>
+        </div>
+    </noscript>
+
+    <div class="toast-container" id="toastContainer" role="region" aria-live="polite"></div>
+    <div class="confirmation-overlay" id="confirmationOverlay" style="display: none;">
+        <div class="confirmation-modal">
+            <h3 class="confirmation-title" id="confirmationTitle">Confirm</h3>
+            <p class="confirmation-message" id="confirmationMessage"></p>
+            <div class="confirmation-actions">
+                <button class="confirmation-btn confirmation-btn-cancel" id="confirmationCancel">Cancel</button>
+                <button class="confirmation-btn confirmation-btn-confirm" id="confirmationConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+    <div class="grain-overlay"></div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;">
+                    <span class="logo-icon">◈</span>
+                    <span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span>
+                </a>
+            </div>
+            <nav class="nav">
+                <a href="/#tools" class="nav-link">Tools</a>
+                <a href="/faq.html" class="nav-link">FAQ</a>
+            </nav>
+        </div>
+    </header>
+
+    <main role="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="title-line">DNS Intelligence Report</span>
+                        <span class="title-line title-gradient">Shareable Lookup Results</span>
+                    </h1>
+                    <p class="hero-description">
+                        Share comprehensive DNS analysis reports via URL. Each report includes DNS records, email security analysis, SSL certificates, and reverse DNS lookups.
+                    </p>
+                </div>
+
+                <!-- Share Box (shown when target is present) -->
+                <div id="shareBox" style="display: none; max-width: 700px; margin: 0 auto 2rem; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem;">
+                    <h3 style="font-family: var(--font-mono); font-size: 1.1rem; margin-bottom: 1rem; color: var(--color-text-primary);">
+                        📤 Share This Report
+                    </h3>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <input type="text" id="shareUrl" readonly style="flex: 1; background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 6px; padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);" />
+                        <button id="copyShareBtn" style="background: var(--color-accent); border: none; border-radius: 6px; padding: 0.75rem 1.5rem; font-weight: 600; color: var(--color-bg); cursor: pointer; font-family: var(--font-mono); white-space: nowrap;">
+                            Copy Link
+                        </button>
+                    </div>
+                    <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-text-secondary);">
+                        Share this URL to let others view the DNS intelligence report for this domain.
+                    </p>
+                </div>
+
+                <div class="analyzer-card">
+                    <div class="card-header">
+                        <div class="status-indicator">
+                            <span class="status-dot"></span>
+                            <span class="status-text">All systems operational</span>
+                        </div>
+                    </div>
+
+                    <form class="analyzer-form" id="analyzerForm">
+                        <div class="input-group">
+                            <label for="domain" class="input-label">Target Domain or IP Address</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="domain" class="domain-input" placeholder="example.com or 8.8.8.8" autocomplete="off" spellcheck="false" />
+                                <button type="submit" class="analyze-btn" id="analyzeBtn">
+                                    <span class="btn-text">Analyze</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                            <div class="input-error" id="domain-error" role="alert"></div>
+                        </div>
+
+                        <div class="turnstile-wrapper">
+                            <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="dark" size="compact"></div>
+                        </div>
+
+                        <div class="advanced-toggle-wrapper">
+                            <button type="button" class="advanced-toggle" id="advancedToggle">
+                                <span class="toggle-icon">▸</span>
+                                <span>Advanced Options</span>
+                            </button>
+                            <button type="button" class="history-toggle" id="historyToggle">
+                                <span>🕒</span>
+                                <span>History</span>
+                                <span class="history-count" id="historyCount" style="display: none;">0</span>
+                            </button>
+                        </div>
+
+                        <div class="history-panel" id="historyPanel">
+                            <div class="history-header">
+                                <h4>Recent Searches</h4>
+                                <button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button>
+                            </div>
+                            <div class="privacy-notice">
+                                <span class="privacy-icon">🔒</span>
+                                <span class="privacy-text">History stored locally in your browser.</span>
+                            </div>
+                            <div class="history-list" id="historyList">
+                                <div class="history-empty">No search history yet</div>
+                            </div>
+                        </div>
+
+                        <div class="advanced-options" id="advancedOptions">
+                            <div class="options-grid">
+                                <div class="option-group">
+                                    <label class="option-label">DNS Record Types</label>
+                                    <div class="record-types">
+                                        <label class="checkbox-label"><input type="checkbox" checked name="recordType" value="A"><span>A</span></label>
+                                        <label class="checkbox-label"><input type="checkbox" checked name="recordType" value="AAAA"><span>AAAA</span></label>
+                                        <label class="checkbox-label"><input type="checkbox" checked name="recordType" value="MX"><span>MX</span></label>
+                                        <label class="checkbox-label"><input type="checkbox" checked name="recordType" value="CNAME"><span>CNAME</span></label>
+                                        <label class="checkbox-label"><input type="checkbox" checked name="recordType" value="TXT"><span>TXT</span></label>
+                                        <label class="checkbox-label"><input type="checkbox" checked name="recordType" value="NS"><span>NS</span></label>
+                                    </div>
+                                </div>
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Check DNS Propagation</span>
+                                        <input type="checkbox" class="toggle-input" name="checkPropagation">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Reverse DNS Lookup</span>
+                                        <input type="checkbox" checked class="toggle-input" name="reverseDNS">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">DNS Enrichment</span>
+                                        <input type="checkbox" checked class="toggle-input" name="enrichment">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">TLS/SSL Inspection</span>
+                                        <input type="checkbox" checked class="toggle-input" name="sslInspection">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="option-group">
+                                    <label class="option-label">Query Timeout (ms)</label>
+                                    <input type="number" class="number-input" value="5000" name="timeout" min="1000" max="30000" step="100">
+                                </div>
+                                <div class="option-group">
+                                    <label class="option-label">Maximum Retries</label>
+                                    <input type="number" class="number-input" value="3" name="maxRetries" min="0" max="10">
+                                </div>
+                                <div class="option-group">
+                                    <label class="option-label">Retry Delay (ms)</label>
+                                    <input type="number" class="number-input" value="1000" name="retryDelay" min="100" max="5000" step="100">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="results-container" id="resultsContainer" style="display: none;"></div>
+
+                <!-- Explanation Text -->
+                <div style="max-width: 800px; margin: 4rem auto 0; text-align: center;">
+                    <h2 style="font-family: var(--font-mono); font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-text-primary);">
+                        How Shareable Lookups Work
+                    </h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem; font-size: 1.05rem;">
+                        Access DNS intelligence reports via URL by adding <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.5rem; border-radius: 3px; font-family: var(--font-mono);">?target=example.com</code> to the lookup URL. The tool automatically analyzes the specified domain and displays results.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; font-size: 1.05rem;">
+                        Share lookup URLs with colleagues to collaborate on DNS troubleshooting, email deliverability issues, or security audits without requiring recipients to manually run queries.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem; font-weight: 600;">DNS Tools:</p>
+                <p class="footer-links" style="color: var(--color-text-dim); font-size: 0.85rem; margin-bottom: 1rem;">
+                    <a href="/dns-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">DNS Lookup</a> •
+                    <a href="/mx-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">MX Lookup</a> •
+                    <a href="/txt-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">TXT Lookup</a> •
+                    <a href="/spf-check/" style="color: var(--color-text-secondary); text-decoration: none;">SPF</a> •
+                    <a href="/dmarc-check/" style="color: var(--color-text-secondary); text-decoration: none;">DMARC</a> •
+                    <a href="/dkim-check/" style="color: var(--color-text-secondary); text-decoration: none;">DKIM</a> •
+                    <a href="/reverse-dns/" style="color: var(--color-text-secondary); text-decoration: none;">Reverse DNS</a> •
+                    <a href="/ssl-certificate-check/" style="color: var(--color-text-secondary); text-decoration: none;">SSL</a>
+                </p>
+                <p class="footer-text">&copy; 2026 DNS Intelligence</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+    <script src="/script.js?a=9"></script>
+    <script>
+    // Share URL functionality for /lookup/ page
+    window.addEventListener('DOMContentLoaded', () => {
+        const shareBox = document.getElementById('shareBox');
+        const shareUrlInput = document.getElementById('shareUrl');
+        const copyShareBtn = document.getElementById('copyShareBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+
+        // Show share box when results are displayed
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    if (resultsContainer.style.display !== 'none') {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const target = urlParams.get('target') || urlParams.get('domain');
+                        if (target) {
+                            const shareUrl = `${window.location.origin}/lookup/?target=${encodeURIComponent(target)}`;
+                            shareUrlInput.value = shareUrl;
+                            shareBox.style.display = 'block';
+                        }
+                    }
+                }
+            });
+        });
+
+        if (resultsContainer) {
+            observer.observe(resultsContainer, { attributes: true });
+        }
+
+        // Copy share URL
+        if (copyShareBtn) {
+            copyShareBtn.addEventListener('click', () => {
+                shareUrlInput.select();
+                navigator.clipboard.writeText(shareUrlInput.value).then(() => {
+                    const originalText = copyShareBtn.textContent;
+                    copyShareBtn.textContent = 'Copied!';
+                    copyShareBtn.style.background = 'var(--color-success)';
+                    setTimeout(() => {
+                        copyShareBtn.textContent = originalText;
+                        copyShareBtn.style.background = '';
+                    }, 2000);
+                });
+            });
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1554,6 +1554,116 @@ function renderPropagation(propagationResults) {
     `;
 }
 
+// ===============================================
+// Preset System for Intent Pages
+// ===============================================
+
+/**
+ * Apply a preset configuration to the form
+ * @param {string} preset - Preset name (dns-lookup, mx-lookup, spf-check, etc.)
+ */
+function applyPreset(preset) {
+    if (!preset || !form) return;
+
+    // Default: all record types checked, reverseDNS/enrichment/sslInspection ON, propagation OFF
+    const defaultRecordTypes = ['A', 'AAAA', 'MX', 'CNAME', 'TXT', 'NS'];
+    const defaultToggles = {
+        checkPropagation: false,
+        reverseDNS: true,
+        enrichment: true,
+        sslInspection: true
+    };
+
+    // Preset configurations
+    const presets = {
+        'dns-lookup': {
+            recordTypes: ['A', 'AAAA', 'MX', 'CNAME', 'TXT', 'NS'],
+            toggles: {
+                checkPropagation: false,
+                reverseDNS: true,
+                enrichment: true,
+                sslInspection: true
+            }
+        },
+        'mx-lookup': {
+            recordTypes: ['MX', 'TXT'],
+            toggles: {
+                checkPropagation: false,
+                reverseDNS: false,
+                enrichment: true,
+                sslInspection: false
+            }
+        },
+        'txt-lookup': {
+            recordTypes: ['TXT'],
+            toggles: {
+                checkPropagation: false,
+                reverseDNS: false,
+                enrichment: true,
+                sslInspection: false
+            }
+        },
+        'spf-check': {
+            recordTypes: ['TXT'],
+            toggles: {
+                checkPropagation: false,
+                reverseDNS: false,
+                enrichment: true,
+                sslInspection: false
+            }
+        },
+        'dmarc-check': {
+            recordTypes: ['TXT'],
+            toggles: {
+                checkPropagation: false,
+                reverseDNS: false,
+                enrichment: true,
+                sslInspection: false
+            }
+        },
+        'dkim-check': {
+            recordTypes: ['TXT'],
+            toggles: {
+                checkPropagation: false,
+                reverseDNS: false,
+                enrichment: true,
+                sslInspection: false
+            }
+        },
+        'reverse-dns': {
+            recordTypes: ['A', 'AAAA'],
+            toggles: {
+                checkPropagation: false,
+                reverseDNS: true,
+                enrichment: false,
+                sslInspection: false
+            }
+        },
+        'ssl-certificate-check': {
+            recordTypes: ['A', 'AAAA'],
+            toggles: {
+                checkPropagation: false,
+                reverseDNS: false,
+                enrichment: false,
+                sslInspection: true
+            }
+        }
+    };
+
+    const config = presets[preset] || presets['dns-lookup'];
+
+    // Apply record types
+    form.querySelectorAll('input[name="recordType"]').forEach(checkbox => {
+        checkbox.checked = config.recordTypes.includes(checkbox.value);
+    });
+
+    // Apply toggles
+    Object.keys(config.toggles).forEach(key => {
+        const input = form.querySelector(`input[name="${key}"]`);
+        if (input) input.checked = config.toggles[key];
+    });
+}
+
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -1597,8 +1707,14 @@ function getURLParameter(name) {
     return urlParams.get(name);
 }
 
-// Auto-fill domain from URL parameter (no auto-analysis)
+// Auto-fill domain from URL parameter (no auto-analysis, except for /lookup/)
 function initializeFromURL() {
+    // Apply preset if data-preset attribute exists
+    const preset = document.body.dataset.preset;
+    if (preset) {
+        applyPreset(preset);
+    }
+
     // Load history
     renderHistory();
 
@@ -1608,16 +1724,82 @@ function initializeFromURL() {
         domainError.classList.add('show');
     }
 
+    // Check for target parameter (preferred for /lookup/) or domain parameter
+    const targetParam = getURLParameter('target');
     const domainParam = getURLParameter('domain');
+    const inputValue = targetParam || domainParam;
 
-    if (domainParam) {
+    // Check if we're on /lookup/ page
+    const isLookupPage = window.location.pathname.includes('/lookup');
+
+    if (inputValue) {
+        const cleanedValue = inputValue.trim();
+
         // Fill the input field
-        domainInput.value = domainParam.trim();
+        domainInput.value = cleanedValue;
 
         // Trigger validation
-        const validation = validateDomain(domainParam.trim());
+        const validation = validateDomain(cleanedValue);
         updateValidationUI(validation, true);
+
+        // For /lookup/ page: handle auto-submit and canonical
+        if (isLookupPage) {
+            if (validation.valid && validation.cleaned) {
+                // Update canonical URL with cleaned target
+                updateCanonical(`https://lookup.echovalue.dev/lookup/?target=${encodeURIComponent(validation.cleaned)}`);
+
+                // Update page title if possible
+                if (document.title.includes('{target}')) {
+                    document.title = document.title.replace('{target}', validation.cleaned);
+                }
+
+                // Auto-submit the form after a brief delay to ensure Turnstile is loaded
+                setTimeout(() => {
+                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }, 500);
+            } else {
+                // Invalid target: set noindex and show error
+                updateMetaRobots('noindex, follow');
+                updateCanonical('https://lookup.echovalue.dev/lookup/');
+
+                if (!validation.valid) {
+                    domainError.textContent = validation.message || 'Invalid domain or IP address';
+                    domainError.classList.add('show');
+                }
+            }
+        }
+    } else if (isLookupPage) {
+        // No target on /lookup/ page: set base canonical
+        updateCanonical('https://lookup.echovalue.dev/lookup/');
     }
+}
+
+/**
+ * Update or create canonical link
+ * @param {string} url - Canonical URL
+ */
+function updateCanonical(url) {
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+        canonical = document.createElement('link');
+        canonical.rel = 'canonical';
+        document.head.appendChild(canonical);
+    }
+    canonical.href = url;
+}
+
+/**
+ * Update or create meta robots tag
+ * @param {string} content - Robots content (e.g., "noindex, follow")
+ */
+function updateMetaRobots(content) {
+    let metaRobots = document.querySelector('meta[name="robots"]');
+    if (!metaRobots) {
+        metaRobots = document.createElement('meta');
+        metaRobots.name = 'robots';
+        document.head.appendChild(metaRobots);
+    }
+    metaRobots.content = content;
 }
 
 // Initialize on page load

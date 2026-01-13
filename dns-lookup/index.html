@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>DNS Lookup Tool - Check A, AAAA, MX, TXT, NS, CNAME Records | Free DNS Checker</title>
+    <meta name="title" content="DNS Lookup Tool - Check A, AAAA, MX, TXT, NS, CNAME Records | Free DNS Checker">
+    <meta name="description"
+        content="Perform comprehensive DNS lookups for any domain. Query A, AAAA, MX, TXT, NS, and CNAME records with advanced analysis, email security checks, and SSL inspection.">
+    <meta name="keywords"
+        content="DNS lookup, DNS records, A record, AAAA record, MX record, TXT record, NS record, CNAME record, DNS checker, DNS query">
+    <meta name="author" content="DNS Intelligence">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://lookup.echovalue.dev/dns-lookup/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lookup.echovalue.dev/dns-lookup/">
+    <meta property="og:title" content="DNS Lookup Tool - Check All DNS Records">
+    <meta property="og:description"
+        content="Comprehensive DNS lookup tool for checking A, AAAA, MX, TXT, NS, and CNAME records with security analysis.">
+    <meta property="og:image" content="https://lookup.echovalue.dev/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://lookup.echovalue.dev/dns-lookup/">
+    <meta property="twitter:title" content="DNS Lookup Tool - Check All DNS Records">
+    <meta property="twitter:description"
+        content="Comprehensive DNS lookup tool for checking A, AAAA, MX, TXT, NS, and CNAME records with security analysis.">
+    <meta property="twitter:image" content="https://lookup.echovalue.dev/og-image.png">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/styles.css?a=9">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "DNS Lookup Tool",
+      "description": "Perform comprehensive DNS lookups for any domain including A, AAAA, MX, TXT, NS, and CNAME records.",
+      "url": "https://lookup.echovalue.dev/dns-lookup/"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://lookup.echovalue.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "DNS Lookup",
+          "item": "https://lookup.echovalue.dev/dns-lookup/"
+        }
+      ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a DNS lookup?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A DNS lookup queries the Domain Name System to retrieve information about a domain, including IP addresses (A/AAAA records), mail servers (MX records), nameservers (NS records), and text records (TXT records). It translates human-readable domain names into machine-readable data that computers use to route traffic."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are A and AAAA records?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A records map domain names to IPv4 addresses (e.g., 192.0.2.1), while AAAA records map to IPv6 addresses (e.g., 2001:db8::1). These records are essential for web hosting—they tell browsers which server hosts your website. Multiple A/AAAA records enable load balancing and redundancy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I check all DNS records for a domain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use this DNS lookup tool by entering your domain name and ensuring all record types (A, AAAA, MX, TXT, NS, CNAME) are selected in the form. The tool queries authoritative nameservers and displays all configured records with their TTL values and associated data."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is DNS TTL and why does it matter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TTL (Time To Live) specifies how long DNS resolvers should cache a record before querying again. Lower TTLs (300-600 seconds) enable faster DNS changes but increase query load; higher TTLs (3600+ seconds) improve performance but delay propagation. Adjust TTL before planned DNS migrations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my domain have multiple A records?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multiple A records enable load balancing, redundancy, and geographic distribution. When a DNS resolver sees multiple A records, it can distribute traffic across servers or provide failover if one IP becomes unavailable. CDNs and cloud platforms commonly use this technique."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between CNAME and A records?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A records map directly to IP addresses, while CNAME records create aliases pointing to other domain names. For example, www.example.com (CNAME) might point to example.com (A record). CNAMEs simplify management—changing the target domain's IP automatically updates all aliases."
+          }
+        }
+      ]
+    }
+    </script>
+</head>
+
+<body data-preset="dns-lookup">
+    <noscript>
+        <div style="text-align: center; padding: 2rem; background: #1a1f2e; color: #e8eaed; font-family: sans-serif;">
+            <h1>JavaScript Required</h1>
+            <p>This DNS lookup tool requires JavaScript to function. Please enable JavaScript in your browser settings.</p>
+        </div>
+    </noscript>
+
+    <div class="toast-container" id="toastContainer" role="region" aria-live="polite" aria-label="Notifications"></div>
+
+    <div class="confirmation-overlay" id="confirmationOverlay" style="display: none;">
+        <div class="confirmation-modal" role="dialog" aria-labelledby="confirmationTitle"
+            aria-describedby="confirmationMessage">
+            <h3 class="confirmation-title" id="confirmationTitle">Confirm Action</h3>
+            <p class="confirmation-message" id="confirmationMessage"></p>
+            <div class="confirmation-actions">
+                <button class="confirmation-btn confirmation-btn-cancel" id="confirmationCancel">Cancel</button>
+                <button class="confirmation-btn confirmation-btn-confirm" id="confirmationConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grain-overlay" aria-hidden="true"></div>
+
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="logo" role="img" aria-label="DNS Intelligence Logo">
+                <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;">
+                    <span class="logo-icon" aria-hidden="true">◈</span>
+                    <span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span>
+                </a>
+            </div>
+            <nav class="nav" role="navigation" aria-label="Main navigation">
+                <a href="/#tools" class="nav-link">Tools</a>
+                <a href="/faq.html" class="nav-link">FAQ</a>
+                <a href="/#api" class="nav-link">API Access</a>
+            </nav>
+        </div>
+    </header>
+
+    <main role="main">
+        <!-- Breadcrumb -->
+        <section style="padding: 1.5rem 0 0; background: var(--color-bg);">
+            <div class="container">
+                <nav aria-label="Breadcrumb" style="font-size: 0.9rem; color: var(--color-text-secondary); font-family: var(--font-mono);">
+                    <a href="/" style="color: var(--color-text-secondary); text-decoration: none;">Home</a>
+                    <span style="margin: 0 0.5rem;">›</span>
+                    <span style="color: var(--color-accent);">DNS Lookup</span>
+                </nav>
+            </div>
+        </section>
+
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title" id="hero-title">
+                        <span class="title-line">DNS Lookup Tool</span>
+                        <span class="title-line title-gradient">Check All DNS Records</span>
+                    </h1>
+                    <p class="hero-description">
+                        Query A, AAAA, MX, TXT, NS, and CNAME records for any domain. Get comprehensive DNS analysis
+                        with email security insights, SSL certificate inspection, and reverse DNS lookups.
+                    </p>
+                </div>
+
+                <div class="analyzer-card">
+                    <div class="card-header">
+                        <div class="status-indicator">
+                            <span class="status-dot" aria-label="Status indicator"></span>
+                            <span class="status-text">All systems operational</span>
+                        </div>
+                    </div>
+
+                    <form class="analyzer-form" id="analyzerForm" aria-label="DNS Analysis Form">
+                        <div class="input-group">
+                            <label for="domain" class="input-label">Target Domain or IP Address</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="domain" class="domain-input" placeholder="example.com or 8.8.8.8"
+                                    autocomplete="off" spellcheck="false" aria-describedby="domain-error"
+                                    aria-invalid="false" />
+                                <button type="submit" class="analyze-btn" id="analyzeBtn">
+                                    <span class="btn-text">Analyze</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                            <div class="input-error" id="domain-error" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <div class="turnstile-wrapper">
+                            <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="dark"
+                                size="compact"></div>
+                        </div>
+
+                        <div class="advanced-toggle-wrapper">
+                            <button type="button" class="advanced-toggle" id="advancedToggle">
+                                <span class="toggle-icon">▸</span>
+                                <span>Advanced Options</span>
+                            </button>
+                            <button type="button" class="history-toggle" id="historyToggle">
+                                <span>🕒</span>
+                                <span>History</span>
+                                <span class="history-count" id="historyCount" style="display: none;">0</span>
+                            </button>
+                        </div>
+
+                        <div class="history-panel" id="historyPanel">
+                            <div class="history-header">
+                                <h4>Recent Searches</h4>
+                                <button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button>
+                            </div>
+                            <div class="privacy-notice">
+                                <span class="privacy-icon">🔒</span>
+                                <span class="privacy-text">Your search history is stored only in your browser and never
+                                    synced to servers.</span>
+                            </div>
+                            <div class="history-list" id="historyList">
+                                <div class="history-empty">No search history yet</div>
+                            </div>
+                        </div>
+
+                        <div class="advanced-options" id="advancedOptions">
+                            <div class="options-grid">
+                                <div class="option-group">
+                                    <label class="option-label">DNS Record Types</label>
+                                    <div class="record-types">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="A">
+                                            <span>A</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="AAAA">
+                                            <span>AAAA</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="MX">
+                                            <span>MX</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="CNAME">
+                                            <span>CNAME</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="TXT">
+                                            <span>TXT</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked name="recordType" value="NS">
+                                            <span>NS</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Check DNS Propagation</span>
+                                        <input type="checkbox" class="toggle-input" name="checkPropagation">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Perform Reverse DNS Lookup</span>
+                                        <input type="checkbox" checked class="toggle-input" name="reverseDNS">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Enable DNS Enrichment</span>
+                                        <input type="checkbox" checked class="toggle-input" name="enrichment">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="toggle-option">
+                                        <span class="toggle-option-label">Enable TLS/SSL Inspection</span>
+                                        <input type="checkbox" checked class="toggle-input" name="sslInspection">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="option-label">Query Timeout (ms)</label>
+                                    <input type="number" class="number-input" value="5000" name="timeout" min="1000"
+                                        max="30000" step="100">
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="option-label">Maximum Retries</label>
+                                    <input type="number" class="number-input" value="3" name="maxRetries" min="0"
+                                        max="10">
+                                </div>
+
+                                <div class="option-group">
+                                    <label class="option-label">Retry Delay (ms)</label>
+                                    <input type="number" class="number-input" value="1000" name="retryDelay" min="100"
+                                        max="5000" step="100">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="results-container" id="resultsContainer" style="display: none;">
+                    <!-- Results will be injected here -->
+                </div>
+
+                <!-- SEO Content -->
+                <div style="max-width: 900px; margin: 4rem auto 0;">
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-accent);">
+                        Understanding DNS Lookups
+                    </h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
+                        DNS (Domain Name System) lookups are the foundation of internet connectivity. When you visit a website,
+                        your device performs DNS queries to translate the domain name into an IP address that servers understand.
+                        This tool performs comprehensive DNS lookups across all major record types, giving you complete visibility
+                        into your domain's DNS configuration.
+                    </p>
+
+                    <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem; color: var(--color-text-primary);">
+                        DNS Record Types and Their Purpose
+                    </h3>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">A Records (IPv4):</strong> The most fundamental DNS record type,
+                        A records map domain names to 32-bit IPv4 addresses. For example, example.com might point to 93.184.216.34.
+                        Multiple A records enable round-robin load balancing and provide redundancy for high-traffic websites.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">AAAA Records (IPv6):</strong> As IPv4 addresses become scarce,
+                        AAAA records map domains to 128-bit IPv6 addresses like 2001:0db8:85a3::8a2e:0370:7334. Modern websites should
+                        configure both A and AAAA records to support all users regardless of their network configuration.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">MX Records (Mail Exchange):</strong> MX records specify which
+                        mail servers accept email for your domain. Each MX record includes a priority number—mail servers attempt delivery
+                        to the lowest-priority server first, falling back to higher numbers if delivery fails. Proper MX configuration is
+                        essential for reliable email delivery.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">TXT Records:</strong> TXT records store arbitrary text data
+                        and serve multiple critical functions. SPF records authorize mail servers, DMARC policies define email authentication
+                        rules, DKIM keys enable cryptographic signatures, and domain verification tokens prove ownership to services like
+                        Google Workspace and Microsoft 365.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">NS Records (Nameservers):</strong> NS records delegate DNS
+                        authority to specific nameservers. For example, example.com might use ns1.google.com and ns2.google.com as
+                        authoritative nameservers. These records are critical for DNS propagation—when you change hosting providers,
+                        updating NS records at your domain registrar is the first step.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">CNAME Records (Canonical Name):</strong> CNAME records create
+                        aliases pointing one domain to another. Common use cases include pointing www.example.com to example.com,
+                        configuring CDN endpoints, and managing subdomain routing. Note that CNAME records cannot coexist with other
+                        record types at the same DNS label.
+                    </p>
+
+                    <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem; color: var(--color-text-primary);">
+                        When to Perform DNS Lookups
+                    </h3>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">Website Migration:</strong> Before and after migrating to new
+                        hosting, verify A/AAAA records point to the correct IP addresses. Check NS records if you're changing DNS providers.
+                        Use DNS propagation checking to confirm changes have reached global resolvers.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">Email Deliverability Issues:</strong> If legitimate emails are
+                        bouncing or landing in spam, check MX records for correct mail server configuration. Verify SPF, DMARC, and DKIM
+                        records to ensure proper email authentication. Our tool automatically parses these records and highlights configuration issues.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">Security Auditing:</strong> Regular DNS lookups help identify
+                        unauthorized changes to your DNS records—a common attack vector. Verify that nameservers, A records, and MX records
+                        match expected values. Check TXT records for suspicious entries that might indicate compromised domain settings.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
+                        <strong style="color: var(--color-text-primary);">Performance Optimization:</strong> Analyze TTL values to balance
+                        DNS caching efficiency with change agility. Multiple A records can distribute load across servers. Review CNAME chains
+                        to eliminate unnecessary DNS query overhead.
+                    </p>
+
+                    <!-- FAQ -->
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin: 3rem 0 1.5rem; color: var(--color-accent); text-align: center;">
+                        Frequently Asked Questions
+                    </h2>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem;">
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                <span>What is a DNS lookup?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
+                                A DNS lookup queries the Domain Name System to retrieve information about a domain, including IP addresses
+                                (A/AAAA records), mail servers (MX records), nameservers (NS records), and text records (TXT records).
+                                It translates human-readable domain names into machine-readable data that computers use to route traffic.
+                            </div>
+                        </details>
+
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                <span>What are A and AAAA records?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
+                                A records map domain names to IPv4 addresses (e.g., 192.0.2.1), while AAAA records map to IPv6 addresses
+                                (e.g., 2001:db8::1). These records are essential for web hosting—they tell browsers which server hosts
+                                your website. Multiple A/AAAA records enable load balancing and redundancy.
+                            </div>
+                        </details>
+
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                <span>How do I check all DNS records for a domain?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
+                                Use this DNS lookup tool by entering your domain name and ensuring all record types (A, AAAA, MX, TXT, NS, CNAME)
+                                are selected in the form. The tool queries authoritative nameservers and displays all configured records with
+                                their TTL values and associated data.
+                            </div>
+                        </details>
+
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                <span>What is DNS TTL and why does it matter?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
+                                TTL (Time To Live) specifies how long DNS resolvers should cache a record before querying again. Lower TTLs
+                                (300-600 seconds) enable faster DNS changes but increase query load; higher TTLs (3600+ seconds) improve
+                                performance but delay propagation. Adjust TTL before planned DNS migrations.
+                            </div>
+                        </details>
+
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                <span>Why does my domain have multiple A records?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
+                                Multiple A records enable load balancing, redundancy, and geographic distribution. When a DNS resolver sees
+                                multiple A records, it can distribute traffic across servers or provide failover if one IP becomes unavailable.
+                                CDNs and cloud platforms commonly use this technique.
+                            </div>
+                        </details>
+
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                <span>What is the difference between CNAME and A records?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
+                                A records map directly to IP addresses, while CNAME records create aliases pointing to other domain names.
+                                For example, www.example.com (CNAME) might point to example.com (A record). CNAMEs simplify management—changing
+                                the target domain's IP automatically updates all aliases.
+                            </div>
+                        </details>
+                    </div>
+
+                    <!-- Popular Tools -->
+                    <div style="margin-top: 4rem;">
+                        <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--color-text-primary); text-align: center;">
+                            Related DNS Tools
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <a href="/mx-lookup/" style="text-decoration: none; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; text-align: center; transition: all 0.3s;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📧</div>
+                                <div style="color: var(--color-text-primary); font-weight: 600;">MX Lookup</div>
+                            </a>
+                            <a href="/txt-lookup/" style="text-decoration: none; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; text-align: center; transition: all 0.3s;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
+                                <div style="color: var(--color-text-primary); font-weight: 600;">TXT Lookup</div>
+                            </a>
+                            <a href="/spf-check/" style="text-decoration: none; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; text-align: center; transition: all 0.3s;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">✉️</div>
+                                <div style="color: var(--color-text-primary); font-weight: 600;">SPF Check</div>
+                            </a>
+                            <a href="/reverse-dns/" style="text-decoration: none; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; text-align: center; transition: all 0.3s;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
+                                <div style="color: var(--color-text-primary); font-weight: 600;">Reverse DNS</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem; font-weight: 600;">
+                    DNS Tools:
+                </p>
+                <p class="footer-links" style="color: var(--color-text-dim); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.8;">
+                    <a href="/dns-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">DNS Lookup</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/mx-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">MX Lookup</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/txt-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">TXT Lookup</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/spf-check/" style="color: var(--color-text-secondary); text-decoration: none;">SPF Check</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/dmarc-check/" style="color: var(--color-text-secondary); text-decoration: none;">DMARC Check</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/dkim-check/" style="color: var(--color-text-secondary); text-decoration: none;">DKIM Check</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/reverse-dns/" style="color: var(--color-text-secondary); text-decoration: none;">Reverse DNS</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/ssl-certificate-check/" style="color: var(--color-text-secondary); text-decoration: none;">SSL Check</a>
+                </p>
+                <p class="footer-text">
+                    &copy; 2026 DNS Intelligence. Built by <a href="https://njoylab.com" target="_blank" rel="noopener"
+                        style="color: var(--color-accent); text-decoration: none;">nJoyLab.com</a>
+                </p>
+                <p class="footer-links" style="color: var(--color-text-dim); font-size: 0.9rem; margin-top: 0.5rem;">
+                    <a href="/" style="color: var(--color-text-secondary); text-decoration: none;">Home</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/sitemap.xml" style="color: var(--color-text-secondary); text-decoration: none;">Sitemap</a>
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <a href="/terms.html" style="color: var(--color-text-secondary); text-decoration: none;">Terms</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LZString for JSON compression -->
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+    <script src="/script.js?a=9"></script>
+</body>
+
+</html>

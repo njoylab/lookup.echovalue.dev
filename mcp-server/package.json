@@ -1,0 +1,31 @@
+{
+    "name": "dns-intelligence-mcp-server",
+    "version": "1.0.0",
+    "description": "MCP Server for DNS Intelligence & Security Analysis",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "ts-node src/index.ts"
+    },
+    "keywords": [
+        "mcp",
+        "dns",
+        "security",
+        "ai",
+        "agent"
+    ],
+    "author": "DNS Intelligence",
+    "license": "MIT",
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.0.3",
+        "axios": "^1.6.0",
+        "dotenv": "^16.0.0",
+        "zod": "^3.22.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "ts-node": "^10.9.0",
+        "typescript": "^5.0.0"
+    }
+}
