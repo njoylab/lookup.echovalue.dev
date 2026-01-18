@@ -24,55 +24,88 @@ const allowedExtensions = new Set([
     '.xml'
 ]);
 
-const allowedNames = new Set([
-    'robots.txt',
-    'sitemap.xml',
-    'site.webmanifest'
+// Directories to skip
+const skipDirs = new Set([
+    'node_modules',
+    'dist',
+    '.git',
+    '.github'
 ]);
 
 fs.rmSync(distDir, { recursive: true, force: true });
 fs.mkdirSync(distDir, { recursive: true });
 
-const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+if (!siteKey) {
+    console.warn('TURNSTILE_SITE_KEY is not set; using placeholder in HTML files');
+}
 
-for (const entry of entries) {
-    if (!entry.isFile()) {
-        continue;
-    }
-
-    const fileName = entry.name;
-    if (fileName.startsWith('.')) {
-        continue;
-    }
-
+/**
+ * Process a file: copy or transform based on type
+ */
+function processFile(sourcePath, destPath) {
+    const fileName = path.basename(sourcePath);
     const ext = path.extname(fileName);
-    const shouldCopy = allowedExtensions.has(ext) || allowedNames.has(fileName);
 
-    if (!shouldCopy) {
-        continue;
+    // Skip hidden files
+    if (fileName.startsWith('.')) {
+        return;
     }
 
-    const sourcePath = path.join(rootDir, fileName);
-    const destPath = path.join(distDir, fileName);
+    // Check if file should be copied
+    if (!allowedExtensions.has(ext)) {
+        return;
+    }
 
-    if (fileName === 'index.html') {
-        const html = fs.readFileSync(sourcePath, 'utf8');
-        if (!siteKey) {
-            console.warn('TURNSTILE_SITE_KEY is not set; using placeholder in index.html');
+    // Process HTML files - replace env variables
+    if (ext === '.html') {
+        let html = fs.readFileSync(sourcePath, 'utf8');
+        if (siteKey) {
+            html = html.replace(/YOUR_TURNSTILE_SITE_KEY/g, siteKey);
         }
-        const output = siteKey
-            ? html.replace('YOUR_TURNSTILE_SITE_KEY', siteKey)
-            : html;
-        fs.writeFileSync(destPath, output);
-        continue;
+        fs.writeFileSync(destPath, html);
+        console.log(`Processed: ${sourcePath}`);
+        return;
     }
 
+    // Process script.js - replace API endpoint
     if (fileName === 'script.js') {
         const script = fs.readFileSync(sourcePath, 'utf8');
         const output = script.replace('__API_ENDPOINT__', apiEndpoint);
         fs.writeFileSync(destPath, output);
-        continue;
+        console.log(`Processed: ${sourcePath}`);
+        return;
     }
 
+    // Copy other files as-is
     fs.copyFileSync(sourcePath, destPath);
+    console.log(`Copied: ${sourcePath}`);
 }
+
+/**
+ * Recursively process directory
+ */
+function processDirectory(sourceDir, destDir) {
+    const entries = fs.readdirSync(sourceDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+        const sourcePath = path.join(sourceDir, entry.name);
+        const destPath = path.join(destDir, entry.name);
+
+        if (entry.isDirectory()) {
+            // Skip excluded directories
+            if (skipDirs.has(entry.name) || entry.name.startsWith('.')) {
+                continue;
+            }
+
+            // Create destination directory and recurse
+            fs.mkdirSync(destPath, { recursive: true });
+            processDirectory(sourcePath, destPath);
+        } else if (entry.isFile()) {
+            processFile(sourcePath, destPath);
+        }
+    }
+}
+
+// Start processing from root
+processDirectory(rootDir, distDir);
+console.log('\nBuild complete!');
