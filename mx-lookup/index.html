@@ -7,6 +7,19 @@
     <meta name="description" content="Check MX records for any domain. Verify mail server configuration, email routing, and identify your email provider with our free MX lookup tool.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://lookup.echovalue.dev/mx-lookup/">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lookup.echovalue.dev/mx-lookup/">
+    <meta property="og:title" content="MX Lookup Tool - Check Mail Server Records">
+    <meta property="og:description" content="Check MX records for any domain. Verify mail server configuration, email routing, and identify your email provider with our free MX lookup tool.">
+    <meta property="og:image" content="https://lookup.echovalue.dev/og-image.png">
+    <meta property="og:site_name" content="DNS Intelligence">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://lookup.echovalue.dev/mx-lookup/">
+    <meta property="twitter:title" content="MX Lookup Tool - Check Mail Server Records">
+    <meta property="twitter:description" content="Check MX records for any domain. Verify mail server configuration, email routing, and identify your email provider with our free MX lookup tool.">
+    <meta property="twitter:image" content="https://lookup.echovalue.dev/og-image.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,10 +29,27 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebPage",
+      "@type": "WebApplication",
       "name": "MX Lookup Tool",
       "description": "Check MX records for mail server configuration and email routing.",
-      "url": "https://lookup.echovalue.dev/mx-lookup/"
+      "url": "https://lookup.echovalue.dev/mx-lookup/",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Any",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "What is an MX record?", "acceptedAnswer": {"@type": "Answer", "text": "MX (Mail Exchange) records specify which mail servers handle email for your domain. Each record includes a priority number and mail server hostname. Lower priority numbers are tried first for email delivery."}},
+        {"@type": "Question", "name": "How many MX records should I have?", "acceptedAnswer": {"@type": "Answer", "text": "Most domains have 2-5 MX records for redundancy. Google Workspace typically uses 5 MX records, while Microsoft 365 uses 1-2. Having multiple records ensures email delivery continues if one server becomes unavailable."}},
+        {"@type": "Question", "name": "Why is email not being delivered to my domain?", "acceptedAnswer": {"@type": "Answer", "text": "Check if MX records exist and point to active mail servers. Verify SPF records authorize your mail servers. Ensure MX hostnames resolve to valid IP addresses. Check DNS propagation if you recently changed records."}},
+        {"@type": "Question", "name": "What is MX priority?", "acceptedAnswer": {"@type": "Answer", "text": "MX priority (also called preference) is a number that determines mail server order. Sending servers try the lowest priority first. If delivery fails, they try progressively higher priorities. Common values are 10 (primary) and 20 (backup)."}},
+        {"@type": "Question", "name": "How long does it take for MX changes to propagate?", "acceptedAnswer": {"@type": "Answer", "text": "MX record changes typically propagate within minutes to hours, depending on TTL values. Lower your TTL to 300 seconds before making changes, wait for the old TTL to expire, then update records. Full global propagation usually completes within 24 hours."}},
+        {"@type": "Question", "name": "Can I use MX records for subdomains?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, each subdomain can have its own MX records. For example, support@sub.example.com uses MX records configured for sub.example.com, which can differ from example.com. This enables different mail routing for different purposes."}}
+      ]
     }
     </script>
     <script type="application/ld+json">

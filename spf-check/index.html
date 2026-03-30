@@ -5,8 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPF Record Check Tool - Validate SPF Configuration | Free SPF Checker</title>
     <meta name="description" content="Check SPF records for email authentication. Validate SPF syntax, authorized mail servers, and get recommendations for fixing SPF configuration issues.">
+    <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://lookup.echovalue.dev/spf-check/">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lookup.echovalue.dev/spf-check/">
+    <meta property="og:title" content="SPF Record Check Tool - Validate SPF Configuration">
+    <meta property="og:description" content="Check SPF records for email authentication. Validate SPF syntax, authorized mail servers, and get recommendations for fixing SPF configuration issues.">
+    <meta property="og:image" content="https://lookup.echovalue.dev/og-image.png">
+    <meta property="og:site_name" content="DNS Intelligence">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://lookup.echovalue.dev/spf-check/">
+    <meta property="twitter:title" content="SPF Record Check Tool - Validate SPF Configuration">
+    <meta property="twitter:description" content="Check SPF records for email authentication. Validate SPF syntax, authorized mail servers, and get recommendations for fixing SPF configuration issues.">
+    <meta property="twitter:image" content="https://lookup.echovalue.dev/og-image.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SPF Record Check Tool",
+      "description": "Check SPF records for email authentication. Validate SPF syntax, authorized mail servers, and get recommendations for fixing SPF configuration issues.",
+      "url": "https://lookup.echovalue.dev/spf-check/",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Any",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://lookup.echovalue.dev/"},
+        {"@type": "ListItem", "position": 2, "name": "SPF Check", "item": "https://lookup.echovalue.dev/spf-check/"}
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "What is an SPF record?", "acceptedAnswer": {"@type": "Answer", "text": "SPF (Sender Policy Framework) is a DNS TXT record that lists which mail servers are authorized to send email on behalf of your domain. It helps prevent email spoofing and improves deliverability."}},
+        {"@type": "Question", "name": "What does v=spf1 mean?", "acceptedAnswer": {"@type": "Answer", "text": "v=spf1 identifies the record as an SPF version 1 record. All SPF records must start with this prefix. The remainder of the record defines authorized mail servers and the policy for handling failures."}},
+        {"@type": "Question", "name": "How do I fix SPF too many lookups error?", "acceptedAnswer": {"@type": "Answer", "text": "SPF is limited to 10 DNS lookups. Replace include: mechanisms with explicit IP ranges when possible. For complex setups, consider SPF flattening services or split mail domains across subdomains with separate SPF records."}},
+        {"@type": "Question", "name": "Should I use -all or ~all?", "acceptedAnswer": {"@type": "Answer", "text": "Use ~all (soft fail) during testing to mark suspicious emails without blocking them. Once confident in your configuration, upgrade to -all (hard fail) to instruct recipients to reject unauthorized mail. Never use +all which provides no protection."}},
+        {"@type": "Question", "name": "Why is my SPF record not working?", "acceptedAnswer": {"@type": "Answer", "text": "Common issues include exceeding 10 DNS lookups, having multiple SPF records (only one allowed), syntax errors, or missing mail servers in your SPF record. Use this tool to identify specific issues and get remediation recommendations."}},
+        {"@type": "Question", "name": "Do I need SPF if I have DMARC?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. DMARC relies on SPF and DKIM for authentication. DMARC defines policies for handling authentication failures but requires at least one of SPF or DKIM to pass. Implement both SPF and DKIM with DMARC for best protection."}}
+      ]
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <link rel="stylesheet" href="/styles.css?a=10">
