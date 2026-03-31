@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary Meta Tags -->
-    <title>FAQ - DNS Lookup Tool | Frequently Asked Questions</title>
-    <meta name="title" content="FAQ - DNS Lookup Tool | Frequently Asked Questions">
+    <title>DNS Lookup FAQ: SPF, DMARC, DKIM & DNS Questions Answered</title>
     <meta name="description"
-        content="Frequently asked questions about DNS Intelligence - your comprehensive DNS lookup, security analysis, and propagation checking tool.">
+        content="Answers to common DNS, SPF, DMARC, DKIM, SSL, and propagation questions. Quick reference guide for DNS security and email authentication.">
     <meta name="keywords" content="DNS FAQ, DNS lookup help, DNS questions, DNS security FAQ, DNS propagation FAQ">
     <meta name="author" content="DNS Intelligence">
     <meta name="robots" content="index, follow">
@@ -37,6 +36,66 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is DNS Intelligence?",
+          "acceptedAnswer": {"@type": "Answer", "text": "DNS Intelligence is a comprehensive DNS lookup and security analysis tool that performs multi-record DNS queries, global propagation checks, reverse DNS lookups, SSL/TLS certificate inspection, and advanced email security analysis — all in one automated workflow. Unlike basic DNS lookup tools, it provides enriched data including SPF/DMARC/DKIM parsing, MX provider detection, security scoring, and actionable recommendations."}
+        },
+        {
+          "@type": "Question",
+          "name": "Is DNS Intelligence free to use?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. The web interface at lookup.echovalue.dev is completely free to use for individual domain lookups with all features enabled. For bulk processing and API access, a pay-per-use model is available through the API integration."}
+        },
+        {
+          "@type": "Question",
+          "name": "What DNS record types are supported?",
+          "acceptedAnswer": {"@type": "Answer", "text": "All major DNS record types are supported including A, AAAA, MX, CNAME, TXT (SPF, DKIM), NS, PTR, SOA, CAA, and SRV."}
+        },
+        {
+          "@type": "Question",
+          "name": "How does DNS Propagation Checking work?",
+          "acceptedAnswer": {"@type": "Answer", "text": "DNS Intelligence queries your domain across multiple global DNS resolvers (Google, Cloudflare, OpenDNS, Quad9) to verify that your DNS changes have propagated correctly worldwide, identifying any consistency issues between resolvers."}
+        },
+        {
+          "@type": "Question",
+          "name": "What is Reverse DNS Lookup?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Reverse DNS Lookup (PTR) resolves IP addresses back to their associated hostnames. This is essential for network reconnaissance, verifying email server authenticity, and identifying server owners."}
+        },
+        {
+          "@type": "Question",
+          "name": "How do you handle privacy and data security?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Your search history is stored only in your browser's local storage and is never synced to servers. No cookies or tracking scripts are used. DNS lookups are standard read-only operations. Minimal data is handled only for processing queries and bot protection (Cloudflare Turnstile), and data is never shared with third parties."}
+        },
+        {
+          "@type": "Question",
+          "name": "Why is the DNS analysis taking so long?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Analysis time depends on enabled options: Basic DNS Lookup takes 1-5 seconds. With DNS Enrichment (comprehensive email security analysis): 10-60 seconds. With SSL Inspection: additional 5-15 seconds. With Propagation Check: additional 10-30 seconds. If analysis exceeds 60 seconds, try disabling some advanced options."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does DNS Intelligence offer an API?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes, a robust API is available for programmatic access, enabling bulk domain processing, CI/CD integration, and automated infrastructure monitoring. It supports all advanced features with JSON output. See the API Access section for documentation and pricing."}
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an MCP endpoint available?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. The DNS tool is available as an MCP endpoint via Apify for agent workflows and automation at mcp.apify.com/?tools=njoylab/apify-dns."}
+        },
+        {
+          "@type": "Question",
+          "name": "Do you support international domains (IDN)?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. Internationalized Domain Names (IDN) containing Unicode characters (e.g., münchen.de, 中国.cn) are fully supported. The system automatically handles the necessary Punycode conversions."}
+        }
+      ]
+    }
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +104,7 @@
         rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css?a=10">
+    <link rel="stylesheet" href="/styles.css?a=10">
 </head>
 
 <body>

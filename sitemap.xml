@@ -56,6 +56,25 @@
   </url>
 
   <url>
+    <loc>https://lookup.echovalue.dev/guides/dmarc-spf-dkim/</loc>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lookup.echovalue.dev/guides/how-to-set-up-dmarc/</loc>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lookup.echovalue.dev/guides/dns-propagation/</loc>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://lookup.echovalue.dev/faq</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>

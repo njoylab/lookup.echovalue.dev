@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Long Does DNS Propagation Take?</title>
+    <meta name="description" content="DNS propagation takes minutes to 48 hours depending on TTL. Learn why changes are delayed, how caching differs from propagation, and how to check with dig and nslookup.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lookup.echovalue.dev/guides/dns-propagation/">
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://lookup.echovalue.dev/guides/dns-propagation/">
+    <meta property="og:title" content="How Long Does DNS Propagation Take?">
+    <meta property="og:description" content="DNS propagation takes minutes to 48 hours depending on TTL. Learn why changes are delayed, how caching differs from propagation, and how to check with dig and nslookup.">
+    <meta property="og:image" content="https://lookup.echovalue.dev/og-image.png">
+    <meta property="og:site_name" content="DNS Intelligence">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://lookup.echovalue.dev/guides/dns-propagation/">
+    <meta property="twitter:title" content="How Long Does DNS Propagation Take?">
+    <meta property="twitter:description" content="DNS propagation takes minutes to 48 hours depending on TTL. Learn why changes are delayed, how caching differs from propagation, and how to check with dig and nslookup.">
+    <meta property="twitter:image" content="https://lookup.echovalue.dev/og-image.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "How Long Does DNS Propagation Take?",
+      "description": "DNS propagation takes minutes to 48 hours depending on TTL settings. Learn how caching differs from propagation, and how to check with dig and nslookup.",
+      "url": "https://lookup.echovalue.dev/guides/dns-propagation/",
+      "publisher": {
+        "@type": "Organization",
+        "name": "DNS Intelligence",
+        "url": "https://lookup.echovalue.dev/"
+      },
+      "datePublished": "2026-03-31",
+      "dateModified": "2026-03-31"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://lookup.echovalue.dev/"},
+        {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://lookup.echovalue.dev/guides/"},
+        {"@type": "ListItem", "position": 3, "name": "DNS Propagation", "item": "https://lookup.echovalue.dev/guides/dns-propagation/"}
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How long does DNS propagation take?",
+          "acceptedAnswer": {"@type": "Answer", "text": "DNS propagation typically takes between a few minutes and 48 hours. The actual time depends on the TTL (Time To Live) value of the record you changed, plus how long your old TTL was set before you made the change. If your TTL was 86400 (24 hours), resolvers cached the old record for up to 24 hours before checking for updates. If you set a low TTL (300 seconds) before making the change, propagation can complete in under 10 minutes globally."}
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between DNS propagation and DNS caching?",
+          "acceptedAnswer": {"@type": "Answer", "text": "DNS propagation is the process of your authoritative nameserver publishing new records. This happens almost instantly after you save changes in your DNS panel. DNS caching is what actually causes the delay — resolvers around the world cache your old records and won't check for updates until the TTL expires. 'Propagation delay' is almost always caching delay, not a slow rollout from your nameserver."}
+        },
+        {
+          "@type": "Question",
+          "name": "Why do some people see my new DNS records but others don't?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Different users query different recursive resolvers (ISP resolvers, Google 8.8.8.8, Cloudflare 1.1.1.1, etc.). Each resolver has its own cache. Some may have cached your old record recently and won't refresh until TTL expires. Others may query your authoritative nameserver fresh and get the new record immediately. This inconsistency is normal and resolves once all resolvers' caches expire."}
+        },
+        {
+          "@type": "Question",
+          "name": "How can I check if DNS has propagated?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Use dig or nslookup to query specific nameservers directly. For example: dig @8.8.8.8 example.com A shows the record from Google's resolver. dig @1.1.1.1 example.com A shows Cloudflare's view. If these return different answers, propagation is still in progress. You can also use our free DNS Lookup tool to check from multiple vantage points."}
+        },
+        {
+          "@type": "Question",
+          "name": "How do I speed up DNS propagation?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Lower your TTL before making changes. If your current TTL is 86400 (24 hours), reduce it to 300 (5 minutes) 24-48 hours before making the change. After the old TTL expires, all resolvers will re-query frequently. Then make your DNS change and propagation will complete within 5-10 minutes. After confirming propagation is complete, raise the TTL back to a higher value."}
+        },
+        {
+          "@type": "Question",
+          "name": "What is a good TTL value for DNS records?",
+          "acceptedAnswer": {"@type": "Answer", "text": "For stable records (nameservers, MX records that rarely change): 86400 seconds (24 hours) or even higher. For records you may change (A records, CNAME for web hosting): 3600 seconds (1 hour) is a good balance. For records under active management or migration: 300 seconds (5 minutes). TTL is a tradeoff between propagation speed and DNS query load on your nameserver."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does DNS propagation affect email delivery?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. If you change MX records, email may be split between old and new mail servers during propagation. Configure both old and new servers to accept mail during the transition. Similarly, SPF, DKIM, and DMARC changes propagate on their own TTL timelines — if you add a new sending service and update SPF, some receivers may not see the updated record for hours, causing authentication failures in the meantime."}
+        }
+      ]
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css?a=10">
+</head>
+<body>
+    <div class="grain-overlay"></div>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;">
+                    <span class="logo-icon">◈</span>
+                    <span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span>
+                </a>
+            </div>
+            <nav class="nav">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/#tools" class="nav-link">Tools</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section style="padding: 1.5rem 0 0;">
+            <div class="container">
+                <nav style="font-size: 0.9rem; color: var(--color-text-secondary); font-family: var(--font-mono);">
+                    <a href="/" style="color: var(--color-text-secondary); text-decoration: none;">Home</a> ›
+                    <span style="color: var(--color-text-secondary);">Guides</span> ›
+                    <span style="color: var(--color-accent);">DNS Propagation</span>
+                </nav>
+            </div>
+        </section>
+
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="title-line">How Long Does DNS</span>
+                        <span class="title-line title-gradient">Propagation Take?</span>
+                    </h1>
+                    <p class="hero-description">DNS changes don't go live instantly. Here's exactly why, how long to expect, and how to verify propagation status from the command line.</p>
+                </div>
+            </div>
+        </section>
+
+        <section style="padding: 2rem 0 4rem;">
+            <div class="container">
+                <article style="max-width: 900px; margin: 0 auto;">
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 2rem;">You updated a DNS record. Your registrar or DNS panel said "saved." But your website, email, or service still isn't working everywhere. Here's what's actually happening and what you can do about it.</p>
+
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.25rem; color: var(--color-accent);">What is DNS Propagation?</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;">When you update a DNS record, your authoritative nameserver has the new value almost immediately. The delay comes from <strong style="color: var(--color-text-primary);">caching</strong>, not from a slow rollout.</p>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;">Here's the path a DNS query takes:</p>
+                    <ol style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                        <li style="margin-bottom: 0.5rem;">Your browser asks a <strong style="color: var(--color-text-primary);">recursive resolver</strong> (usually your ISP's, or Google's 8.8.8.8, or Cloudflare's 1.1.1.1)</li>
+                        <li style="margin-bottom: 0.5rem;">The resolver checks its <strong style="color: var(--color-text-primary);">local cache</strong>. If it has a recent answer, it returns that — without contacting your nameserver</li>
+                        <li style="margin-bottom: 0.5rem;">If the cache is empty or expired, the resolver queries the root nameservers → TLD nameservers → your authoritative nameserver</li>
+                        <li style="margin-bottom: 0.5rem;">Your authoritative nameserver returns the current record, and the resolver caches it for the record's <strong style="color: var(--color-text-primary);">TTL</strong> duration</li>
+                    </ol>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 2rem;">The "propagation delay" is almost entirely the time for all the world's resolvers to let their cached copy of your old record expire and re-fetch from your nameserver.</p>
+
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.25rem; color: var(--color-accent);">Propagation vs. Caching: The Key Distinction</h2>
+                    <div style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <th style="text-align: left; padding: 0.75rem 1rem; color: var(--color-accent); font-family: var(--font-mono);">Concept</th>
+                                    <th style="text-align: left; padding: 0.75rem 1rem; color: var(--color-accent); font-family: var(--font-mono);">What it is</th>
+                                    <th style="text-align: left; padding: 0.75rem 1rem; color: var(--color-accent); font-family: var(--font-mono);">How fast</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-primary); font-weight: 600;">DNS Propagation</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">Your authoritative nameserver publishing the new record</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">Seconds to ~1 minute</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-primary); font-weight: 600;">Cache Expiry</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">Recursive resolvers worldwide letting old cached records expire</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">Equal to the old TTL value</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 2rem;">This means: if your A record had a TTL of 86400 (24 hours) before you changed it, resolvers that cached it just before your change will serve the old IP for up to 24 more hours — even though your nameserver has the new value instantly.</p>
+
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.25rem; color: var(--color-accent);">TTL Values and What They Mean</h2>
+                    <div style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.9rem;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <th style="text-align: left; padding: 0.75rem 1rem; color: var(--color-accent);">TTL Value</th>
+                                    <th style="text-align: left; padding: 0.75rem 1rem; color: var(--color-accent);">Duration</th>
+                                    <th style="text-align: left; padding: 0.75rem 1rem; color: var(--color-accent);">Max propagation delay</th>
+                                    <th style="text-align: left; padding: 0.75rem 1rem; color: var(--color-accent);">Typical use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-primary);">60</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">1 minute</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">~1–2 minutes</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">Active migration, failover</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-primary);">300</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">5 minutes</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">~5–10 minutes</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">Pre-migration (lower before change)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-primary);">3600</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">1 hour</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">~1–2 hours</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">A records, CNAME (default for many providers)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-primary);">14400</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">4 hours</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">~4–6 hours</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">MX records, SPF/DKIM/DMARC</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-primary);">86400</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">24 hours</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">Up to 48 hours</td>
+                                    <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary);">NS records, stable infrastructure</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 2rem;">Why can propagation take longer than the TTL? Some ISP resolvers ignore TTL and cache records longer than specified. This is uncommon with major resolvers (Google, Cloudflare, OpenDNS) but happens with older or misconfigured ISP resolvers.</p>
+
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.25rem; color: var(--color-accent);">How to Speed Up DNS Propagation</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;">The only way to speed up propagation is to <strong style="color: var(--color-text-primary);">lower your TTL before making the change</strong>. The process:</p>
+                    <ol style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                        <li style="margin-bottom: 0.75rem;"><strong style="color: var(--color-text-primary);">24–48 hours before your planned change:</strong> Lower the TTL of the record you're going to change to 300 seconds (5 minutes).</li>
+                        <li style="margin-bottom: 0.75rem;"><strong style="color: var(--color-text-primary);">Wait for the old TTL to expire:</strong> If your record had TTL=86400, wait 24 hours for all resolvers to let their cache expire and pick up the new short TTL.</li>
+                        <li style="margin-bottom: 0.75rem;"><strong style="color: var(--color-text-primary);">Make your DNS change:</strong> Update the record value. With TTL=300, most resolvers will fetch the new value within 5–10 minutes.</li>
+                        <li style="margin-bottom: 0.75rem;"><strong style="color: var(--color-text-primary);">After propagation confirms:</strong> Raise the TTL back to 3600 or higher.</li>
+                    </ol>
+
+                    <div style="background: var(--color-bg-card); border-left: 3px solid var(--color-accent); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 2rem;">
+                        <p style="color: var(--color-text-secondary); line-height: 1.7; margin: 0;"><strong style="color: var(--color-text-primary);">Common mistake:</strong> Lowering TTL at the same time as making the change. This doesn't help — the resolvers already cached your old record at the old TTL. The TTL reduction only affects future cache refreshes.</p>
+                    </div>
+
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.25rem; color: var(--color-accent);">How to Check DNS Propagation with dig</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;"><code style="background: var(--color-bg-elevated); padding: 0.15rem 0.4rem; font-family: var(--font-mono);">dig</code> is the standard command-line DNS tool on Linux and macOS. Query a specific resolver with <code style="background: var(--color-bg-elevated); padding: 0.15rem 0.4rem; font-family: var(--font-mono);">@server</code>:</p>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 0.5rem;">Check your A record from Google's resolver:</p>
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);">dig @8.8.8.8 example.com A</code></pre>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 0.5rem;">Check from Cloudflare's resolver:</p>
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);">dig @1.1.1.1 example.com A</code></pre>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 0.5rem;">Query your authoritative nameserver directly (bypasses all caching):</p>
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);"># First, find your nameserver
+dig example.com NS
+
+# Then query it directly (replace ns1.example.com with your NS)
+dig @ns1.example.com example.com A</code></pre>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 0.5rem;">Check TTL remaining on a cached record (the number in the ANSWER SECTION shows seconds left):</p>
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);">dig @8.8.8.8 example.com A +noall +answer
+# Output:
+# example.com.  2341  IN  A  93.184.216.34
+#               ^^^^
+#               TTL remaining in seconds (2341s = ~39 minutes until refresh)</code></pre>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;">Check MX records (email routing):</p>
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 2rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);">dig @8.8.8.8 example.com MX +short</code></pre>
+
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.25rem; color: var(--color-accent);">How to Check DNS Propagation with nslookup</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;"><code style="background: var(--color-bg-elevated); padding: 0.15rem 0.4rem; font-family: var(--font-mono);">nslookup</code> is available on Windows, macOS, and Linux:</p>
+
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);"># Query from Google DNS
+nslookup example.com 8.8.8.8
+
+# Query from Cloudflare
+nslookup example.com 1.1.1.1
+
+# Query MX records
+nslookup -type=MX example.com 8.8.8.8
+
+# Query TXT records (SPF, DMARC, DKIM)
+nslookup -type=TXT example.com 8.8.8.8
+nslookup -type=TXT _dmarc.example.com 8.8.8.8</code></pre>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;">If Google (8.8.8.8) and Cloudflare (1.1.1.1) both return your new record but your ISP resolver still returns the old one, propagation is nearly complete. The ISP cache will expire on its own schedule.</p>
+
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.25rem; color: var(--color-accent);">Flush Your Local DNS Cache</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem;">Your own computer also caches DNS records. To see the new record locally, flush your DNS cache:</p>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 0.5rem;"><strong style="color: var(--color-text-primary);">macOS:</strong></p>
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);">sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder</code></pre>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 0.5rem;"><strong style="color: var(--color-text-primary);">Windows:</strong></p>
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);">ipconfig /flushdns</code></pre>
+
+                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 0.5rem;"><strong style="color: var(--color-text-primary);">Linux (systemd-resolved):</strong></p>
+                    <pre style="background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 2rem;"><code style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-text-primary);">sudo systemd-resolve --flush-caches</code></pre>
+
+                    <div style="background: var(--color-bg-card); border-left: 3px solid var(--color-accent); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 2rem;">
+                        <p style="color: var(--color-text-secondary); line-height: 1.7; margin: 0;"><strong style="color: var(--color-text-primary);">Browser caching:</strong> Chrome and Firefox maintain their own DNS cache independently of the OS. In Chrome, go to <code style="background: var(--color-bg-elevated); padding: 0.1rem 0.35rem; font-family: var(--font-mono);">chrome://net-internals/#dns</code> and click "Clear host cache". In Firefox, restart the browser after flushing the OS cache.</p>
+                    </div>
+
+                    <!-- CTA -->
+                    <div style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 2rem; margin-bottom: 3rem; text-align: center;">
+                        <p style="color: var(--color-text-primary); font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Check your DNS records from multiple locations</p>
+                        <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem;">Our tool queries authoritative nameservers and returns live results — no caching.</p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;">
+                            <a href="/dns-lookup/" style="background: var(--color-accent); color: #000; padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-family: var(--font-mono); font-size: 0.9rem;">DNS Lookup Tool</a>
+                            <a href="/mx-lookup/" style="background: var(--color-accent); color: #000; padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-family: var(--font-mono); font-size: 0.9rem;">MX Record Lookup</a>
+                            <a href="/spf-check/" style="border: 1px solid var(--color-border); color: var(--color-text-primary); padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-family: var(--font-mono); font-size: 0.9rem;">SPF Checker</a>
+                        </div>
+                    </div>
+
+                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin: 3rem 0 1.5rem; color: var(--color-accent); text-align: center;">FAQ</h2>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem;">
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between;">
+                                <span>How long does DNS propagation take?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">Between a few minutes and 48 hours. The actual time equals the TTL of your old record — if it was set to 86400 (24 hours), resolvers that cached it just before your change will keep the old value for up to 24 hours. If you reduced TTL to 300 before changing, propagation completes in under 10 minutes globally.</div>
+                        </details>
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between;">
+                                <span>What is the difference between DNS propagation and DNS caching?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">DNS propagation (your nameserver publishing the new record) happens in seconds. What causes the actual delay is DNS caching — recursive resolvers worldwide serve their cached copy of your old record until the TTL expires. "Propagation" is the common term, but the delay is almost entirely cache expiry, not a slow rollout.</div>
+                        </details>
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between;">
+                                <span>Why do some people see my new DNS record but others don't?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">Different users query different recursive resolvers, each with its own cache. Some may have just cached your old record; others may query fresh and get the new value. This is normal and resolves once all resolvers' caches expire.</div>
+                        </details>
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between;">
+                                <span>How can I check if DNS has propagated?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">Use <code style="background: var(--color-bg-elevated); padding: 0.1rem 0.35rem; font-family: var(--font-mono);">dig @8.8.8.8 example.com A</code> (Google) and <code style="background: var(--color-bg-elevated); padding: 0.1rem 0.35rem; font-family: var(--font-mono);">dig @1.1.1.1 example.com A</code> (Cloudflare) and compare the answers. If both return your new value, propagation is effectively complete for most users. You can also use our <a href="/dns-lookup/" style="color: var(--color-accent); text-decoration: none;">DNS Lookup tool</a> to check live records.</div>
+                        </details>
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between;">
+                                <span>How do I speed up DNS propagation?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">Lower your TTL to 300 at least 24 hours before making the change. After waiting for the old TTL to expire, make your change. With TTL=300, propagation completes in under 10 minutes. After confirming propagation, restore the TTL to a higher value.</div>
+                        </details>
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between;">
+                                <span>What is a good TTL value?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">For stable records (NS, MX): 86400 (24 hours). For A records and CNAMEs: 3600 (1 hour) balances propagation speed with query load. For records under active migration: 300 (5 minutes). TTL is a tradeoff — lower TTL means faster propagation but more DNS queries against your nameserver.</div>
+                        </details>
+                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
+                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between;">
+                                <span>Does DNS propagation affect email delivery?</span>
+                                <span style="color: var(--color-accent);">▸</span>
+                            </summary>
+                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">Yes. If you change MX records, email may be split between old and new mail servers during propagation. Configure both to accept mail during the transition. SPF, DKIM, and DMARC changes also propagate on their own TTL timelines — adding a new sender to SPF may take hours to reach all resolvers, causing authentication failures in the meantime.</div>
+                        </details>
+                    </div>
+
+                </article>
+            </div>
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">Built by <a href="https://njoylab.com" target="_blank" rel="noopener" style="color: var(--color-accent); text-decoration: none;">nJoyLab.com</a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
