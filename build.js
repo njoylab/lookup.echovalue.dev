@@ -18,6 +18,8 @@ const allowedExtensions = new Set([
     '.js',
     '.json',
     '.md',
+    '.jpg',
+    '.jpeg',
     '.png',
     '.ico',
     '.svg',
