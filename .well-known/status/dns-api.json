@@ -1,0 +1,9 @@
+{
+  "service": "DNS Intelligence API",
+  "endpoint": "https://api.lookup.echovalue.dev/dns-query",
+  "documentation": "https://lookup.echovalue.dev/docs/api/",
+  "notes": [
+    "This site publishes static service metadata for automated discovery.",
+    "Operational status is provided by upstream API providers and runtime monitoring."
+  ]
+}

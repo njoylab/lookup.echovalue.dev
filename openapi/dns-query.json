@@ -1,0 +1,106 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "DNS Intelligence API",
+    "version": "1.0.0",
+    "description": "Programmatic DNS lookup, propagation, email-security, and TLS inspection contract for lookup.echovalue.dev."
+  },
+  "servers": [
+    {
+      "url": "https://api.lookup.echovalue.dev"
+    }
+  ],
+  "paths": {
+    "/dns-query": {
+      "post": {
+        "operationId": "dnsQuery",
+        "summary": "Analyze one or more domains or IP addresses",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DnsQueryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful DNS analysis response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "429": {
+            "description": "Rate limited or verification required"
+          },
+          "500": {
+            "description": "Upstream processing failure"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DnsQueryRequest": {
+        "type": "object",
+        "properties": {
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "recordTypes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["A", "AAAA", "MX", "NS", "TXT", "CNAME", "PTR", "SOA", "CAA", "SRV"]
+            }
+          },
+          "checkPropagation": {
+            "type": "boolean"
+          },
+          "performReverseLookup": {
+            "type": "boolean"
+          },
+          "enableEnrichment": {
+            "type": "boolean"
+          },
+          "enableSslInspection": {
+            "type": "boolean"
+          },
+          "timeout": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 30000
+          },
+          "maxRetries": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "retryDelay": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 5000
+          },
+          "includeMetadata": {
+            "type": "boolean"
+          }
+        },
+        "required": ["domains"]
+      }
+    }
+  }
+}

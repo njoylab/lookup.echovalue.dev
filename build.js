@@ -16,12 +16,20 @@ const allowedExtensions = new Set([
     '.html',
     '.css',
     '.js',
+    '.json',
+    '.md',
     '.png',
     '.ico',
     '.svg',
     '.webmanifest',
     '.txt',
     '.xml'
+]);
+
+const allowedBasenames = new Set([
+    '_headers',
+    'api-catalog',
+    'oauth-protected-resource'
 ]);
 
 // Directories to skip
@@ -45,6 +53,7 @@ if (!siteKey) {
 function processFile(sourcePath, destPath) {
     const fileName = path.basename(sourcePath);
     const ext = path.extname(fileName);
+    const relativePath = path.relative(rootDir, sourcePath).split(path.sep).join('/');
 
     // Skip hidden files
     if (fileName.startsWith('.')) {
@@ -52,8 +61,28 @@ function processFile(sourcePath, destPath) {
     }
 
     // Check if file should be copied
-    if (!allowedExtensions.has(ext)) {
+    if (!allowedExtensions.has(ext) && !allowedBasenames.has(fileName)) {
         return;
+    }
+
+    if (ext === '.md') {
+        const isPublicMarkdown =
+            relativePath === 'index.md' ||
+            relativePath.startsWith('.well-known/agent-skills/');
+
+        if (!isPublicMarkdown) {
+            return;
+        }
+    }
+
+    if (ext === '.json') {
+        const isPublicJson =
+            relativePath.startsWith('.well-known/') ||
+            relativePath.startsWith('openapi/');
+
+        if (!isPublicJson) {
+            return;
+        }
     }
 
     // Process HTML files - replace env variables
@@ -93,7 +122,11 @@ function processDirectory(sourceDir, destDir) {
 
         if (entry.isDirectory()) {
             // Skip excluded directories
-            if (skipDirs.has(entry.name) || entry.name.startsWith('.')) {
+            if (skipDirs.has(entry.name)) {
+                continue;
+            }
+
+            if (entry.name.startsWith('.') && entry.name !== '.well-known') {
                 continue;
             }
 
@@ -104,6 +137,10 @@ function processDirectory(sourceDir, destDir) {
             processFile(sourcePath, destPath);
         }
     }
+}
+
+function generateAgentSkillsIndex() {
+    return;
 }
 
 // Start processing from root

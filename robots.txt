@@ -1,6 +1,7 @@
 # robots.txt for lookup.echovalue.dev
 User-agent: *
 Allow: /
+Content-Signal: ai-train=yes, search=yes, ai-input=no
 
 # Sitemap
 Sitemap: https://lookup.echovalue.dev/sitemap.xml

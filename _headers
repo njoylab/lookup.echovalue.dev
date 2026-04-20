@@ -1,0 +1,10 @@
+/
+  Link: </.well-known/api-catalog>; rel="api-catalog"
+  Link: </docs/api/>; rel="service-doc"
+  Link: </openapi/dns-query.json>; rel="service-desc"
+  Link: </index.md>; rel="alternate"; type="text/markdown"
+  Vary: Accept
+
+/.well-known/api-catalog
+  Content-Type: application/linkset+json; charset=utf-8
+  Access-Control-Allow-Origin: *

@@ -1,0 +1,25 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://api.lookup.echovalue.dev/dns-query",
+      "service-desc": [
+        {
+          "href": "https://lookup.echovalue.dev/openapi/dns-query.json",
+          "type": "application/openapi+json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://lookup.echovalue.dev/docs/api/",
+          "type": "text/html"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://lookup.echovalue.dev/.well-known/status/dns-api.json",
+          "type": "application/json"
+        }
+      ]
+    }
+  ]
+}

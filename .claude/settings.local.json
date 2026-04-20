@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(gcloud auth:*)",
+      "WebFetch(domain:lookup.echovalue.dev)",
+      "Bash(python3:*)",
+      "Read(//Users/emln/dev/njoylab.com/echovalue.dev/geoip.echovalue.dev/**)",
+      "Bash(npx tsc:*)",
+      "Bash(mkdir -p /Users/emln/dev/njoylab.com/echovalue.dev/lookup.echovalue.dev/guides/dns-propagation)",
+      "Bash(mkdir -p /Users/emln/dev/njoylab.com/echovalue.dev/lookup.echovalue.dev/guides/dmarc-spf-dkim)",
+      "Bash(mkdir -p /Users/emln/dev/njoylab.com/echovalue.dev/lookup.echovalue.dev/guides/how-to-set-up-dmarc)"
     ]
   }
 }
