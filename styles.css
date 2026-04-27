@@ -10,9 +10,9 @@
     --color-text-secondary: #a1a1a6;
     --color-text-muted: #6e6e73;
 
-    --color-accent: #ff9f0a;
-    --color-accent-hover: #fbbf24;
-    --color-accent-soft: rgba(255, 159, 10, 0.14);
+    --color-accent: #0a84ff;
+    --color-accent-hover: #64d2ff;
+    --color-accent-soft: rgba(10, 132, 255, 0.14);
 
     --color-success: #30d158;
     --color-warning: #ff9f0a;
@@ -243,7 +243,7 @@ body {
 }
 
 .title-gradient {
-    background: linear-gradient(135deg, var(--color-accent) 0%, #fbbf24 100%);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1985,7 +1985,7 @@ html {
 
 body {
     background:
-        linear-gradient(180deg, rgba(255, 159, 10, 0.04), transparent 280px),
+        linear-gradient(180deg, rgba(10, 132, 255, 0.04), transparent 280px),
         var(--color-bg);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
@@ -1993,7 +1993,7 @@ body {
 }
 
 ::selection {
-    background-color: rgba(255, 159, 10, 0.28);
+    background-color: rgba(10, 132, 255, 0.25);
     color: var(--color-text-primary);
 }
 
@@ -2161,9 +2161,9 @@ code,
 .domain-input:focus,
 .number-input:focus {
     background: var(--color-bg-elevated);
-    border-color: rgba(255, 159, 10, 0.58);
+    border-color: rgba(10, 132, 255, 0.58);
     box-shadow: none;
-    outline: 2px solid rgba(255, 159, 10, 0.22);
+    outline: 2px solid rgba(10, 132, 255, 0.22);
     outline-offset: 3px;
 }
 
