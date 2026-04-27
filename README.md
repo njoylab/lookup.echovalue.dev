@@ -1,4 +1,4 @@
-# DNS Intelligence - Security Analyzer
+# echoValue lookup - DNS Security Analyzer
 
 A privacy-first DNS lookup tool with advanced security analysis, email security checking, SSL/TLS inspection, and DNS propagation monitoring.
 
@@ -10,6 +10,11 @@ A privacy-first DNS lookup tool with advanced security analysis, email security 
 
 Use the DNS tool as an MCP endpoint via Apify:
 [mcp.apify.com/?tools=njoylab/apify-dns](https://mcp.apify.com/?tools=njoylab/apify-dns)
+
+## API Documentation
+
+- DNS lookup API: [docs.echovalue.dev/dns-lookup](https://docs.echovalue.dev/dns-lookup/)
+- OpenAPI: [docs.echovalue.dev/openapi.yaml](https://docs.echovalue.dev/openapi.yaml)
 
 ## Features
 
@@ -27,7 +32,7 @@ Pure static HTML/CSS/JavaScript:
 - Optional build step for environment variable injection
 - No framework dependencies
 - Vanilla JavaScript (ES6+)
-- IBM Plex Sans & JetBrains Mono fonts
+- Inter & JetBrains Mono fonts
 
 ## Quick Start
 

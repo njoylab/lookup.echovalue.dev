@@ -4,13 +4,13 @@
       "anchor": "https://api.lookup.echovalue.dev/dns-query",
       "service-desc": [
         {
-          "href": "https://lookup.echovalue.dev/openapi/dns-query.json",
-          "type": "application/openapi+json"
+          "href": "https://docs.echovalue.dev/openapi.yaml",
+          "type": "application/openapi+yaml"
         }
       ],
       "service-doc": [
         {
-          "href": "https://lookup.echovalue.dev/docs/api/",
+          "href": "https://docs.echovalue.dev/dns-lookup/",
           "type": "text/html"
         }
       ],

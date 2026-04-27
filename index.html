@@ -12,13 +12,16 @@
         content="Free DNS lookup tool with security analysis. Check DNS records, email security (SPF, DMARC, DKIM), SSL certificates, and DNS propagation.">
     <meta name="keywords"
         content="DNS lookup, DNS checker, DNS records, SPF checker, DMARC checker, SSL certificate checker, DNS propagation, email security, DNS intelligence, DNS analyzer, free DNS tool">
-    <meta name="author" content="DNS Intelligence">
+    <meta name="author" content="echoValue">
     <meta name="robots" content="index, follow">
     <meta name="language" content="English">
 
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://lookup.echovalue.dev/">
+    <link rel="api-catalog" href="/.well-known/api-catalog">
+    <link rel="service-doc" href="https://docs.echovalue.dev/dns-lookup/">
+    <link rel="service-desc" type="application/openapi+yaml" href="https://docs.echovalue.dev/openapi.yaml">
     <link rel="alternate" type="text/markdown" href="/index.md">
 
     <!-- Open Graph / Facebook -->
@@ -29,7 +32,7 @@
         content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation.">
     <meta property="og:image" content="https://lookup.echovalue.dev/og-image.jpg">
     <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="DNS Intelligence">
+    <meta property="og:site_name" content="echoValue lookup">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -70,7 +73,7 @@
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "DNS Intelligence - DNS Lookup Tool",
+      "name": "echoValue lookup - DNS Lookup Tool",
       "description": "Advanced DNS lookup tool with security analysis, email security checking, SSL certificate inspection, and DNS propagation monitoring.",
       "url": "https://lookup.echovalue.dev/",
       "applicationCategory": "SecurityApplication",
@@ -105,7 +108,15 @@
           "name": "What DNS records does this tool check?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The tool queries all major DNS record types: A (IPv4 addresses), AAAA (IPv6 addresses), MX (mail servers), TXT (text records including SPF/DMARC/DKIM), NS (nameservers), and CNAME (canonical names). You can select which record types to query in the advanced options."
+            "text": "The tool queries A, AAAA, MX, TXT, NS, and CNAME records. You can narrow record types in advanced options."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I check IP addresses?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The input accepts domains, IPv4 addresses, and IPv6 addresses. Reverse DNS can resolve IP addresses to hostnames."
           }
         },
         {
@@ -113,55 +124,15 @@
           "name": "How is the email security score calculated?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The security score (0-100) evaluates SPF validity, DMARC policy strength (reject > quarantine > none), DKIM configuration, MX record security, and implementation best practices. A score above 80 indicates strong email authentication; below 50 suggests critical vulnerabilities to spoofing attacks."
+            "text": "It evaluates SPF validity, DMARC policy strength, DKIM configuration, MX records, and related best-practice signals."
           }
         },
         {
           "@type": "Question",
-          "name": "What is DNS propagation and when should I check it?",
+          "name": "Is search history stored on your servers?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "DNS propagation is the time it takes for DNS changes to spread across global nameservers. After updating DNS records (changing hosting providers, modifying MX records, etc.), enable propagation checking to verify that major DNS resolvers worldwide are serving your updated records. Propagation typically completes within minutes to hours, depending on TTL values."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I use this tool to check IP addresses?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, the tool accepts both domain names and IP addresses (IPv4 and IPv6). When you enter an IP address, it automatically performs reverse DNS lookups (PTR records) to resolve the IP to its associated hostname. This is useful for network diagnostics and mail server validation."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Why do I need reverse DNS for email servers?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Many email providers (Gmail, Outlook, etc.) require mail servers to have valid reverse DNS (PTR) records that match their hostname. This helps prevent spam and validates server identity. If your mail server's IP doesn't resolve to a matching hostname, legitimate emails may be rejected or marked as spam."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How often should I check my SSL certificate expiry?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Monitor SSL certificates at least monthly. Let's Encrypt certificates expire after 90 days, while commercial certificates last 1-2 years. Our tool displays days until expiry and offers downloadable calendar reminders. Set alerts 30 days before expiration to allow time for renewal and deployment."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What does SPF too many DNS lookups mean?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "SPF records are limited to 10 DNS lookups to prevent abuse. Each include: mechanism counts as one lookup. If your SPF record exceeds this limit, email authentication fails. Our tool flags this issue and recommends flattening your SPF record or using SPF macros to reduce lookup count."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is my search history stored on your servers?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. All search history is stored exclusively in your browser's localStorage and never transmitted to our servers. You can clear your history at any time using the Clear All button in the history panel. Your DNS queries are processed server-side for analysis but not logged or associated with your identity."
+            "text": "No. Search history is stored in browser localStorage and can be cleared from the history panel."
           }
         }
       ]
@@ -202,10 +173,8 @@
                 <span class="logo-accent">lookup</span>
             </a>
             <nav class="nav" role="navigation" aria-label="Main navigation">
-                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer" class="nav-link">More
-                    Tools</a>
-                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer"
-                    class="nav-link">GitHub</a>
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer" class="nav-link">More Tools</a>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
                 <a href="/terms" class="nav-link">Terms</a>
             </nav>
         </div>
@@ -524,13 +493,11 @@
     <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-content">
-                <span>Built by <a href="https://njoylab.com" class="footer-brand" target="_blank"
-                        rel="noopener noreferrer">nJoyLab.com</a></span>
+                <span>Built by <a href="https://njoylab.com" class="footer-brand" target="_blank" rel="noopener noreferrer">nJoyLab.com</a></span>
                 <span class="footer-sep">·</span>
                 <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer">More Tools</a>
                 <span class="footer-sep">·</span>
-                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank"
-                    rel="noopener noreferrer">GitHub</a>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <span class="footer-sep">·</span>
                 <a href="/terms">Terms &amp; Conditions</a>
             </div>

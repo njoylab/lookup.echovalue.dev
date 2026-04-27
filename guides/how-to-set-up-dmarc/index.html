@@ -13,7 +13,7 @@
     <meta property="og:title" content="How to Set Up DMARC: Step-by-Step Guide">
     <meta property="og:description" content="Step-by-step guide to setting up DMARC for your domain. Configure SPF, DKIM, and DMARC records from scratch, choose the right policy, and enable reporting.">
     <meta property="og:image" content="https://lookup.echovalue.dev/og-image.jpg">
-    <meta property="og:site_name" content="DNS Intelligence">
+    <meta property="og:site_name" content="echoValue lookup">
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lookup.echovalue.dev/guides/how-to-set-up-dmarc/">
@@ -126,22 +126,21 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css?a=10">
 </head>
 <body>
-    <div class="grain-overlay"></div>
-    <header class="header">
+    <header class="header" role="banner">
         <div class="container">
-            <div class="logo">
-                <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;">
-                    <span class="logo-icon">◈</span>
-                    <span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span>
-                </a>
-            </div>
-            <nav class="nav">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/#tools" class="nav-link">Tools</a>
+            <a class="logo" href="/" aria-label="echoValue DNS lookup">
+                <span class="logo-text">echoValue</span>
+                <span class="logo-separator">/</span>
+                <span class="logo-accent">lookup</span>
+            </a>
+            <nav class="nav" role="navigation" aria-label="Main navigation">
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer" class="nav-link">More Tools</a>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+                <a href="/terms" class="nav-link">Terms</a>
             </nav>
         </div>
     </header>
@@ -331,10 +330,16 @@ ruf=mailto:dmarc-fail@example.com; fo=1</code></pre>
             </div>
         </section>
     </main>
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-content">
-                <p class="footer-text">Built by <a href="https://njoylab.com" target="_blank" rel="noopener" style="color: var(--color-accent); text-decoration: none;">nJoyLab.com</a></p>
+                <span>Built by <a href="https://njoylab.com" class="footer-brand" target="_blank" rel="noopener noreferrer">nJoyLab.com</a></span>
+                <span class="footer-sep">·</span>
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer">More Tools</a>
+                <span class="footer-sep">·</span>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-sep">·</span>
+                <a href="/terms">Terms &amp; Conditions</a>
             </div>
         </div>
     </footer>

@@ -1,4 +1,4 @@
-# DNS Intelligence
+# echoValue lookup
 
 DNS lookup, security analysis, email-authentication checks, SSL inspection, and propagation monitoring for domains and IP addresses.
 
@@ -40,4 +40,6 @@ The rendered results include:
 
 ## External Integrations
 
+- API documentation: [https://docs.echovalue.dev/dns-lookup/](https://docs.echovalue.dev/dns-lookup/)
+- OpenAPI specification: [https://docs.echovalue.dev/openapi.yaml](https://docs.echovalue.dev/openapi.yaml)
 - Apify MCP endpoint: [https://mcp.apify.com/?tools=njoylab/apify-dns](https://mcp.apify.com/?tools=njoylab/apify-dns)

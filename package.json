@@ -1,7 +1,7 @@
 {
   "name": "dns-intelligence-tool",
   "version": "1.0.0",
-  "description": "DNS Intelligence & Security Analyzer",
+  "description": "echoValue lookup DNS security analyzer",
   "scripts": {
     "build": "node build.js",
     "install-deps": "npm install"
@@ -11,6 +11,6 @@
     "security",
     "analyzer"
   ],
-  "author": "DNS Intelligence",
+  "author": "echoValue",
   "license": "MIT"
 }

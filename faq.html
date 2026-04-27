@@ -10,7 +10,7 @@
     <meta name="description"
         content="Answers to common DNS, SPF, DMARC, DKIM, SSL, and propagation questions. Quick reference guide for DNS security and email authentication.">
     <meta name="keywords" content="DNS FAQ, DNS lookup help, DNS questions, DNS security FAQ, DNS propagation FAQ">
-    <meta name="author" content="DNS Intelligence">
+    <meta name="author" content="echoValue">
     <meta name="robots" content="index, follow">
 
     <!-- Canonical URL -->
@@ -21,7 +21,7 @@
     <meta property="og:url" content="https://lookup.echovalue.dev/faq">
     <meta property="og:title" content="FAQ - DNS Lookup Tool">
     <meta property="og:description"
-        content="Frequently asked questions about DNS Intelligence - your comprehensive DNS lookup and security analysis tool.">
+        content="Frequently asked questions about echoValue lookup - your comprehensive DNS lookup and security analysis tool.">
     <meta property="og:image" content="https://lookup.echovalue.dev/og-image.jpg">
 
     <!-- Twitter -->
@@ -29,7 +29,7 @@
     <meta property="twitter:url" content="https://lookup.echovalue.dev/faq">
     <meta property="twitter:title" content="FAQ - DNS Lookup Tool">
     <meta property="twitter:description"
-        content="Frequently asked questions about DNS Intelligence - your comprehensive DNS lookup and security analysis tool.">
+        content="Frequently asked questions about echoValue lookup - your comprehensive DNS lookup and security analysis tool.">
     <meta property="twitter:image" content="https://lookup.echovalue.dev/og-image.jpg">
 
     <!-- Favicon -->
@@ -44,12 +44,12 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is DNS Intelligence?",
-          "acceptedAnswer": {"@type": "Answer", "text": "DNS Intelligence is a comprehensive DNS lookup and security analysis tool that performs multi-record DNS queries, global propagation checks, reverse DNS lookups, SSL/TLS certificate inspection, and advanced email security analysis — all in one automated workflow. Unlike basic DNS lookup tools, it provides enriched data including SPF/DMARC/DKIM parsing, MX provider detection, security scoring, and actionable recommendations."}
+          "name": "What is echoValue lookup?",
+          "acceptedAnswer": {"@type": "Answer", "text": "echoValue lookup is a comprehensive DNS lookup and security analysis tool that performs multi-record DNS queries, global propagation checks, reverse DNS lookups, SSL/TLS certificate inspection, and advanced email security analysis — all in one automated workflow. Unlike basic DNS lookup tools, it provides enriched data including SPF/DMARC/DKIM parsing, MX provider detection, security scoring, and actionable recommendations."}
         },
         {
           "@type": "Question",
-          "name": "Is DNS Intelligence free to use?",
+          "name": "Is echoValue lookup free to use?",
           "acceptedAnswer": {"@type": "Answer", "text": "Yes. The web interface at lookup.echovalue.dev is completely free to use for individual domain lookups with all features enabled. For bulk processing and API access, a pay-per-use model is available through the API integration."}
         },
         {
@@ -60,7 +60,7 @@
         {
           "@type": "Question",
           "name": "How does DNS Propagation Checking work?",
-          "acceptedAnswer": {"@type": "Answer", "text": "DNS Intelligence queries your domain across multiple global DNS resolvers (Google, Cloudflare, OpenDNS, Quad9) to verify that your DNS changes have propagated correctly worldwide, identifying any consistency issues between resolvers."}
+          "acceptedAnswer": {"@type": "Answer", "text": "echoValue lookup queries your domain across multiple global DNS resolvers (Google, Cloudflare, OpenDNS, Quad9) to verify that your DNS changes have propagated correctly worldwide, identifying any consistency issues between resolvers."}
         },
         {
           "@type": "Question",
@@ -79,8 +79,8 @@
         },
         {
           "@type": "Question",
-          "name": "Does DNS Intelligence offer an API?",
-          "acceptedAnswer": {"@type": "Answer", "text": "Yes, but not as a first-party endpoint on this domain. Programmatic access is currently exposed through hosted partners such as Apify and RapidAPI."}
+          "name": "Does echoValue lookup offer an API?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. API documentation for DNS lookup is available at docs.echovalue.dev/dns-lookup/ and the shared OpenAPI specification is published at docs.echovalue.dev/openapi.yaml."}
         },
         {
           "@type": "Question",
@@ -100,7 +100,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     <!-- Stylesheet -->
@@ -108,20 +108,17 @@
 </head>
 
 <body>
-    <div class="grain-overlay" aria-hidden="true"></div>
-
     <header class="header" role="banner">
         <div class="container">
-            <a href="/" class="logo" role="img" aria-label="DNS Intelligence Logo" style="text-decoration: none;">
-                <span class="logo-icon" aria-hidden="true">◈</span>
-                <span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span>
+            <a class="logo" href="/" aria-label="echoValue DNS lookup">
+                <span class="logo-text">echoValue</span>
+                <span class="logo-separator">/</span>
+                <span class="logo-accent">lookup</span>
             </a>
             <nav class="nav" role="navigation" aria-label="Main navigation">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/faq" class="nav-link">FAQ</a>
-                <a href="/#api" class="nav-link">API Access</a>
-                <a href="/#mcp" class="nav-link">MCP</a>
-                <a href="/#pricing" class="nav-link">Bulk Analysis</a>
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer" class="nav-link">More Tools</a>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+                <a href="/terms" class="nav-link">Terms</a>
             </nav>
         </div>
     </header>
@@ -133,7 +130,7 @@
                     <span class="title-gradient">Frequently Asked Questions</span>
                 </h1>
                 <p class="hero-description" style="margin-bottom: 3rem;">
-                    Everything you need to know about DNS Intelligence
+                    Everything you need to know about echoValue lookup
                 </p>
 
                 <!-- FAQ Sections -->
@@ -145,11 +142,11 @@
 
                         <div class="faq-item">
                             <button class="faq-question" aria-expanded="false">
-                                <span>What is DNS Intelligence?</span>
+                                <span>What is echoValue lookup?</span>
                                 <span class="faq-icon">▸</span>
                             </button>
                             <div class="faq-answer">
-                                <p>DNS Intelligence is a comprehensive DNS lookup and security analysis tool that
+                                <p>echoValue lookup is a comprehensive DNS lookup and security analysis tool that
                                     performs
                                     multi-record DNS queries, global propagation checks, reverse DNS lookups, SSL/TLS
                                     certificate inspection, and advanced email security analysis - all in one automated
@@ -162,7 +159,7 @@
 
                         <div class="faq-item">
                             <button class="faq-question" aria-expanded="false">
-                                <span>Is DNS Intelligence free to use?</span>
+                                <span>Is echoValue lookup free to use?</span>
                                 <span class="faq-icon">▸</span>
                             </button>
                             <div class="faq-answer">
@@ -194,7 +191,7 @@
                                 <span class="faq-icon">▸</span>
                             </button>
                             <div class="faq-answer">
-                                <p>DNS Intelligence is designed for <strong>cybersecurity professionals</strong>,
+                                <p>echoValue lookup is designed for <strong>cybersecurity professionals</strong>,
                                     <strong>web developers</strong>, <strong>IT administrators</strong>, and
                                     <strong>digital marketers</strong> needing comprehensive domain analysis and
                                     security assessments.
@@ -388,14 +385,13 @@
 
                         <div class="faq-item">
                             <button class="faq-question" aria-expanded="false">
-                                <span>Does DNS Intelligence offer an API?</span>
+                                <span>Does echoValue lookup offer an API?</span>
                                 <span class="faq-icon">▸</span>
                             </button>
                             <div class="faq-answer">
-                                <p>Yes, but not as a first-party endpoint on this domain. Programmatic access is
-                                    currently exposed through hosted partners such as Apify and RapidAPI.</p>
+                                <p>Yes. API documentation for DNS lookup is published in the echoValue docs site.</p>
                                 <p>For the currently available integration options, see the <a
-                                        href="/#api">API Access section</a>.</p>
+                                        href="https://docs.echovalue.dev/dns-lookup/" target="_blank" rel="noopener">DNS lookup API documentation</a>.</p>
                             </div>
                         </div>
 
@@ -477,7 +473,7 @@
                                 <span class="btn-text">Try DNS Lookup</span>
                                 <span class="btn-icon">→</span>
                             </a>
-                            <a href="/#api" class="analyze-btn"
+                            <a href="https://docs.echovalue.dev/dns-lookup/" target="_blank" rel="noopener" class="analyze-btn"
                                 style="text-decoration: none; display: inline-flex; background: transparent; border: 2px solid var(--color-accent); color: var(--color-accent);">
                                 <span class="btn-text">View API Access</span>
                             </a>
@@ -492,16 +488,13 @@
     <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-content">
-                <p class="footer-text">
-                    Built by <a href="https://njoylab.com" target="_blank" rel="noopener" style="color: var(--color-accent); text-decoration: none;">nJoyLab.com</a>
-                </p>
-                <p class="footer-links" style="color: var(--color-text-dim); font-size: 0.9rem; margin-top: 0.5rem;">
-                    <a href="https://echovalue.dev" target="_blank" rel="noopener" style="color: var(--color-text-secondary); text-decoration: none;">More Tools</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener" style="color: var(--color-text-secondary); text-decoration: none;">GitHub</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/terms" style="color: var(--color-text-secondary); text-decoration: none;">Terms & Conditions</a>
-                </p>
+                <span>Built by <a href="https://njoylab.com" class="footer-brand" target="_blank" rel="noopener noreferrer">nJoyLab.com</a></span>
+                <span class="footer-sep">·</span>
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer">More Tools</a>
+                <span class="footer-sep">·</span>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-sep">·</span>
+                <a href="/terms">Terms &amp; Conditions</a>
             </div>
         </div>
     </footer>

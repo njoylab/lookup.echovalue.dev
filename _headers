@@ -1,7 +1,7 @@
 /
   Link: </.well-known/api-catalog>; rel="api-catalog"
-  Link: </docs/api/>; rel="service-doc"
-  Link: </openapi/dns-query.json>; rel="service-desc"
+  Link: <https://docs.echovalue.dev/dns-lookup/>; rel="service-doc"
+  Link: <https://docs.echovalue.dev/openapi.yaml>; rel="service-desc"; type="application/openapi+yaml"
   Link: </index.md>; rel="alternate"; type="text/markdown"
   Vary: Accept
 

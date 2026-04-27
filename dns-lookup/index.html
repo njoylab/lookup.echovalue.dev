@@ -12,7 +12,7 @@
         content="Perform comprehensive DNS lookups for any domain. Query A, AAAA, MX, TXT, NS, and CNAME records with advanced analysis, email security checks, and SSL inspection.">
     <meta name="keywords"
         content="DNS lookup, DNS records, A record, AAAA record, MX record, TXT record, NS record, CNAME record, DNS checker, DNS query">
-    <meta name="author" content="DNS Intelligence">
+    <meta name="author" content="echoValue">
     <meta name="robots" content="index, follow">
 
     <!-- Canonical URL -->
@@ -42,7 +42,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     <!-- Cloudflare Turnstile -->
@@ -163,21 +163,17 @@
         </div>
     </div>
 
-    <div class="grain-overlay" aria-hidden="true"></div>
-
     <header class="header" role="banner">
         <div class="container">
-            <div class="logo" role="img" aria-label="DNS Intelligence Logo">
-                <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;">
-                    <span class="logo-icon" aria-hidden="true">◈</span>
-                    <span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span>
-                </a>
-            </div>
+            <a class="logo" href="/" aria-label="echoValue DNS lookup">
+                <span class="logo-text">echoValue</span>
+                <span class="logo-separator">/</span>
+                <span class="logo-accent">lookup</span>
+            </a>
             <nav class="nav" role="navigation" aria-label="Main navigation">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/#tools" class="nav-link">Tools</a>
-                <a href="/faq" class="nav-link">FAQ</a>
-                <a href="/#api" class="nav-link">API Access</a>
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer" class="nav-link">More Tools</a>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+                <a href="/terms" class="nav-link">Terms</a>
             </nav>
         </div>
     </header>
@@ -529,37 +525,13 @@
     <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-content">
-                <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem; font-weight: 600;">
-                    DNS Tools:
-                </p>
-                <p class="footer-links" style="color: var(--color-text-dim); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.8;">
-                    <a href="/dns-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">DNS Lookup</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/mx-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">MX Lookup</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/txt-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">TXT Lookup</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/spf-check/" style="color: var(--color-text-secondary); text-decoration: none;">SPF Check</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/dmarc-check/" style="color: var(--color-text-secondary); text-decoration: none;">DMARC Check</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/dkim-check/" style="color: var(--color-text-secondary); text-decoration: none;">DKIM Check</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/reverse-dns/" style="color: var(--color-text-secondary); text-decoration: none;">Reverse DNS</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/ssl-certificate-check/" style="color: var(--color-text-secondary); text-decoration: none;">SSL Check</a>
-                </p>
-                <p class="footer-text">
-                    Built by <a href="https://njoylab.com" target="_blank" rel="noopener"
-                        style="color: var(--color-accent); text-decoration: none;">nJoyLab.com</a>
-                </p>
-                <p class="footer-links" style="color: var(--color-text-dim); font-size: 0.9rem; margin-top: 0.5rem;">
-                    <a href="/" style="color: var(--color-text-secondary); text-decoration: none;">Home</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/sitemap.xml" style="color: var(--color-text-secondary); text-decoration: none;">Sitemap</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/terms" style="color: var(--color-text-secondary); text-decoration: none;">Terms</a>
-                </p>
+                <span>Built by <a href="https://njoylab.com" class="footer-brand" target="_blank" rel="noopener noreferrer">nJoyLab.com</a></span>
+                <span class="footer-sep">·</span>
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer">More Tools</a>
+                <span class="footer-sep">·</span>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-sep">·</span>
+                <a href="/terms">Terms &amp; Conditions</a>
             </div>
         </div>
     </footer>
