@@ -7,7 +7,7 @@
 
     <!-- Primary Meta Tags -->
     <title>DNS Lookup Tool - Security &amp; Intelligence Analyzer</title>
-    <meta name="title" content="DNS Lookup Tool - Security & Intelligence Analyzer">
+    <meta name="title" content="DNS Lookup Tool - Security &amp; Intelligence Analyzer">
     <meta name="description"
         content="Free DNS lookup tool with security analysis. Check DNS records, email security (SPF, DMARC, DKIM), SSL certificates, and DNS propagation.">
     <meta name="keywords"
@@ -19,15 +19,12 @@
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://lookup.echovalue.dev/">
-    <link rel="api-catalog" href="/.well-known/api-catalog">
-    <link rel="service-doc" href="/docs/api/">
-    <link rel="service-desc" type="application/openapi+json" href="/openapi/dns-query.json">
     <link rel="alternate" type="text/markdown" href="/index.md">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lookup.echovalue.dev/">
-    <meta property="og:title" content="DNS Lookup Tool - Intelligence & Security Analyzer">
+    <meta property="og:title" content="DNS Lookup Tool - Intelligence &amp; Security Analyzer">
     <meta property="og:description"
         content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation.">
     <meta property="og:image" content="https://lookup.echovalue.dev/og-image.jpg">
@@ -37,7 +34,7 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lookup.echovalue.dev/">
-    <meta property="twitter:title" content="DNS Lookup Tool - Intelligence & Security Analyzer">
+    <meta property="twitter:title" content="DNS Lookup Tool - Intelligence &amp; Security Analyzer">
     <meta property="twitter:description"
         content="Free DNS lookup tool with advanced security analysis. Check DNS records, email security, SSL certificates, and DNS propagation.">
     <meta property="twitter:image" content="https://lookup.echovalue.dev/og-image.jpg">
@@ -56,7 +53,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap"
         rel="stylesheet">
 
     <!-- Cloudflare Turnstile -->
@@ -197,21 +194,17 @@
         </div>
     </div>
 
-    <div class="grain-overlay" aria-hidden="true"></div>
-
     <header class="header" role="banner">
         <div class="container">
-            <div class="logo" role="img" aria-label="DNS Intelligence Logo">
-                <span class="logo-icon" aria-hidden="true">◈</span>
-                <span class="logo-text">DNS<span class="logo-accent">Intelligence</span></span>
-            </div>
+            <a class="logo" href="/" aria-label="echoValue DNS lookup">
+                <span class="logo-text">echoValue</span>
+                <span class="logo-separator">/</span>
+                <span class="logo-accent">lookup</span>
+            </a>
             <nav class="nav" role="navigation" aria-label="Main navigation">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/#tools" class="nav-link">Tools</a>
-                <a href="/faq" class="nav-link">FAQ</a>
-                <a href="/#api" class="nav-link">API Access</a>
-                <a href="/#mcp" class="nav-link">MCP</a>
-                <a href="/#pricing" class="nav-link">Bulk Analysis</a>
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer" class="nav-link">More Tools</a>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+                <a href="/terms.html" class="nav-link">Terms</a>
             </nav>
         </div>
     </header>
@@ -220,14 +213,12 @@
         <section class="hero" aria-labelledby="hero-title">
             <div class="container">
                 <div class="hero-content">
+                    <p class="section-label">Developer utility</p>
                     <h1 class="hero-title" id="hero-title">
-                        <span class="title-line">DNS Lookup:</span>
-                        <span class="title-line title-gradient">Intelligence & Security Analyzer</span>
+                        DNS Lookup Tool
                     </h1>
                     <p class="hero-description">
-                        A powerful DNS intelligence tool that performs multi-record lookups, global propagation checks,
-                        reverse DNS, SSL/TLS inspection, email security analysis, and rich metadata extraction
-                        all in one automated workflow.
+                        Check DNS records, email security, propagation, reverse DNS, and SSL/TLS details from one compact workflow.
                     </p>
                 </div>
 
@@ -258,7 +249,6 @@
                                 <span>Advanced Options</span>
                             </button>
                             <button type="button" class="history-toggle" id="historyToggle">
-                                <span>🕒</span>
                                 <span>History</span>
                                 <span class="history-count" id="historyCount" style="display: none;">0</span>
                             </button>
@@ -430,304 +420,92 @@
             </div>
         </section>
 
-        <!-- Popular DNS Tools -->
-        <section class="tools-section" id="tools" aria-labelledby="tools-heading">
+        <section class="content-section" aria-labelledby="checks-heading">
             <div class="container">
-                <h2 id="tools-heading" style="font-family: var(--font-mono); font-size: 2rem; text-align: center; margin-bottom: 3rem; color: var(--color-text-primary);">
-                    DNS Lookup Tools
-                </h2>
-                <div class="cta-grid" style="margin-bottom: 4rem;">
-                    <a href="/dns-lookup/" class="cta-card" style="text-decoration: none;">
-                        <div class="cta-icon">🔍</div>
-                        <h3 class="cta-title">DNS Lookup</h3>
-                        <p class="cta-description">
-                            Query all DNS record types (A, AAAA, MX, TXT, NS, CNAME) with comprehensive analysis and security insights.
-                        </p>
-                    </a>
-
-                    <a href="/mx-lookup/" class="cta-card" style="text-decoration: none;">
-                        <div class="cta-icon">📧</div>
-                        <h3 class="cta-title">MX Lookup</h3>
-                        <p class="cta-description">
-                            Check mail server records, verify email routing configuration, and identify your email provider.
-                        </p>
-                    </a>
-
-                    <a href="/txt-lookup/" class="cta-card" style="text-decoration: none;">
-                        <div class="cta-icon">📝</div>
-                        <h3 class="cta-title">TXT Lookup</h3>
-                        <p class="cta-description">
-                            Examine TXT records including SPF, DMARC, DKIM, domain verification tokens, and other metadata.
-                        </p>
-                    </a>
-
-                    <a href="/spf-check/" class="cta-card" style="text-decoration: none;">
-                        <div class="cta-icon">✉️</div>
-                        <h3 class="cta-title">SPF Check</h3>
-                        <p class="cta-description">
-                            Validate SPF records, check authorized mail servers, and get recommendations for SPF configuration.
-                        </p>
-                    </a>
-
-                    <a href="/dmarc-check/" class="cta-card" style="text-decoration: none;">
-                        <div class="cta-icon">🛡️</div>
-                        <h3 class="cta-title">DMARC Check</h3>
-                        <p class="cta-description">
-                            Analyze DMARC policy (none/quarantine/reject), verify reporting configuration, and assess email authentication.
-                        </p>
-                    </a>
-
-                    <a href="/dkim-check/" class="cta-card" style="text-decoration: none;">
-                        <div class="cta-icon">🔑</div>
-                        <h3 class="cta-title">DKIM Check</h3>
-                        <p class="cta-description">
-                            Verify DKIM signatures, check selector configuration, and validate email authentication keys.
-                        </p>
-                    </a>
-
-                    <a href="/reverse-dns/" class="cta-card" style="text-decoration: none;">
-                        <div class="cta-icon">🔄</div>
-                        <h3 class="cta-title">Reverse DNS</h3>
-                        <p class="cta-description">
-                            Perform PTR record lookups to resolve IP addresses to hostnames for network validation.
-                        </p>
-                    </a>
-
-                    <a href="/ssl-certificate-check/" class="cta-card" style="text-decoration: none;">
-                        <div class="cta-icon">🔐</div>
-                        <h3 class="cta-title">SSL Certificate Check</h3>
-                        <p class="cta-description">
-                            Inspect TLS certificates, verify expiry dates, check issuers, and get renewal reminders.
-                        </p>
-                    </a>
-                </div>
-
-                <!-- What This Tool Checks -->
-                <div style="max-width: 900px; margin: 0 auto 4rem;">
-                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-accent);">
-                        What This Tool Checks
-                    </h2>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                        Our DNS intelligence platform performs comprehensive domain analysis in a single automated workflow. When you enter a domain or IP address, the tool queries authoritative nameservers and gathers data across multiple dimensions: DNS records, email security configuration, SSL/TLS certificates, and optional global propagation checks.
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                        The analysis covers all major DNS record types (A, AAAA, MX, TXT, NS, CNAME), automatically performs reverse DNS lookups to map IP addresses to hostnames, inspects SSL certificates for expiry and configuration issues, and parses email security records (SPF, DMARC, DKIM) to calculate a security score from 0 to 100.
-                    </p>
-
-                    <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem; color: var(--color-text-primary);">
-                        DNS Record Types Explained
-                    </h3>
-                    <div style="display: grid; gap: 1.25rem; margin-bottom: 2rem;">
-                        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem;">
-                            <h4 style="color: var(--color-accent); font-family: var(--font-mono); margin-bottom: 0.5rem; font-size: 1.1rem;">A & AAAA Records</h4>
-                            <p style="color: var(--color-text-secondary); line-height: 1.7; font-size: 0.98rem;">
-                                A records map domain names to IPv4 addresses (e.g., 93.184.216.34), while AAAA records handle IPv6 addresses. These are fundamental to web hosting and service accessibility. Our tool displays all associated IP addresses and their TTL (Time To Live) values, which indicate how long DNS resolvers should cache the records.
-                            </p>
-                        </div>
-                        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem;">
-                            <h4 style="color: var(--color-accent); font-family: var(--font-mono); margin-bottom: 0.5rem; font-size: 1.1rem;">MX Records</h4>
-                            <p style="color: var(--color-text-secondary); line-height: 1.7; font-size: 0.98rem;">
-                                Mail Exchange records define which servers handle email for your domain. Each MX record includes a priority value—lower numbers indicate higher priority. When our tool detects MX records, it automatically identifies your email provider (Google Workspace, Microsoft 365, etc.) and analyzes email security configuration.
-                            </p>
-                        </div>
-                        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem;">
-                            <h4 style="color: var(--color-accent); font-family: var(--font-mono); margin-bottom: 0.5rem; font-size: 1.1rem;">TXT Records</h4>
-                            <p style="color: var(--color-text-secondary); line-height: 1.7; font-size: 0.98rem;">
-                                TXT records store arbitrary text data and serve multiple purposes: SPF records specify authorized mail servers, DMARC policies define email authentication rules, DKIM keys enable cryptographic email signing, and domain verification tokens prove ownership to third-party services.
-                            </p>
-                        </div>
-                        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem;">
-                            <h4 style="color: var(--color-accent); font-family: var(--font-mono); margin-bottom: 0.5rem; font-size: 1.1rem;">NS & CNAME Records</h4>
-                            <p style="color: var(--color-text-secondary); line-height: 1.7; font-size: 0.98rem;">
-                                NS (nameserver) records delegate DNS authority to specific servers—critical for DNS propagation analysis. CNAME records create aliases that point one domain to another, commonly used for CDN integration and subdomain management. Understanding these relationships helps diagnose routing issues.
-                            </p>
-                        </div>
-                    </div>
-
-                    <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem; color: var(--color-text-primary);">
-                        Email Security Analysis
-                    </h3>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
-                        When enrichment is enabled, our tool performs deep email security analysis by parsing SPF, DMARC, and DKIM records. The security score (0-100) reflects your domain's resilience against email spoofing and phishing attacks.
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
-                        <strong style="color: var(--color-text-primary);">SPF (Sender Policy Framework)</strong> defines which mail servers can send email on behalf of your domain. A valid SPF record starts with <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">v=spf1</code> and includes mechanisms like <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">include:</code>, <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">ip4:</code>, and enforcement qualifiers (<code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">-all</code> for strict rejection, <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">~all</code> for soft fail).
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
-                        <strong style="color: var(--color-text-primary);">DMARC (Domain-based Message Authentication)</strong> builds on SPF and DKIM by instructing receiving servers how to handle authentication failures. Policies include <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">p=none</code> (monitoring only), <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">p=quarantine</code> (send to spam), and <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">p=reject</code> (block delivery). Our tool highlights weak policies and recommends upgrades.
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                        <strong style="color: var(--color-text-primary);">DKIM (DomainKeys Identified Mail)</strong> uses cryptographic signatures to verify email authenticity. Each sending server uses a selector (like <code style="background: var(--color-bg-elevated); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.9em;">default._domainkey</code>) to publish public keys. Our tool parses DKIM TXT records and validates key configuration.
-                    </p>
-
-                    <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem; color: var(--color-text-primary);">
-                        SSL/TLS Certificate Inspection
-                    </h3>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
-                        When SSL inspection is enabled, our tool connects to your domain over HTTPS and retrieves certificate metadata including issuer (Let's Encrypt, DigiCert, etc.), subject alternative names (SANs) covering additional domains, validity period, and days until expiry.
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                        The tool highlights certificates expiring within 30 days and provides a downloadable calendar reminder (.ics file) to ensure timely renewal. This prevents service disruption from expired certificates—a common cause of downtime in production environments.
-                    </p>
-
-                    <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem; color: var(--color-text-primary);">
-                        DNS Propagation & Reverse DNS
-                    </h3>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem;">
-                        DNS propagation checking queries multiple global resolvers (Google DNS 8.8.8.8, Cloudflare 1.1.1.1, Quad9, OpenDNS) to verify consistency across the internet. This is essential after DNS changes—you can confirm whether updates have reached major providers worldwide.
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                        Reverse DNS performs PTR record lookups to resolve IP addresses back to hostnames. This is critical for mail server validation (many spam filters require matching forward and reverse DNS) and network reconnaissance during incident response.
-                    </p>
-
-                    <h3 style="font-family: var(--font-mono); font-size: 1.4rem; margin: 2.5rem 0 1.25rem; color: var(--color-text-primary);">
-                        Common Use Cases
-                    </h3>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem; font-size: 1.05rem;">
-                        <strong style="color: var(--color-text-primary);">DevOps & Site Reliability:</strong> Verify DNS changes after infrastructure migrations, confirm CDN integration, validate load balancer configuration, and troubleshoot connectivity issues by inspecting A/AAAA records and nameserver delegation.
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem; font-size: 1.05rem;">
-                        <strong style="color: var(--color-text-primary);">Email Deliverability:</strong> Diagnose bounced emails by checking MX records and SPF configuration, improve inbox placement by implementing DMARC with strict policies, and monitor email security posture to prevent domain spoofing.
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1rem; font-size: 1.05rem;">
-                        <strong style="color: var(--color-text-primary);">Security Auditing:</strong> Assess domain security posture before penetration testing, identify misconfigurations that enable email spoofing, verify certificate validity for compliance requirements, and detect DNS hijacking by monitoring nameserver changes.
-                    </p>
-                    <p style="color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                        <strong style="color: var(--color-text-primary);">Incident Response:</strong> During outages, quickly identify DNS resolution failures, check whether SSL certificates expired unexpectedly, trace email routing problems to MX misconfigurations, and verify DNS propagation after emergency changes.
+                <div class="section-copy">
+                    <p class="section-label">What it checks</p>
+                    <h2 id="checks-heading">DNS and security signals in one pass</h2>
+                    <p>
+                        Query core DNS records, inspect mail authentication, review SSL certificate metadata, and optionally compare propagation across global resolvers.
                     </p>
                 </div>
-
-                <!-- FAQ Section -->
-                <div style="max-width: 900px; margin: 0 auto 4rem;">
-                    <h2 style="font-family: var(--font-mono); font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-accent); text-align: center;">
-                        Frequently Asked Questions
-                    </h2>
-                    <div style="display: flex; flex-direction: column; gap: 1rem;">
-                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
-                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                                <span>What DNS records does this tool check?</span>
-                                <span style="color: var(--color-accent);">▸</span>
-                            </summary>
-                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
-                                The tool queries all major DNS record types: A (IPv4 addresses), AAAA (IPv6 addresses), MX (mail servers), TXT (text records including SPF/DMARC/DKIM), NS (nameservers), and CNAME (canonical names). You can select which record types to query in the advanced options.
-                            </div>
-                        </details>
-
-                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
-                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                                <span>How is the email security score calculated?</span>
-                                <span style="color: var(--color-accent);">▸</span>
-                            </summary>
-                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
-                                The security score (0-100) evaluates SPF validity, DMARC policy strength (reject > quarantine > none), DKIM configuration, MX record security, and implementation best practices. A score above 80 indicates strong email authentication; below 50 suggests critical vulnerabilities to spoofing attacks.
-                            </div>
-                        </details>
-
-                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
-                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                                <span>What is DNS propagation and when should I check it?</span>
-                                <span style="color: var(--color-accent);">▸</span>
-                            </summary>
-                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
-                                DNS propagation is the time it takes for DNS changes to spread across global nameservers. After updating DNS records (changing hosting providers, modifying MX records, etc.), enable propagation checking to verify that major DNS resolvers worldwide are serving your updated records. Propagation typically completes within minutes to hours, depending on TTL values.
-                            </div>
-                        </details>
-
-                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
-                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                                <span>Can I use this tool to check IP addresses?</span>
-                                <span style="color: var(--color-accent);">▸</span>
-                            </summary>
-                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
-                                Yes, the tool accepts both domain names and IP addresses (IPv4 and IPv6). When you enter an IP address, it automatically performs reverse DNS lookups (PTR records) to resolve the IP to its associated hostname. This is useful for network diagnostics and mail server validation.
-                            </div>
-                        </details>
-
-                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
-                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                                <span>Why do I need reverse DNS for email servers?</span>
-                                <span style="color: var(--color-accent);">▸</span>
-                            </summary>
-                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
-                                Many email providers (Gmail, Outlook, etc.) require mail servers to have valid reverse DNS (PTR) records that match their hostname. This helps prevent spam and validates server identity. If your mail server's IP doesn't resolve to a matching hostname, legitimate emails may be rejected or marked as spam.
-                            </div>
-                        </details>
-
-                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
-                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                                <span>How often should I check my SSL certificate expiry?</span>
-                                <span style="color: var(--color-accent);">▸</span>
-                            </summary>
-                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
-                                Monitor SSL certificates at least monthly. Let's Encrypt certificates expire after 90 days, while commercial certificates last 1-2 years. Our tool displays days until expiry and offers downloadable calendar reminders. Set alerts 30 days before expiration to allow time for renewal and deployment.
-                            </div>
-                        </details>
-
-                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
-                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                                <span>What does SPF "too many DNS lookups" mean?</span>
-                                <span style="color: var(--color-accent);">▸</span>
-                            </summary>
-                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
-                                SPF records are limited to 10 DNS lookups to prevent abuse. Each "include:" mechanism counts as one lookup. If your SPF record exceeds this limit, email authentication fails. Our tool flags this issue and recommends flattening your SPF record or using SPF macros to reduce lookup count.
-                            </div>
-                        </details>
-
-                        <details class="faq-item" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem;">
-                            <summary style="font-size: 1.05rem; font-weight: 600; color: var(--color-text-primary); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                                <span>Is my search history stored on your servers?</span>
-                                <span style="color: var(--color-accent);">▸</span>
-                            </summary>
-                            <div style="margin-top: 1rem; color: var(--color-text-secondary); line-height: 1.7;">
-                                No. All search history is stored exclusively in your browser's localStorage and never transmitted to our servers. You can clear your history at any time using the "Clear All" button in the history panel. Your DNS queries are processed server-side for analysis but not logged or associated with your identity.
-                            </div>
-                        </details>
-                    </div>
+                <div class="info-grid">
+                    <article class="info-card">
+                        <h3>DNS records</h3>
+                        <p>A, AAAA, MX, TXT, NS, and CNAME records with TTL values for operational checks.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>Email security</h3>
+                        <p>SPF, DMARC, DKIM, MX provider detection, and a practical security score.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>SSL and propagation</h3>
+                        <p>Certificate issuer, SANs, expiry reminders, reverse DNS, and global resolver consistency.</p>
+                    </article>
                 </div>
             </div>
         </section>
 
-        <section class="cta-section" id="pricing" aria-labelledby="cta-heading">
+        <section class="content-section" aria-labelledby="use-cases-heading">
             <div class="container">
-                <h2 id="cta-heading" class="sr-only">Additional Services</h2>
-                <div class="cta-grid">
-                    <div class="cta-card">
-                        <div class="cta-icon">⚡</div>
-                        <h3 class="cta-title">Bulk Analysis</h3>
-                        <p class="cta-description">
-                            Coming soon. Bulk analysis for large domain lists with enterprise-grade infrastructure.
-                        </p>
-                        <span class="cta-button cta-button-primary" aria-disabled="true">Coming Soon</span>
-                    </div>
+                <div class="section-copy">
+                    <p class="section-label">Use cases</p>
+                    <h2 id="use-cases-heading">Fast checks for DNS operations</h2>
+                    <p>
+                        Use the lookup when moving infrastructure, validating email delivery, investigating certificate expiry, or confirming DNS changes after a deployment.
+                    </p>
+                </div>
+                <div class="info-grid">
+                    <article class="info-card">
+                        <h3>DevOps</h3>
+                        <p>Verify hosting, CDN, nameserver, and load balancer records before and after changes.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>Email delivery</h3>
+                        <p>Check MX routing and authentication records before tightening SPF or DMARC policies.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>Incident response</h3>
+                        <p>Quickly separate DNS, certificate, and mail routing issues during outage triage.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
 
-                    <div class="cta-card" id="api">
-                        <div class="cta-icon">{ }</div>
-                        <h3 class="cta-title">API Access</h3>
-                        <p class="cta-description">
-                            Integrate DNS intelligence directly into your applications.
-                            Available on Apify and RapidAPI with simple REST access.
-                        </p>
-                        <div class="cta-actions">
-                            <a href="/docs/api/" class="cta-button cta-button-secondary">API Docs</a>
-                            <a href="https://apify.com/njoylab/apify-dns?fpr=njoylab" target="_blank"
-                                rel="noopener noreferrer" class="cta-button cta-button-secondary">View on Apify</a>
-                            <a href="https://rapidapi.com/njoylab/api/dns-lookup-api-intelligence-security-analyzer"
-                                target="_blank" rel="noopener noreferrer" class="cta-button cta-button-secondary">View
-                                on RapidAPI</a>
-                        </div>
-                    </div>
+        <section class="content-section faq-section" aria-labelledby="faq-heading">
+            <div class="container">
+                <div class="section-copy">
+                    <p class="section-label">FAQ</p>
+                    <h2 id="faq-heading">DNS lookup questions</h2>
+                </div>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary>What DNS records does this tool check?</summary>
+                        <p>The tool queries A, AAAA, MX, TXT, NS, and CNAME records. You can narrow record types in advanced options.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Can I check IP addresses?</summary>
+                        <p>Yes. The input accepts domains, IPv4 addresses, and IPv6 addresses. Reverse DNS can resolve IP addresses to hostnames.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How is the email security score calculated?</summary>
+                        <p>It evaluates SPF validity, DMARC policy strength, DKIM configuration, MX records, and related best-practice signals.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Is search history stored on your servers?</summary>
+                        <p>No. Search history is stored in browser localStorage and can be cleared from the history panel.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
 
-                    <div class="cta-card" id="mcp">
-                        <div class="cta-icon">⎔</div>
-                        <h3 class="cta-title">MCP</h3>
-                        <p class="cta-description">
-                            Use the DNS tool as an MCP endpoint via Apify, ready for agent workflows and automation.
-                        </p>
-                        <div class="cta-actions">
-                            <a href="https://mcp.apify.com/?tools=njoylab/apify-dns" target="_blank"
-                                rel="noopener noreferrer" class="cta-button cta-button-secondary">Open MCP Tool</a>
-                        </div>
-                    </div>
+        <section class="content-section related-tools" aria-label="Related tools">
+            <div class="container">
+                <p class="section-label">Related tools</p>
+                <div class="related-row">
+                    <a href="https://crontab.echovalue.dev/" target="_blank" rel="noopener noreferrer">Cron parser</a>
+                    <a href="https://geoip.echovalue.dev/" target="_blank" rel="noopener noreferrer">GeoIP lookup</a>
+                    <a href="https://urlsummary.echovalue.dev/" target="_blank" rel="noopener noreferrer">URL summary</a>
                 </div>
             </div>
         </section>
@@ -736,51 +514,13 @@
     <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-content">
-                <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem; font-weight: 600;">
-                    DNS Tools:
-                </p>
-                <p class="footer-links" style="color: var(--color-text-dim); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.8;">
-                    <a href="/dns-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">DNS Lookup</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/mx-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">MX Lookup</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/txt-lookup/" style="color: var(--color-text-secondary); text-decoration: none;">TXT Lookup</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/spf-check/" style="color: var(--color-text-secondary); text-decoration: none;">SPF Check</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/dmarc-check/" style="color: var(--color-text-secondary); text-decoration: none;">DMARC Check</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/dkim-check/" style="color: var(--color-text-secondary); text-decoration: none;">DKIM Check</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/reverse-dns/" style="color: var(--color-text-secondary); text-decoration: none;">Reverse DNS</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/ssl-certificate-check/" style="color: var(--color-text-secondary); text-decoration: none;">SSL Check</a>
-                </p>
-                <p class="footer-text">
-                    Built by <a href="https://njoylab.com" target="_blank" rel="noopener"
-                        style="color: var(--color-accent); text-decoration: none;">nJoyLab.com</a>
-                </p>
-                <p class="footer-links" style="color: var(--color-text-dim); font-size: 0.9rem; margin-top: 0.5rem;">
-                    <a href="https://geoip.echovalue.dev/ipv6" target="_blank" rel="noopener"
-                        style="color: var(--color-text-secondary); text-decoration: none;">IPv6 Checker</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="https://jsonlint.echovalue.dev" target="_blank" rel="noopener"
-                        style="color: var(--color-text-secondary); text-decoration: none;">JSON Linter</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="https://urlsummary.echovalue.dev" target="_blank" rel="noopener"
-                        style="color: var(--color-text-secondary); text-decoration: none;">URL Analyzer</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="https://echovalue.dev" target="_blank" rel="noopener"
-                        style="color: var(--color-text-secondary); text-decoration: none;">All Tools</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener"
-                        style="color: var(--color-text-secondary); text-decoration: none;">GitHub</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/sitemap.xml" style="color: var(--color-text-secondary); text-decoration: none;">Sitemap</a>
-                    <span style="margin: 0 0.5rem;">•</span>
-                    <a href="/terms" style="color: var(--color-text-secondary); text-decoration: none;">Terms &
-                        Conditions</a>
-                </p>
+                <span>Built by <a href="https://njoylab.com" class="footer-brand" target="_blank" rel="noopener noreferrer">nJoyLab.com</a></span>
+                <span class="footer-sep">·</span>
+                <a href="https://www.echovalue.dev/" target="_blank" rel="noopener noreferrer">More Tools</a>
+                <span class="footer-sep">·</span>
+                <a href="https://github.com/njoylab/lookup.echovalue.dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-sep">·</span>
+                <a href="/terms.html">Terms &amp; Conditions</a>
             </div>
         </div>
     </footer>
