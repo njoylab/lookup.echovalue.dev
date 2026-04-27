@@ -33,16 +33,11 @@ The rendered results include:
 - SSL certificate details
 - Propagation data when requested
 
-## API and Agent Access
+## Agent Access
 
-- API documentation: [/docs/api/](https://lookup.echovalue.dev/docs/api/)
-- OpenAPI description: [/openapi/dns-query.json](https://lookup.echovalue.dev/openapi/dns-query.json)
-- API catalog: [/.well-known/api-catalog](https://lookup.echovalue.dev/.well-known/api-catalog)
 - MCP server card: [/.well-known/mcp/server-card.json](https://lookup.echovalue.dev/.well-known/mcp/server-card.json)
 - Agent skills index: [/.well-known/agent-skills/index.json](https://lookup.echovalue.dev/.well-known/agent-skills/index.json)
 
 ## External Integrations
 
-- Apify API: [njoylab/apify-dns](https://apify.com/njoylab/apify-dns)
 - Apify MCP endpoint: [https://mcp.apify.com/?tools=njoylab/apify-dns](https://mcp.apify.com/?tools=njoylab/apify-dns)
-- RapidAPI listing: [DNS lookup API: Intelligence & Security Analyzer](https://rapidapi.com/njoylab/api/dns-lookup-api-intelligence-security-analyzer)
