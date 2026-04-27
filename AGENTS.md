@@ -121,10 +121,14 @@ localStorage['dns-analyzer-history'] = [
 
 ## Styling System
 
+**Reference Design System:**
+- `/Users/emln/dev/njoylab.com/echovalue.dev/design-system`
+- Check the reference design system before visual changes, especially `tokens.css` for shared colors.
+
 **CSS Variables (in `:root`):**
 ```css
 --color-bg: #0a0e1a          /* Main background */
---color-accent: #f59e0b       /* Primary accent (orange) */
+--color-accent: #0a84ff       /* Primary accent (matches --ev-color-accent) */
 --color-text-primary: #e8eaed /* Main text */
 --font-sans: 'IBM Plex Sans'
 --font-mono: 'JetBrains Mono'
