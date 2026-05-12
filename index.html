@@ -156,7 +156,7 @@
     <div class="confirmation-overlay" id="confirmationOverlay" style="display: none;">
         <div class="confirmation-modal" role="dialog" aria-labelledby="confirmationTitle"
             aria-describedby="confirmationMessage">
-            <h3 class="confirmation-title" id="confirmationTitle">Confirm Action</h3>
+            <h2 class="confirmation-title" id="confirmationTitle">Confirm Action</h2>
             <p class="confirmation-message" id="confirmationMessage"></p>
             <div class="confirmation-actions">
                 <button class="confirmation-btn confirmation-btn-cancel" id="confirmationCancel">Cancel</button>
@@ -228,7 +228,7 @@
 
                         <div class="history-panel" id="historyPanel">
                             <div class="history-header">
-                                <h4>Recent Searches</h4>
+                                <h2>Recent Searches</h2>
                                 <button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button>
                             </div>
                             <div class="privacy-notice">
@@ -344,7 +344,7 @@
                                 </div>
 
                                 <div class="option-group">
-                                    <label class="option-label">
+                                    <label class="option-label" for="timeout">
                                         Query Timeout (ms)
                                         <span class="tooltip-wrapper">
                                             <span class="tooltip-icon">?</span>
@@ -352,12 +352,12 @@
                                                 (1000-30000ms)</span>
                                         </span>
                                     </label>
-                                    <input type="number" class="number-input" value="5000" name="timeout" min="1000"
-                                        max="30000" step="100">
+                                    <input type="number" id="timeout" class="number-input" value="5000" name="timeout"
+                                        min="1000" max="30000" step="100">
                                 </div>
 
                                 <div class="option-group">
-                                    <label class="option-label">
+                                    <label class="option-label" for="maxRetries">
                                         Maximum Retries
                                         <span class="tooltip-wrapper">
                                             <span class="tooltip-icon">?</span>
@@ -365,12 +365,12 @@
                                                 failed queries (0-10 attempts)</span>
                                         </span>
                                     </label>
-                                    <input type="number" class="number-input" value="1" name="maxRetries" min="0"
-                                        max="10">
+                                    <input type="number" id="maxRetries" class="number-input" value="1"
+                                        name="maxRetries" min="0" max="10">
                                 </div>
 
                                 <div class="option-group">
-                                    <label class="option-label">
+                                    <label class="option-label" for="retryDelay">
                                         Retry Delay (ms)
                                         <span class="tooltip-wrapper">
                                             <span class="tooltip-icon">?</span>
@@ -378,8 +378,8 @@
                                                 (100-5000ms)</span>
                                         </span>
                                     </label>
-                                    <input type="number" class="number-input" value="1000" name="retryDelay" min="100"
-                                        max="5000" step="100">
+                                    <input type="number" id="retryDelay" class="number-input" value="1000"
+                                        name="retryDelay" min="100" max="5000" step="100">
                                 </div>
                             </div>
                         </div>
