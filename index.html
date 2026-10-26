@@ -63,7 +63,7 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css?a=11">
+    <link rel="stylesheet" href="styles.css?a=13">
 
     <!-- Sitemap Reference -->
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
@@ -216,17 +216,17 @@
                         </div>
 
                         <div class="advanced-toggle-wrapper">
-                            <button type="button" class="advanced-toggle" id="advancedToggle">
+                            <button type="button" class="advanced-toggle" id="advancedToggle" aria-expanded="false" aria-controls="advancedOptions">
                                 <span class="toggle-icon">▸</span>
                                 <span>Advanced Options</span>
                             </button>
-                            <button type="button" class="history-toggle" id="historyToggle">
+                            <button type="button" class="history-toggle" id="historyToggle" aria-expanded="false" aria-controls="historyPanel">
                                 <span>History</span>
                                 <span class="history-count" id="historyCount" style="display: none;">0</span>
                             </button>
                         </div>
 
-                        <div class="history-panel" id="historyPanel">
+                        <div class="history-panel" id="historyPanel" aria-hidden="true" inert>
                             <div class="history-header">
                                 <h2>Recent Searches</h2>
                                 <button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button>
@@ -241,7 +241,7 @@
                             </div>
                         </div>
 
-                        <div class="advanced-options" id="advancedOptions">
+                        <div class="advanced-options" id="advancedOptions" aria-hidden="true" inert>
                             <div class="options-grid">
                                 <div class="option-group">
                                     <label class="option-label">
@@ -508,7 +508,7 @@
 
     <!-- LZString for JSON compression -->
     <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-    <script src="script.js?a=9"></script>
+    <script src="script.js?a=10"></script>
 </body>
 
 </html>

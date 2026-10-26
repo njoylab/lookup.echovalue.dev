@@ -49,7 +49,7 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/styles.css?a=11">
+    <link rel="stylesheet" href="/styles.css?a=13">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -225,18 +225,17 @@
                         </div>
 
                         <div class="advanced-toggle-wrapper">
-                            <button type="button" class="advanced-toggle" id="advancedToggle">
+                            <button type="button" class="advanced-toggle" id="advancedToggle" aria-expanded="false" aria-controls="advancedOptions">
                                 <span class="toggle-icon">▸</span>
                                 <span>Advanced Options</span>
                             </button>
-                            <button type="button" class="history-toggle" id="historyToggle">
-                                <span>🕒</span>
+                            <button type="button" class="history-toggle" id="historyToggle" aria-expanded="false" aria-controls="historyPanel">
                                 <span>History</span>
                                 <span class="history-count" id="historyCount" style="display: none;">0</span>
                             </button>
                         </div>
 
-                        <div class="history-panel" id="historyPanel">
+                        <div class="history-panel" id="historyPanel" aria-hidden="true" inert>
                             <div class="history-header">
                                 <h4>Recent Searches</h4>
                                 <button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button>
@@ -251,7 +250,7 @@
                             </div>
                         </div>
 
-                        <div class="advanced-options" id="advancedOptions">
+                        <div class="advanced-options" id="advancedOptions" aria-hidden="true" inert>
                             <div class="options-grid">
                                 <div class="option-group">
                                     <label class="option-label">DNS Record Types</label>
@@ -316,20 +315,20 @@
                                 </div>
 
                                 <div class="option-group">
-                                    <label class="option-label">Query Timeout (ms)</label>
-                                    <input type="number" class="number-input" value="5000" name="timeout" min="1000"
+                                    <label class="option-label" for="timeout">Query Timeout (ms)</label>
+                                    <input type="number" id="timeout" class="number-input" value="5000" name="timeout" min="1000"
                                         max="30000" step="100">
                                 </div>
 
                                 <div class="option-group">
-                                    <label class="option-label">Maximum Retries</label>
-                                    <input type="number" class="number-input" value="3" name="maxRetries" min="0"
+                                    <label class="option-label" for="maxRetries">Maximum Retries</label>
+                                    <input type="number" id="maxRetries" class="number-input" value="3" name="maxRetries" min="0"
                                         max="10">
                                 </div>
 
                                 <div class="option-group">
-                                    <label class="option-label">Retry Delay (ms)</label>
-                                    <input type="number" class="number-input" value="1000" name="retryDelay" min="100"
+                                    <label class="option-label" for="retryDelay">Retry Delay (ms)</label>
+                                    <input type="number" id="retryDelay" class="number-input" value="1000" name="retryDelay" min="100"
                                         max="5000" step="100">
                                 </div>
                             </div>
@@ -538,7 +537,7 @@
 
     <!-- LZString for JSON compression -->
     <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-    <script src="/script.js?a=9"></script>
+    <script src="/script.js?a=10"></script>
 </body>
 
 </html>

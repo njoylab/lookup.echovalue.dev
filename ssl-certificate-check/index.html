@@ -46,7 +46,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <link rel="stylesheet" href="/styles.css?a=11">
+    <link rel="stylesheet" href="/styles.css?a=13">
 </head>
 <body data-preset="ssl-certificate-check">
     <div class="toast-container" id="toastContainer" role="region" aria-live="polite"></div>
@@ -71,9 +71,9 @@
         <div class="analyzer-card">
         <form class="analyzer-form" id="analyzerForm"><div class="input-group"><label for="domain" class="input-label">Target Domain</label><div class="input-wrapper"><input type="text" id="domain" class="domain-input" placeholder="example.com" autocomplete="off" spellcheck="false" /><button type="submit" class="analyze-btn" id="analyzeBtn"><span class="btn-text">Check SSL</span><span class="btn-icon">→</span></button></div><div class="input-error" id="domain-error"></div></div>
         <div class="turnstile-wrapper"><div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="dark" size="compact"></div></div>
-        <div class="advanced-toggle-wrapper"><button type="button" class="advanced-toggle" id="advancedToggle"><span class="toggle-icon">▸</span><span>Advanced Options</span></button><button type="button" class="history-toggle" id="historyToggle"><span>🕒</span><span>History</span><span class="history-count" id="historyCount" style="display: none;">0</span></button></div>
-        <div class="history-panel" id="historyPanel"><div class="history-header"><h4>Recent Searches</h4><button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button></div><div class="privacy-notice"><span class="privacy-icon">🔒</span><span class="privacy-text">History stored locally.</span></div><div class="history-list" id="historyList"><div class="history-empty">No history</div></div></div>
-        <div class="advanced-options" id="advancedOptions"><div class="options-grid"><div class="option-group"><label class="option-label">DNS Record Types</label><div class="record-types"><label class="checkbox-label"><input type="checkbox" checked name="recordType" value="A"><span>A</span></label><label class="checkbox-label"><input type="checkbox" checked name="recordType" value="AAAA"><span>AAAA</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="MX"><span>MX</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="CNAME"><span>CNAME</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="TXT"><span>TXT</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="NS"><span>NS</span></label></div></div><div class="option-group"><label class="toggle-option"><span class="toggle-option-label">SSL/TLS Inspection</span><input type="checkbox" checked class="toggle-input" name="sslInspection"><span class="toggle-slider"></span></label></div></div></div>
+        <div class="advanced-toggle-wrapper"><button type="button" class="advanced-toggle" id="advancedToggle" aria-expanded="false" aria-controls="advancedOptions"><span class="toggle-icon">▸</span><span>Advanced Options</span></button><button type="button" class="history-toggle" id="historyToggle" aria-expanded="false" aria-controls="historyPanel"><span>History</span><span class="history-count" id="historyCount" style="display: none;">0</span></button></div>
+        <div class="history-panel" id="historyPanel" aria-hidden="true" inert><div class="history-header"><h4>Recent Searches</h4><button type="button" class="clear-history-btn" id="clearHistoryBtn">Clear All</button></div><div class="privacy-notice"><span class="privacy-icon">🔒</span><span class="privacy-text">History stored locally.</span></div><div class="history-list" id="historyList"><div class="history-empty">No history</div></div></div>
+        <div class="advanced-options" id="advancedOptions" aria-hidden="true" inert><div class="options-grid"><div class="option-group"><label class="option-label">DNS Record Types</label><div class="record-types"><label class="checkbox-label"><input type="checkbox" checked name="recordType" value="A"><span>A</span></label><label class="checkbox-label"><input type="checkbox" checked name="recordType" value="AAAA"><span>AAAA</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="MX"><span>MX</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="CNAME"><span>CNAME</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="TXT"><span>TXT</span></label><label class="checkbox-label"><input type="checkbox" name="recordType" value="NS"><span>NS</span></label></div></div><div class="option-group"><label class="toggle-option"><span class="toggle-option-label">SSL/TLS Inspection</span><input type="checkbox" checked class="toggle-input" name="sslInspection"><span class="toggle-slider"></span></label></div></div></div>
         </form></div>
         <div class="results-container" id="resultsContainer" style="display: none;"></div>
         <div style="max-width: 900px; margin: 4rem auto 0;">
@@ -106,6 +106,6 @@
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-    <script src="/script.js?a=9"></script>
+    <script src="/script.js?a=10"></script>
 </body>
 </html>

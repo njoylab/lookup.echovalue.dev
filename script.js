@@ -328,26 +328,27 @@ function updateValidationUI(validation, showNeutral = false) {
         return;
     }
 
-    if (!validation.valid && !isEmpty) {
-        // Invalid state
+    if (!validation.valid) {
         domainInput.classList.add('invalid');
         domainInput.setAttribute('aria-invalid', 'true');
-        domainError.textContent = validation.message;
+        domainError.textContent = validation.message || 'Please enter a domain name';
         domainError.classList.add('show');
         analyzeBtn.disabled = true;
         lastValidationState = false;
-    } else if (validation.valid && !isEmpty) {
-        // Valid state
+        return;
+    }
+
+    if (!isEmpty) {
         domainInput.classList.add('valid');
         domainError.textContent = '';
         analyzeBtn.disabled = false;
         lastValidationState = true;
-    } else {
-        // Default state (empty)
-        analyzeBtn.disabled = false;
-        domainError.textContent = '';
-        lastValidationState = null;
+        return;
     }
+
+    analyzeBtn.disabled = false;
+    domainError.textContent = '';
+    lastValidationState = null;
 }
 
 /**
@@ -474,16 +475,22 @@ function getTurnstileToken() {
     return '';
 }
 
+function setDisclosure(toggle, panel, open) {
+    toggle.classList.toggle('active', open);
+    panel.classList.toggle('active', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    panel.inert = !open;
+}
+
 // Advanced options toggle
 advancedToggle.addEventListener('click', () => {
-    advancedToggle.classList.toggle('active');
-    advancedOptions.classList.toggle('active');
+    setDisclosure(advancedToggle, advancedOptions, !advancedOptions.classList.contains('active'));
 });
 
 // History toggle
 historyToggle.addEventListener('click', () => {
-    historyToggle.classList.toggle('active');
-    historyPanel.classList.toggle('active');
+    setDisclosure(historyToggle, historyPanel, !historyPanel.classList.contains('active'));
 });
 
 // History management
@@ -704,8 +711,7 @@ function loadFromHistory(historyItem) {
     }
 
     // Close history panel
-    historyPanel.classList.remove('active');
-    historyToggle.classList.remove('active');
+    setDisclosure(historyToggle, historyPanel, false);
 
     // Submit form
     form.dispatchEvent(new Event('submit'));
