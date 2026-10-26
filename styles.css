@@ -125,7 +125,7 @@ body {
 }
 
 .logo-accent {
-    color: var(--color-accent);
+    color: var(--color-success);
     font-weight: 500;
 }
 
@@ -2046,9 +2046,13 @@ code,
     text-decoration: none;
 }
 
-.logo-accent,
+.logo-accent {
+    color: var(--color-success);
+    font-weight: 500;
+}
+
 .logo-separator {
-    color: var(--color-text-muted);
+    display: none;
 }
 
 .nav {
