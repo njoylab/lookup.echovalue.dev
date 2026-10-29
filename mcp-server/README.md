@@ -13,7 +13,7 @@ This server exposes advanced DNS lookup, propagation checking, and SSL inspectio
 
 ```bash
 cd mcp-server
-npm install
+npm ci
 npm run build
 ```
 
@@ -73,3 +73,10 @@ Get SSL certificate details.
   "domain": "secure.example.com"
 }
 ```
+
+## Verification
+
+Run `npm test` to compile TypeScript and check the HTTP client against a local fixture.
+The overall HTTP request budget is 180 seconds, matching the frontend. The `timeout`
+option remains the per-query timeout sent to the API; it does not limit the entire
+propagation, enrichment, SSL and retry workflow. Explicit zero retries are preserved.

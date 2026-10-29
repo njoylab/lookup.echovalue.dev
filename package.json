@@ -4,7 +4,8 @@
   "description": "echoValue lookup DNS security analyzer",
   "scripts": {
     "build": "node build.js",
-    "install-deps": "npm install"
+    "install-deps": "npm install",
+    "test": "node --test test/*.test.js"
   },
   "keywords": [
     "dns",
@@ -12,5 +13,8 @@
     "analyzer"
   ],
   "author": "echoValue",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
 }

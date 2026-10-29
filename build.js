@@ -12,6 +12,20 @@ const siteKey =
 const apiEndpoint =
     process.env.DNS_API_ENDPOINT || '';
 
+if (!siteKey || siteKey === 'YOUR_TURNSTILE_SITE_KEY' || !/^[a-zA-Z0-9_-]+$/.test(siteKey)) {
+    throw new Error('Set TURNSTILE_SITE_KEY (or CLOUDFLARE_TURNSTILE_SITE_KEY) to a valid public site key.');
+}
+
+let apiUrl;
+try {
+    apiUrl = new URL(apiEndpoint);
+} catch {
+    throw new Error('Set DNS_API_ENDPOINT to an absolute HTTP(S) API URL.');
+}
+if (!['http:', 'https:'].includes(apiUrl.protocol) || apiUrl.username || apiUrl.password) {
+    throw new Error('DNS_API_ENDPOINT must use HTTP(S) and must not contain credentials.');
+}
+
 const allowedExtensions = new Set([
     '.html',
     '.css',
@@ -39,15 +53,13 @@ const skipDirs = new Set([
     'node_modules',
     'dist',
     '.git',
-    '.github'
+    '.github',
+    'test',
+    'mcp-server'
 ]);
 
 fs.rmSync(distDir, { recursive: true, force: true });
 fs.mkdirSync(distDir, { recursive: true });
-
-if (!siteKey) {
-    console.warn('TURNSTILE_SITE_KEY is not set; using placeholder in HTML files');
-}
 
 /**
  * Process a file: copy or transform based on type
@@ -56,6 +68,8 @@ function processFile(sourcePath, destPath) {
     const fileName = path.basename(sourcePath);
     const ext = path.extname(fileName);
     const relativePath = path.relative(rootDir, sourcePath).split(path.sep).join('/');
+
+    if (relativePath === 'build.js' || relativePath === 'og-image-template.html') return;
 
     // Skip hidden files
     if (fileName.startsWith('.')) {
@@ -90,9 +104,7 @@ function processFile(sourcePath, destPath) {
     // Process HTML files - replace env variables
     if (ext === '.html') {
         let html = fs.readFileSync(sourcePath, 'utf8');
-        if (siteKey) {
-            html = html.replace(/YOUR_TURNSTILE_SITE_KEY/g, siteKey);
-        }
+        html = html.replace(/YOUR_TURNSTILE_SITE_KEY/g, () => siteKey);
         fs.writeFileSync(destPath, html);
         console.log(`Processed: ${sourcePath}`);
         return;
@@ -101,7 +113,7 @@ function processFile(sourcePath, destPath) {
     // Process script.js - replace API endpoint
     if (fileName === 'script.js') {
         const script = fs.readFileSync(sourcePath, 'utf8');
-        const output = script.replace('__API_ENDPOINT__', apiEndpoint);
+        const output = script.replace("'__API_ENDPOINT__'", () => JSON.stringify(apiEndpoint));
         fs.writeFileSync(destPath, output);
         console.log(`Processed: ${sourcePath}`);
         return;
@@ -139,10 +151,6 @@ function processDirectory(sourceDir, destDir) {
             processFile(sourcePath, destPath);
         }
     }
-}
-
-function generateAgentSkillsIndex() {
-    return;
 }
 
 // Start processing from root

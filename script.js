@@ -11,6 +11,9 @@ const historyCount = document.getElementById('historyCount');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
 const API_ENDPOINT = '__API_ENDPOINT__';
+const API_CONFIGURED = /^https?:\/\//.test(API_ENDPOINT);
+let requestInProgress = false;
+let pendingAutoSubmit = null;
 
 // Toast and Confirmation Elements
 const toastContainer = document.getElementById('toastContainer');
@@ -183,7 +186,6 @@ document.addEventListener('keydown', (e) => {
 const analyzeBtn = document.getElementById('analyzeBtn');
 const domainError = document.getElementById('domain-error');
 
-const DOMAIN_REGEX_UNICODE = /^(?!:\/\/)([a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF-_]{1,63}\.)*[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF-_]{0,61}[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]\.[a-zA-Z]{2,63}$/;
 const IPV4_REGEX = /^(\d{1,3}\.){3}\d{1,3}$/;
 const IPV6_REGEX = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
 const VALIDATION_DEBOUNCE_MS = 300;
@@ -226,78 +228,42 @@ function validateDomain(input) {
         return { valid: true, message: '', cleaned: '' };
     }
 
-    let cleaned = input.trim();
+    let cleaned = input.trim().replace(/^(?:https?|ftp):\/\//i, '').split(/[/?#]/)[0];
+    const invalid = (message) => ({ valid: false, message, cleaned });
 
-    // Check if it's an IPv6 address (contains colons)
+    // Strip a port only from a hostname or a bracketed IPv6 address.
+    if (cleaned.startsWith('[')) {
+        const match = cleaned.match(/^\[([^\]]+)\](?::(\d{1,5}))?$/);
+        if (!match || (match[2] && Number(match[2]) > 65535)) return invalid('Invalid IPv6 address or port');
+        cleaned = match[1];
+        return isValidIPv6(cleaned) ? { valid: true, message: '', cleaned } : invalid('Invalid IPv6 address format');
+    }
+    if ((cleaned.match(/:/g) || []).length > 1) {
+        return isValidIPv6(cleaned) ? { valid: true, message: '', cleaned } : invalid('Invalid IPv6 address format');
+    }
     if (cleaned.includes(':')) {
-        // For IPv6, preserve case but remove protocol and path
-        cleaned = cleaned.replace(/^https?:\/\//i, '');
-        cleaned = cleaned.replace(/^ftp:\/\//i, '');
-        cleaned = cleaned.split('/')[0];
-
-        // Remove brackets if present (e.g., [::1])
-        cleaned = cleaned.replace(/^\[|\]$/g, '');
-
-        if (isValidIPv6(cleaned)) {
-            return { valid: true, message: '', cleaned };
-        }
-        return { valid: false, message: 'Invalid IPv6 address format', cleaned };
+        const match = cleaned.match(/^([^:]+):(\d{1,5})$/);
+        if (!match || Number(match[2]) > 65535) return invalid('Invalid port');
+        cleaned = match[1];
     }
 
-    // Convert to lowercase for domain/IPv4 processing
-    cleaned = cleaned.toLowerCase();
-
-    // Remove protocol prefixes
-    cleaned = cleaned.replace(/^https?:\/\//i, '');
-    cleaned = cleaned.replace(/^ftp:\/\//i, '');
-
-    // Remove trailing slashes and paths
-    cleaned = cleaned.split('/')[0];
-
-    // For IPv4, don't remove port numbers yet - check first
-    const withoutPort = cleaned.split(':')[0];
-
-    // Check if it's an IPv4 address
-    if (IPV4_REGEX.test(withoutPort)) {
-        if (isValidIPv4(withoutPort)) {
-            return { valid: true, message: '', cleaned: withoutPort };
-        }
-        return { valid: false, message: 'Invalid IPv4 address (each octet must be 0-255)', cleaned: withoutPort };
+    cleaned = cleaned.toLowerCase().replace(/\.$/, '');
+    if (IPV4_REGEX.test(cleaned)) {
+        return isValidIPv4(cleaned) ? { valid: true, message: '', cleaned } : invalid('Invalid IPv4 address (each octet must be 0-255)');
     }
+    if (!/^[\p{L}\p{N}_.-]+$/u.test(cleaned)) return invalid('Domain contains invalid characters');
 
-    // If not an IP, treat as domain - remove port numbers
-    cleaned = withoutPort;
-
-    // Remove www. prefix for domains
-    cleaned = cleaned.replace(/^www\./i, '');
-
-    // Validation checks for domains
-    if (cleaned.includes(' ')) {
-        return { valid: false, message: 'Domain cannot contain spaces', cleaned };
+    // Use the platform IDN conversion without changing the requested subdomain.
+    try {
+        cleaned = new URL(`http://${cleaned}`).hostname;
+    } catch {
+        return invalid('Invalid domain format');
     }
-
-    if (cleaned.length < 4) {
-        return { valid: false, message: 'Domain is too short (minimum 4 characters)', cleaned };
-    }
-
-    if (cleaned.length > 253) {
-        return { valid: false, message: 'Domain is too long (maximum 253 characters)', cleaned };
-    }
-
-    if (!/^[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF.-]+$/.test(cleaned)) {
-        return { valid: false, message: 'Domain contains invalid characters', cleaned };
-    }
-
-    if (cleaned.includes('..')) {
-        return { valid: false, message: 'Domain cannot have consecutive dots', cleaned };
-    }
-
-    if (/^[.-]|[.-]$/.test(cleaned)) {
-        return { valid: false, message: 'Domain cannot start or end with dots or hyphens', cleaned };
-    }
-
-    if (!DOMAIN_REGEX_UNICODE.test(cleaned)) {
-        return { valid: false, message: 'Invalid domain format', cleaned };
+    if (cleaned.length > 253) return invalid('Domain is too long (maximum 253 characters)');
+    const labels = cleaned.split('.');
+    if (labels.length < 2 || !labels.every(label => /^[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?$/.test(label)) ||
+        !/^(?:[a-z]{2,63}|xn--[a-z0-9-]+)$/.test(labels[labels.length - 1])) {
+        return invalid('Invalid domain format');
     }
 
     return { valid: true, message: '', cleaned };
@@ -309,7 +275,7 @@ function validateDomain(input) {
  * @param {boolean} showNeutral - Whether to show neutral state for empty input
  */
 function updateValidationUI(validation, showNeutral = false) {
-    if (!API_ENDPOINT) {
+    if (!API_CONFIGURED) {
         analyzeBtn.disabled = true;
         return;
     }
@@ -322,7 +288,7 @@ function updateValidationUI(validation, showNeutral = false) {
     domainInput.setAttribute('aria-invalid', 'false');
 
     if (isEmpty && showNeutral) {
-        analyzeBtn.disabled = false;
+        analyzeBtn.disabled = requestInProgress;
         domainError.textContent = '';
         lastValidationState = null;
         return;
@@ -341,12 +307,12 @@ function updateValidationUI(validation, showNeutral = false) {
     if (!isEmpty) {
         domainInput.classList.add('valid');
         domainError.textContent = '';
-        analyzeBtn.disabled = false;
+        analyzeBtn.disabled = requestInProgress;
         lastValidationState = true;
         return;
     }
 
-    analyzeBtn.disabled = false;
+    analyzeBtn.disabled = requestInProgress;
     domainError.textContent = '';
     lastValidationState = null;
 }
@@ -355,6 +321,7 @@ function updateValidationUI(validation, showNeutral = false) {
  * Handles real-time validation with debouncing
  */
 function handleInputValidation() {
+    pendingAutoSubmit = null;
     if (validationTimeout) {
         clearTimeout(validationTimeout);
     }
@@ -469,7 +436,11 @@ function getTurnstileToken() {
     }
 
     if (window.turnstile && typeof window.turnstile.getResponse === 'function') {
-        return window.turnstile.getResponse();
+        try {
+            return window.turnstile.getResponse();
+        } catch {
+            return '';
+        }
     }
 
     return '';
@@ -547,24 +518,48 @@ function saveToHistory(domain, options) {
         history = history.slice(0, MAX_HISTORY_ITEMS);
     }
 
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-    renderHistory();
+    persistHistory(history);
 }
 
 function getHistory() {
     try {
-        const history = localStorage.getItem(HISTORY_KEY);
-        return history ? JSON.parse(history) : [];
-    } catch (e) {
+        const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        if (!Array.isArray(history)) return [];
+        return history.filter(item => item && typeof item.domain === 'string' &&
+            item.domain.trim() && validateDomain(item.domain).valid &&
+            typeof item.timestamp === 'string' && Number.isFinite(Date.parse(item.timestamp)))
+            .slice(0, MAX_HISTORY_ITEMS).map(item => {
+                const source = item.options && typeof item.options === 'object' ? item.options : {};
+                const options = {};
+                if (Array.isArray(source.recordTypes)) {
+                    options.recordTypes = source.recordTypes.filter(type => ['A', 'AAAA', 'MX', 'NS', 'TXT', 'CNAME', 'PTR', 'SOA', 'CAA', 'SRV'].includes(type));
+                }
+                for (const key of ['checkPropagation', 'reverseDNS', 'enrichment', 'sslInspection']) {
+                    if (typeof source[key] === 'boolean') options[key] = source[key];
+                }
+                for (const [key, min, max] of [['timeout', 1000, 30000], ['maxRetries', 0, 10], ['retryDelay', 100, 5000]]) {
+                    if (Number.isInteger(source[key]) && source[key] >= min && source[key] <= max) options[key] = source[key];
+                }
+                return { domain: item.domain, timestamp: item.timestamp, options };
+            });
+    } catch {
         return [];
+    }
+}
+
+function persistHistory(history) {
+    try {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        renderHistory();
+    } catch {
+        showToast('Search history could not be saved on this device.', 'warning');
     }
 }
 
 function deleteHistoryItem(domain) {
     let history = getHistory();
     history = history.filter(item => item.domain !== domain);
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-    renderHistory();
+    persistHistory(history);
 }
 
 async function clearHistory() {
@@ -574,9 +569,13 @@ async function clearHistory() {
     );
 
     if (confirmed) {
-        localStorage.removeItem(HISTORY_KEY);
-        renderHistory();
-        showToast('Search history cleared successfully', 'success', 3000);
+        try {
+            localStorage.removeItem(HISTORY_KEY);
+            renderHistory();
+            showToast('Search history cleared successfully', 'success', 3000);
+        } catch {
+            showToast('Search history could not be cleared on this device.', 'warning');
+        }
     }
 }
 
@@ -700,7 +699,7 @@ function loadFromHistory(historyItem) {
             const timeoutInput = form.querySelector('input[name="timeout"]');
             if (timeoutInput) timeoutInput.value = options.timeout;
         }
-        if (options.maxRetries) {
+        if (options.maxRetries != null) {
             const retriesInput = form.querySelector('input[name="maxRetries"]');
             if (retriesInput) retriesInput.value = options.maxRetries;
         }
@@ -714,7 +713,7 @@ function loadFromHistory(historyItem) {
     setDisclosure(historyToggle, historyPanel, false);
 
     // Submit form
-    form.dispatchEvent(new Event('submit'));
+    submitForm();
 }
 
 // Clear history button
@@ -843,11 +842,19 @@ function stopLoadingAnimation(button) {
     startTime = null;
 }
 
+function submitForm() {
+    if (form.reportValidity()) {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+}
+
 // Form submission
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    pendingAutoSubmit = null;
+    if (requestInProgress) return;
 
-    if (!API_ENDPOINT) {
+    if (!API_CONFIGURED) {
         showToast('Service unavailable. Please try again later.', 'error', 6000);
         return;
     }
@@ -885,12 +892,20 @@ form.addEventListener('submit', async (e) => {
 
     // Update URL with domain parameter
     const url = new URL(window.location);
-    url.searchParams.set('domain', domain);
+    const isLookupPage = /^\/lookup\/?$/.test(url.pathname);
+    url.searchParams.delete(isLookupPage ? 'domain' : 'target');
+    url.searchParams.set(isLookupPage ? 'target' : 'domain', domain);
+    if (isLookupPage) updateCanonical(url.origin + '/lookup/?target=' + encodeURIComponent(domain));
     window.history.pushState({}, '', url);
 
     // Show loading state with animated messages
     const analyzeBtn = form.querySelector('.analyze-btn');
     const originalText = analyzeBtn.innerHTML;
+    requestInProgress = true;
+    resultsContainer.style.display = 'none';
+    currentApiResponse = null;
+    const shareBox = document.getElementById('shareBox');
+    if (shareBox) shareBox.style.display = 'none';
     analyzeBtn.disabled = true;
     startLoadingAnimation(analyzeBtn, options);
 
@@ -902,6 +917,7 @@ form.addEventListener('submit', async (e) => {
             throw new Error('Unexpected API response');
         }
 
+        if (window.location.href !== url.href) return;
         displayResults(result);
         saveToHistory(domain, options);
 
@@ -914,12 +930,14 @@ form.addEventListener('submit', async (e) => {
         // Stop loading animation
         stopLoadingAnimation(analyzeBtn);
 
+        requestInProgress = false;
+
         // Reset Turnstile after every API call to generate new token
         if (window.turnstile && typeof window.turnstile.reset === 'function') {
             window.turnstile.reset();
         }
         analyzeBtn.innerHTML = originalText;
-        analyzeBtn.disabled = false;
+        updateValidationUI(validateDomain(domainInput.value), true);
     }
 });
 
@@ -956,8 +974,9 @@ function displayResults(data) {
 
             ${renderWarnings(warnings)}
             ${renderRecommendations(recommendations)}
-            ${renderEmailSecurity(enrichment)}
+            ${renderEmailSecurity(enrichment, lookupResult)}
             ${renderDNSRecords(records, enrichment)}
+            ${renderReverseLookup(lookupResult.reverseLookup)}
             ${renderSSLCertificate(enrichment)}
             ${renderPropagation(propagationResults)}
         </div>
@@ -976,7 +995,7 @@ function displayResults(data) {
 
             // Visual feedback
             const originalContent = this.innerHTML;
-            this.innerHTML = '<span>✓</span><span>Added!</span>';
+            this.innerHTML = '<span>✓</span><span>Downloaded!</span>';
             this.style.background = 'var(--color-success)';
 
             setTimeout(() => {
@@ -1074,28 +1093,36 @@ function renderRecommendations(recommendations) {
 }
 
 // Render email security section
-function renderEmailSecurity(enrichment) {
-    if (!enrichment?.emailSecurity) return '';
+function renderEmailSecurity(enrichment, lookupResult = {}) {
+    const emailSecurity = enrichment?.emailSecurity || (['email_security_score', 'spf_valid', 'dmarc_policy', 'has_dkim'].some(key => key in lookupResult) ? {
+        score: lookupResult.email_security_score,
+        spf: { isValid: lookupResult.spf_valid },
+        dmarc: { policy: lookupResult.dmarc_policy },
+        mx: { provider: { name: lookupResult.mx_provider } }
+    } : null);
+    if (!emailSecurity) return '';
 
-    const { score, spf, dmarc, mx, warnings, recommendations } = enrichment.emailSecurity;
+    const { score, spf, dmarc, mx, warnings, recommendations } = emailSecurity;
+    const validScore = typeof score === 'number' && Number.isFinite(score) && score >= 0 && score <= 100;
+    const hasDkim = lookupResult.has_dkim;
 
     // Create contextual badges for warnings and recommendations
     const warningBadge = createContextBadge(warnings, 'warning');
     const recommendationBadge = createContextBadge(recommendations, 'recommendation');
 
     // Determine security score color and icon
-    let scoreColor = 'var(--color-success)';
-    let scoreIcon = '✓';
-    if (score < 50) {
+    let scoreColor = validScore ? 'var(--color-success)' : 'var(--color-text-secondary)';
+    let scoreIcon = validScore ? '✓' : '';
+    if (validScore && score < 50) {
         scoreColor = 'var(--color-error)';
         scoreIcon = '✗';
-    } else if (score < 80) {
+    } else if (validScore && score < 80) {
         scoreColor = 'var(--color-warning)';
         scoreIcon = '⚠';
     }
 
     // Determine DMARC policy color and icon
-    const dmarcPolicy = dmarc?.policy?.toLowerCase() || 'none';
+    const dmarcPolicy = typeof dmarc?.policy === 'string' ? dmarc.policy.toLowerCase() : '';
     let dmarcColor = 'var(--color-text-secondary)';
     let dmarcIcon = '';
     let dmarcText = dmarc?.policy || 'Not configured';
@@ -1124,13 +1151,13 @@ function renderEmailSecurity(enrichment) {
                 <div class="data-item">
                     <div class="data-label">Security Score</div>
                     <div class="data-value" style="color: ${scoreColor}; font-weight: 600;">
-                        ${scoreIcon} ${score}/100
+                        ${scoreIcon} ${validScore ? `${score}/100` : 'Not available'}
                     </div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">SPF Record</div>
                     <div class="data-value" style="color: ${spf?.isValid ? 'var(--color-success)' : 'var(--color-error)'}">
-                        ${spf?.isValid ? '✓ Valid' : '✗ Invalid'}
+                        ${typeof spf?.isValid !== 'boolean' ? 'Not available' : spf.isValid ? '✓ Valid' : '✗ Invalid'}
                     </div>
                 </div>
                 <div class="data-item">
@@ -1138,6 +1165,10 @@ function renderEmailSecurity(enrichment) {
                     <div class="data-value" style="color: ${dmarcColor}">
                         ${dmarcIcon} ${escapeHtml(dmarcText)}
                     </div>
+                </div>
+                <div class="data-item">
+                    <div class="data-label">DKIM</div>
+                    <div class="data-value">${typeof hasDkim !== 'boolean' ? 'Not available' : hasDkim ? 'Detected' : 'Not detected in checked selectors'}</div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">Email Provider</div>
@@ -1255,7 +1286,24 @@ function renderDNSRecords(records, enrichment) {
         `;
     }
 
-    // TXT Records (show first 3)
+    for (const [type, label] of [['CNAME', 'Aliases'], ['PTR', 'Reverse DNS']]) {
+        if (!Array.isArray(records[type]) || records[type].length === 0) continue;
+        recordsHtml += `
+            <div class="results-section">
+                <h3 class="section-title">${type} Records (${label})</h3>
+                <div class="record-list">
+                    ${records[type].map(record => `
+                        <div class="record-item">
+                            <span class="record-type">${type}</span>
+                            <span>${escapeHtml(record.value)}</span>
+                            ${renderTTL(record.ttl, type, enrichment)}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+    }
+
+    // Show every TXT record, including authentication records beyond the first three.
     if (records.TXT && records.TXT.length > 0) {
         recordsHtml += `
             <div class="results-section">
@@ -1264,24 +1312,32 @@ function renderDNSRecords(records, enrichment) {
                     TXT Records
                 </h3>
                 <div class="record-list">
-                    ${records.TXT.slice(0, 3).map(r => `
+                    ${records.TXT.map(r => `
                         <div class="record-item">
                             <span class="record-type">TXT</span>
                             <span style="word-break: break-all;">${r.entries.map(entry => escapeHtml(entry)).join(' ')}</span>
                             ${renderTTL(r.ttl, 'TXT', enrichment)}
                         </div>
                     `).join('')}
-                    ${records.TXT.length > 3 ? `
-                        <div class="record-item" style="color: var(--color-text-muted); text-align: center;">
-                            +${records.TXT.length - 3} more TXT records
-                        </div>
-                    ` : ''}
                 </div>
             </div>
         `;
     }
 
     return recordsHtml;
+}
+
+function renderReverseLookup(reverseLookup) {
+    if (!reverseLookup || !Array.isArray(reverseLookup.hostnames)) return '';
+    return `
+        <div class="results-section">
+            <h3 class="section-title">Reverse DNS Lookup</h3>
+            <div class="record-list">
+                ${reverseLookup.hostnames.length ? reverseLookup.hostnames.map(hostname => `
+                    <div class="record-item"><span class="record-type">PTR</span><span>${escapeHtml(hostname)}</span></div>
+                `).join('') : '<p>No PTR hostnames returned.</p>'}
+            </div>
+        </div>`;
 }
 
 // Render SSL certificate
@@ -1293,6 +1349,7 @@ function renderSSLCertificate(enrichment) {
         certificate.daysUntilExpiry > 7 ? 'var(--color-warning)' : 'var(--color-error)';
 
     // Get domain for calendar event
+    const validExpiryDate = certificate.validTo && Number.isFinite(Date.parse(certificate.validTo));
     const domain = certificate.subject?.commonName || 'Unknown domain';
     const certId = `cert-${Date.now()}`; // Unique ID for the calendar button
 
@@ -1341,7 +1398,7 @@ function renderSSLCertificate(enrichment) {
                     <div class="data-label">Valid Until</div>
                     <div class="data-value" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                         <span>${escapeHtml(certificate.validTo || 'N/A')}</span>
-                        ${certificate.validTo ? `
+                        ${validExpiryDate ? `
                             <button class="calendar-btn" id="${certId}" data-domain="${escapeAttribute(domain)}" data-date="${escapeAttribute(certificate.validTo)}">
                                 <span>📅</span>
                                 <span>Add reminder</span>
@@ -1352,7 +1409,7 @@ function renderSSLCertificate(enrichment) {
                 <div class="data-item">
                     <div class="data-label">Days Until Expiry</div>
                     <div class="data-value" style="color: ${daysColor}">
-                        ${escapeHtml(certificate.daysUntilExpiry || 'N/A')} days
+                        ${escapeHtml(certificate.daysUntilExpiry ?? 'N/A')} days
                     </div>
                 </div>
             </div>
@@ -1364,16 +1421,21 @@ function renderSSLCertificate(enrichment) {
 function generateCalendarEvent(domain, expiryDate) {
     // Parse the date (format: "Jul 31 08:04:27 2026 GMT")
     const date = new Date(expiryDate);
+    if (!Number.isFinite(date.getTime())) throw new Error('Invalid certificate expiry date');
+    const escapeCalendarText = value => String(value).replace(/\\/g, '\\\\').replace(/\r\n|\r|\n/g, '\\n').replace(/[,;]/g, '\\$&');
+    const safeDomain = escapeCalendarText(domain);
 
     // Set reminder for 30 days before expiry
     const reminderDate = new Date(date);
-    reminderDate.setDate(date.getDate() - 30);
+    reminderDate.setUTCDate(date.getUTCDate() - 30);
+    const endDate = new Date(reminderDate);
+    endDate.setUTCDate(endDate.getUTCDate() + 1);
 
     // Format dates for iCal (YYYYMMDD)
     const formatDate = (d) => {
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
+        const year = d.getUTCFullYear();
+        const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(d.getUTCDate()).padStart(2, '0');
         return `${year}${month}${day}`;
     };
 
@@ -1388,22 +1450,22 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:${eventDate}
-DTEND;VALUE=DATE:${eventDate}
+DTEND;VALUE=DATE:${formatDate(endDate)}
 DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-UID:ssl-cert-${domain}-${Date.now()}@dnsintelligence.com
-SUMMARY:SSL Certificate Renewal: ${domain}
-DESCRIPTION:Reminder: The SSL certificate for ${domain} will expire on ${expiryDateFormatted}. Please renew the certificate before it expires.
+UID:ssl-cert-${Date.now()}-${Math.random().toString(36).slice(2)}@lookup.echovalue.dev
+SUMMARY:SSL Certificate Renewal: ${safeDomain}
+DESCRIPTION:Reminder: The SSL certificate for ${safeDomain} will expire on ${expiryDateFormatted}. Please renew the certificate before it expires.
 STATUS:CONFIRMED
 SEQUENCE:0
 BEGIN:VALARM
-TRIGGER:-P7D
+TRIGGER:PT0S
 ACTION:DISPLAY
-DESCRIPTION:SSL certificate for ${domain} expires in 7 days
+DESCRIPTION:SSL certificate for ${safeDomain} expires on ${expiryDateFormatted}
 END:VALARM
 END:VEVENT
 END:VCALENDAR`;
 
-    return icsContent;
+    return icsContent.replace(/\n/g, '\r\n') + '\r\n';
 }
 
 // Download calendar event
@@ -1724,7 +1786,7 @@ function initializeFromURL() {
     // Load history
     renderHistory();
 
-    if (!API_ENDPOINT) {
+    if (!API_CONFIGURED) {
         analyzeBtn.disabled = true;
         domainError.textContent = 'Service unavailable. Please try again later.';
         domainError.classList.add('show');
@@ -1759,10 +1821,9 @@ function initializeFromURL() {
                     document.title = document.title.replace('{target}', validation.cleaned);
                 }
 
-                // Auto-submit the form after a brief delay to ensure Turnstile is loaded
-                setTimeout(() => {
-                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                }, 500);
+                // The callback also handles verification that completes after page load.
+                pendingAutoSubmit = validation.cleaned;
+                submitPendingLookup();
             } else {
                 // Invalid target: set noindex and show error
                 updateMetaRobots('noindex, follow');
@@ -1808,16 +1869,24 @@ function updateMetaRobots(content) {
     metaRobots.content = content;
 }
 
+function submitPendingLookup() {
+    if (!pendingAutoSubmit || !API_CONFIGURED || requestInProgress || !getTurnstileToken()) return;
+    const target = pendingAutoSubmit;
+    pendingAutoSubmit = null;
+    if (validateDomain(domainInput.value).cleaned === target) submitForm();
+}
+
+window.onLookupVerified = submitPendingLookup;
+
 // Initialize on page load
 window.addEventListener('DOMContentLoaded', initializeFromURL);
 
-// Handle browser back/forward buttons
 window.addEventListener('popstate', () => {
-    const domainParam = getURLParameter('domain');
-    if (domainParam) {
-        domainInput.value = domainParam.trim();
-    } else {
-        domainInput.value = '';
-        resultsContainer.style.display = 'none';
-    }
+    pendingAutoSubmit = null;
+    domainInput.value = getURLParameter('target') || getURLParameter('domain') || '';
+    resultsContainer.style.display = 'none';
+    currentApiResponse = null;
+    const shareBox = document.getElementById('shareBox');
+    if (shareBox) shareBox.style.display = 'none';
+    updateValidationUI(validateDomain(domainInput.value), true);
 });

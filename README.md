@@ -22,14 +22,14 @@ Use the DNS tool as an MCP endpoint via Apify:
 - 🌍 **Propagation Check** - Global DNS server monitoring
 - 📧 **Email Security** - SPF, DMARC, DKIM validation
 - 🔐 **SSL/TLS Inspection** - Certificate analysis with expiration alerts
-- 🔒 **Privacy First** - All processing in your browser, no tracking
+- 🔒 **Privacy First** - Search history stays in your browser; analysis uses the backend API
 - 📅 **Calendar Reminders** - SSL certificate renewal notifications
 - 🕒 **Search History** - Local storage only
 
 ## Tech Stack
 
 Pure static HTML/CSS/JavaScript:
-- Optional build step for environment variable injection
+- Required build step for public API and Turnstile configuration
 - No framework dependencies
 - Vanilla JavaScript (ES6+)
 - Inter & JetBrains Mono fonts
@@ -41,19 +41,22 @@ Pure static HTML/CSS/JavaScript:
 ```bash
 # Clone the repository
 git clone https://github.com/njoylab/lookup.echovalue.dev
-cd dns-intelligence
+cd lookup.echovalue.dev
 
-# Serve locally (choose one):
-python -m http.server 8000
-npx serve .
-php -S localhost:8000
+# Configure the API endpoint and a Turnstile site key valid for your hostname.
+export DNS_API_ENDPOINT=https://api.lookup.echovalue.dev/dns-query
+export TURNSTILE_SITE_KEY=your_public_site_key
+npm run build
+
+# Serve the generated site:
+python3 -m http.server 8000 --directory dist
 
 # Visit http://localhost:8000
 ```
 
-### Pages Build (Turnstile Key)
+### Pages Build
 
-Set a build command to inject the Turnstile site key at build time.
+The build requires both the API endpoint and public Turnstile site key. Missing or invalid configuration fails before replacing `dist`. The unbuilt sources cannot perform lookups.
 
 Build command:
 ```
@@ -67,10 +70,10 @@ dist
 
 Environment variable:
 ```
-TURNSTILE_SITE_KEY=0x4AAAAAACIBHDOiy9i84iTV
+TURNSTILE_SITE_KEY=your_public_site_key
 ```
 
-Optional API endpoint override:
+Required API endpoint:
 ```
 DNS_API_ENDPOINT=https://<API_URL>
 ```
@@ -78,10 +81,28 @@ DNS_API_ENDPOINT=https://<API_URL>
 
 ## Privacy
 
-- ✅ No server-side data collection
-- ✅ Search history stored locally only (LocalStorage)
-- ✅ No tracking or analytics
-- ✅ No cookies
+- Search history is stored locally in LocalStorage.
+- Submitted domains/IPs and query options are sent to the configured backend for analysis.
+- Cloudflare Turnstile provides bot verification; Google Fonts and jsDelivr serve external assets.
+- This frontend includes no analytics or advertising trackers. Backend retention cannot be established from this repository.
+
+## Verification
+
+Requires Node.js 20 or newer. Playwright is a development dependency only.
+
+```bash
+npm ci
+npx playwright install chromium
+npm test
+
+# Or use an installed Google Chrome:
+PLAYWRIGHT_CHANNEL=chrome npm test
+
+npm ci --prefix mcp-server
+npm test --prefix mcp-server
+```
+
+Frontend tests build an isolated copy and exercise real browser flows with controlled API responses and Turnstile verification. They do not call the production API or bypass production verification. MCP tests use a local HTTP fixture, including a delayed response.
 
 ## Browser Support
 

@@ -39,9 +39,9 @@ export class DnsApiClient {
             performReverseLookup: options.performReverseLookup || false,
             enableEnrichment: options.enableEnrichment || false,
             enableSslInspection: options.enableSslInspection || false,
-            timeout: options.timeout || 5000,
-            maxRetries: options.maxRetries || 3,
-            retryDelay: options.retryDelay || 1000,
+            timeout: options.timeout ?? 5000,
+            maxRetries: options.maxRetries ?? 3,
+            retryDelay: options.retryDelay ?? 1000,
             includeMetadata: true
         };
 
@@ -56,7 +56,8 @@ export class DnsApiClient {
 
             const response = await axios.post(this.endpoint, payload, {
                 headers,
-                timeout: (options.timeout || 5000) + 2000 // Add buffer
+                // The per-query timeout does not cover enrichment, propagation or retries.
+                timeout: 180000
             });
 
             return response.data;

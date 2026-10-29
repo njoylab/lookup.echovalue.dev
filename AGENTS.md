@@ -8,26 +8,23 @@ This is a **static frontend-only application** for DNS intelligence and security
 
 **Tech Stack:**
 - Pure HTML5, CSS3, vanilla JavaScript (ES6+)
-- Optional build step for environment variable injection
-- Google Fonts (IBM Plex Sans, JetBrains Mono)
+- Required build step for API endpoint and Turnstile site key injection
+- Google Fonts (Inter, JetBrains Mono)
 
 ## Development Commands
 
 ### Local Development
 ```bash
-# Serve locally (choose one):
-python -m http.server 8000
-# or
-npx serve .
-# or
-php -S localhost:8000
+# Set DNS_API_ENDPOINT and TURNSTILE_SITE_KEY first.
+npm run build
+python3 -m http.server 8000 --directory dist
 
 # Visit http://localhost:8000
 ```
 
 ### Deployment
 ```bash
-# Build optional for env injection, otherwise deploy static files directly.
+# Build with DNS_API_ENDPOINT and TURNSTILE_SITE_KEY; deploy the dist directory.
 
 # Example with Vercel:
 vercel --prod
@@ -41,7 +38,7 @@ netlify deploy --prod
 ### File Organization
 - **`index.html`** - Single page application, all HTML markup
 - **`styles.css`** - Complete styling, uses CSS variables for theming
-- **`script.js`** - All application logic, contains mock data
+- **`script.js`** - All application logic, calls the configured backend API
 
 ### Key Architectural Patterns
 
@@ -53,7 +50,7 @@ netlify deploy --prod
 **State Management:**
 - LocalStorage for search history (`dns-analyzer-history` key)
 - URL parameters for shareable domain lookups (`?domain=example.com`)
-- No global state objects - DOM is the source of truth
+- Form options are read from the DOM; request state and the latest exportable response are held in memory
 
 **Data Flow:**
 1. User input → `form.addEventListener('submit')`
@@ -76,9 +73,9 @@ MAX_HISTORY_ITEMS      // History limit: 20 items
 
 ## Privacy & Data Handling
 
-**Client-Side Only:**
-- All processing happens in browser
-- No cookies (only localStorage)
+**Frontend and API Responsibilities:**
+- Rendering and history management happen in the browser; DNS analysis runs through the configured backend API
+- The frontend uses localStorage for history and Cloudflare Turnstile for bot verification
 - No external tracking/analytics
 - Search history never sent to servers
 
@@ -127,10 +124,10 @@ localStorage['dns-analyzer-history'] = [
 
 **CSS Variables (in `:root`):**
 ```css
---color-bg: #0a0e1a          /* Main background */
+--color-bg: #0a0a0a          /* Main background */
 --color-accent: #0a84ff       /* Primary accent (matches --ev-color-accent) */
---color-text-primary: #e8eaed /* Main text */
---font-sans: 'IBM Plex Sans'
+--color-text-primary: #f5f5f7 /* Main text */
+--font-sans: 'Inter'
 --font-mono: 'JetBrains Mono'
 ```
 
@@ -205,6 +202,12 @@ Functions in `script.js`:
 - `deleteHistoryItem(domain)` - Remove one
 - `clearHistory()` - Remove all
 - `renderHistory()` - Update UI
+
+## Automated Verification
+
+- `npm ci` and `npx playwright install chromium` prepare browser tests.
+- `npm test` runs build and browser regressions with fixture API responses.
+- `npm ci --prefix mcp-server` and `npm test --prefix mcp-server` verify the MCP client.
 
 ## Testing Checklist
 
